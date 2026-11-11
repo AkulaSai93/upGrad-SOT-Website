@@ -4,6 +4,7 @@ import { Legacy } from "@/components/sections/Legacy";
 import { BestOfBoth } from "@/components/sections/BestOfBoth";
 import { Specializations } from "@/components/sections/Specializations";
 import { Curriculum } from "@/components/sections/Curriculum";
+import { AlumniCompanies } from "@/components/sections/AlumniCompanies";
 import { Pathways } from "@/components/sections/Pathways";
 import { Campuses } from "@/components/sections/Campuses";
 import { Leaders } from "@/components/sections/Leaders";
@@ -18,7 +19,6 @@ import { Admission } from "@/components/sections/Admission";
 import { Toolkit } from "@/components/sections/Toolkit";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Faqs } from "@/components/sections/Faqs";
-import { Mentorship } from "@/components/sections/Mentorship";
 import { Social } from "@/components/sections/Social";
 import { Footer } from "@/components/site/Footer";
 
@@ -33,14 +33,14 @@ export default function Home() {
         <BestOfBoth />
         <Specializations />
         <Curriculum />
+        <AlumniCompanies />
         <Pathways />
         <Campuses />
-        <Leaders />
         <Faculty />
-        <Mentorship />
         <Festivals />
         <IITRace />
         <Spotlight />
+        <Leaders />
         <News />
         <Awards />
         <Scholarships />

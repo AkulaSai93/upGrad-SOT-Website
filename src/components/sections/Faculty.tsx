@@ -11,20 +11,20 @@ import { Reveal } from "@/components/motion/Reveal";
  * Names and roles are sot.upgrad.com's (all 21 faculty).
  *
  * Layout after "Hear from Our Faculty about What They Teach" on
- * mastersunion.org: a black band with the heading on the left (light
- * weight, the key phrases heavier), the intro under it and round prev/next
- * arrows on the right; below, a coverflow of tall 9:16 poster cards. The
- * active card sits centred at full size; its neighbours step out to each
- * side, smaller and dimmer, three deep, the rest hidden.
+ * mastersunion.org, on black: the heading on the left (light weight, the key
+ * phrases heavier), the intro under it and round prev/next arrows on the
+ * right; below, a coverflow of cards. The active card sits centred at full
+ * size; its neighbours step out to each side, smaller and dimmer, three deep,
+ * the rest hidden. Fades into the black soften the strip's edges.
  *
  * Posters (public/images/faculty/posters-v6) are made in Masters' Union's card
  * style by scripts/faculty-posters, on the live site's card ground (near-black
- * frosted glass), with the cut-out portrait at the foot; a fine light edge
- * keeps them apart from the black band. Over each sit the person's company
- * logos (all of them, as sot.upgrad.com lists them) in white, sized off
- * the card so they keep a clear margin, with their name big under them, both centred above the
- * portrait as Masters' Union places its logo and title; and the designation,
- * small at the foot. Fades into the black soften the strip's edges.
+ * frosted glass), with the cut-out portrait at the foot. Over each sit the
+ * person's company logos (all of them, as sot.upgrad.com lists them) in white,
+ * sized off the card so they keep a clear margin, with their name big under
+ * them, both centred above the portrait; and the designation, small at the
+ * foot. The cards are square-cornered, with the live site's "selection"
+ * handles on all four corners and a fine light edge.
  *
  * The coverflow loops: arrows, a click on a side card, the arrow keys and a
  * horizontal swipe all move it, and it advances on its own every few seconds
@@ -181,6 +181,16 @@ function Logos({ img }: { img: string }) {
   );
 }
 
+/** one of the four "selection" handles on the card's corners */
+function Handle({ className }: { className: string }) {
+  return (
+    <span
+      aria-hidden
+      className={`absolute z-[3] size-2.5 border border-ink bg-white ${className}`}
+    />
+  );
+}
+
 export function Faculty() {
   const [active, setActive] = useState(0);
   const [auto, setAuto] = useState(true);
@@ -256,7 +266,7 @@ export function Faculty() {
           onPointerDown={onDown}
           onPointerUp={onUp}
           onPointerCancel={() => (swipe.current = null)}
-          className="relative mt-12 h-[var(--card-h)] touch-pan-y select-none overflow-hidden outline-none [--card-h:calc(var(--card-w)*16/9)] [--card-w:200px] focus-visible:ring-2 focus-visible:ring-white/40 sm:[--card-w:236px] lg:mt-14 lg:[--card-w:256px]"
+          className="relative mt-12 h-[calc(var(--card-h)+12px)] touch-pan-y select-none overflow-hidden outline-none [--card-h:calc(var(--card-w)*16/9)] [--card-w:200px] focus-visible:ring-2 focus-visible:ring-white/40 sm:[--card-w:236px] lg:mt-14 lg:[--card-w:256px]"
         >
           {/* fades into the black over the left and right edges */}
           <span
@@ -289,26 +299,34 @@ export function Faculty() {
                   zIndex: 10 - Math.abs(d),
                   pointerEvents: hidden ? "none" : undefined,
                 }}
-                className="absolute left-1/2 top-0 -ml-[calc(var(--card-w)/2)] h-[var(--card-h)] w-[var(--card-w)] overflow-hidden rounded-[12px] bg-[#08080a] transition-[transform,opacity,filter] after:pointer-events-none after:absolute after:inset-0 after:z-10 after:rounded-[12px] after:ring-1 after:ring-inset after:ring-white/15 after:content-[''] duration-[520ms] ease-[cubic-bezier(0.32,0,0.2,1)]"
+                className="absolute left-1/2 top-[6px] -ml-[calc(var(--card-w)/2)] h-[var(--card-h)] w-[var(--card-w)] transition-[transform,opacity,filter] duration-[520ms] ease-[cubic-bezier(0.32,0,0.2,1)]"
               >
-                <Image
-                  src={`/images/faculty/posters-v6/${f.img}.webp`}
-                  alt=""
-                  fill
-                  sizes="256px"
-                  draggable={false}
-                  className="object-cover"
-                />
-                {/* logos, then the name big and centred under them, as
-                    Masters' Union sets its logo and title */}
-                <span className="absolute inset-x-0 top-[9%] flex flex-col items-center gap-[calc(var(--card-w)*0.045)]">
-                  <Logos img={f.img} />
-                  <Name name={f.name} />
+                {/* the card itself, square-cornered */}
+                <span className="absolute inset-0 overflow-hidden border border-white/20 bg-[#08080a]">
+                  <Image
+                    src={`/images/faculty/posters-v6/${f.img}.webp`}
+                    alt=""
+                    fill
+                    sizes="256px"
+                    draggable={false}
+                    className="object-cover"
+                  />
+                  {/* logos, then the name big and centred under them, as
+                      Masters' Union sets its logo and title */}
+                  <span className="absolute inset-x-0 top-[9%] flex flex-col items-center gap-[calc(var(--card-w)*0.045)]">
+                    <Logos img={f.img} />
+                    <Name name={f.name} />
+                  </span>
+                  {/* the designation, small at the foot */}
+                  <span className="absolute inset-x-3 bottom-[5%] text-balance text-center text-[11.5px] font-medium leading-snug text-white/90 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] sm:text-[12.5px]">
+                    {f.role}
+                  </span>
                 </span>
-                {/* the designation, small at the foot */}
-                <span className="absolute inset-x-3 bottom-[5%] text-balance text-center text-[11.5px] font-medium leading-snug text-white/90 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] sm:text-[12.5px]">
-                  {f.role}
-                </span>
+                {/* "selection" handles on the four corners */}
+                <Handle className="-left-[5px] -top-[5px]" />
+                <Handle className="-right-[5px] -top-[5px]" />
+                <Handle className="-bottom-[5px] -left-[5px]" />
+                <Handle className="-bottom-[5px] -right-[5px]" />
               </button>
             );
           })}
