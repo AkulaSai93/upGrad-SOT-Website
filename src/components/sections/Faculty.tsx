@@ -1,61 +1,47 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { SectionHeading } from "@/components/site/SectionHeading";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { Reveal } from "@/components/motion/Reveal";
 
 /**
  * "Taught by World's Top Tech and Academic Minds"
  *
- * Copy, names, roles and portraits are sot.upgrad.com's (all 21 faculty).
- * Portraits are the site's cut-outs with its baked-in red block and swoosh
- * removed (public/images/faculty/*.png).
+ * Names and roles are sot.upgrad.com's (all 21 faculty).
  *
- * Cards after a "speaker lineup" reference the client supplied: a frame with
- * "selection" corner handles, after the client's "PLACED" poster in black and
- * white: near-black throughout, the faintest lift at the foot,
- * frosted vertical glass bands, a glossy sheen and a fine bright inner edge,
- * the portrait outlined like a sticker with a white band (sticker-v2: the
- * band recoloured from the old yellow, orange and pink),
- * a name pill with a cursor, and the role in a white box beneath. Every
- * faculty member gets one, and they run past in a single moving strip under a
- * centred heading, alternate cards set lower for the staggered lineup look.
+ * Layout after "Hear from Our Faculty about What They Teach" on
+ * mastersunion.org: a black band with the heading on the left (light
+ * weight, the key phrases heavier), the intro under it and round prev/next
+ * arrows on the right; below, a coverflow of tall 9:16 poster cards. The
+ * active card sits centred at full size; its neighbours step out to each
+ * side, smaller and dimmer, three deep, the rest hidden.
  *
- * Motion (GSAP): the strip loops endlessly right to left (the list is rendered
- * twice and the track slides by exactly half its width); hovering eases it to a stop and
- * leaving speeds it back up. The cards drop in like stickers (up, tilted,
- * settling level) when the strip first scrolls into view.
+ * Posters (public/images/faculty/posters-v6) are made in Masters' Union's card
+ * style by scripts/faculty-posters, on the live site's card ground (near-black
+ * frosted glass), with the cut-out portrait at the foot; a fine light edge
+ * keeps them apart from the black band. Over each sit the person's company
+ * logos (all of them, as sot.upgrad.com lists them) in white, sized off
+ * the card so they keep a clear margin, with their name big under them, both centred above the
+ * portrait as Masters' Union places its logo and title; and the designation,
+ * small at the foot. Fades into the black soften the strip's edges.
+ *
+ * The coverflow loops: arrows, a click on a side card, the arrow keys and a
+ * horizontal swipe all move it, and it advances on its own every few seconds
+ * until someone interacts with it.
  */
 type Person = { name: string; role: string; img: string };
 
 const FACULTY: Person[] = [
   { name: "Vishwa Mohan", role: "CEO of upGrad SOT", img: "vishwa-mohan" },
-  {
-    name: "Rishi Saraf",
-    role: "Cofounder & CEO DevDynamics",
-    img: "rishi-saraf",
-  },
+  { name: "Rishi Saraf", role: "Cofounder & CEO DevDynamics", img: "rishi-saraf" },
   {
     name: "Gaurav Kaushik",
     role: "Senior Staff Software Engineer & Problem Solving Track Lead",
     img: "gaurav-kaushik",
   },
-  {
-    name: "Gladden Rumao",
-    role: "Staff Software AI Engineer",
-    img: "gladden-rumao",
-  },
-  {
-    name: "Jyoti Nigam",
-    role: "Data Scientist at upGrad SOT",
-    img: "jyoti-nigam",
-  },
+  { name: "Gladden Rumao", role: "Staff Software AI Engineer", img: "gladden-rumao" },
+  { name: "Jyoti Nigam", role: "Data Scientist at upGrad SOT", img: "jyoti-nigam" },
   {
     name: "Rishabh Bafna",
     role: "Senior AI Engineer & Lead Instructor",
@@ -67,54 +53,36 @@ const FACULTY: Person[] = [
     role: "Senior Mathematician and Lead Instructor",
     img: "piyush-jain",
   },
-  {
-    name: "Bhavishya Rao",
-    role: "Mathematics Teaching Assistant",
-    img: "bhavishya-rao",
-  },
+  { name: "Bhavishya Rao", role: "Mathematics Teaching Assistant", img: "bhavishya-rao" },
   { name: "Akash Tiwari", role: "SDE + Instructor", img: "akash-tiwari" },
   { name: "Rahul Yadav", role: "SDE 2 + Lead Instructor", img: "rahul-yadav" },
   { name: "Deepak Mishra", role: "SDE + Instructor", img: "deepak-mishra" },
-  {
-    name: "Drishti Aggarwal",
-    role: "SDE + Instructor",
-    img: "drishti-aggarwal",
-  },
-  {
-    name: "Dhanshree",
-    role: "Mathematics Teaching Assistant",
-    img: "dhanshree",
-  },
+  { name: "Drishti Aggarwal", role: "SDE + Instructor", img: "drishti-aggarwal" },
+  { name: "Dhanshree", role: "Mathematics Teaching Assistant", img: "dhanshree" },
   { name: "Simran Pathania", role: "SDE + SME", img: "simran-pathania" },
   { name: "Jai Prasad B", role: "SDE + Instructor", img: "jai-prasad-b" },
   { name: "Avinash Agrawal", role: "SDE + Instructor", img: "avinash-agrawal" },
-  {
-    name: "Shivam Shrivastava",
-    role: "SDE + Instructor",
-    img: "shivam-shrivastava",
-  },
-  {
-    name: "Ananya Saini",
-    role: "Mathematics Teaching Assistant",
-    img: "ananya-saini",
-  },
-  {
-    name: "Shivam Pandey",
-    role: "Mathematics Teaching Assistant",
-    img: "shivam-pandey",
-  },
+  { name: "Shivam Shrivastava", role: "SDE + Instructor", img: "shivam-shrivastava" },
+  { name: "Ananya Saini", role: "Mathematics Teaching Assistant", img: "ananya-saini" },
+  { name: "Shivam Pandey", role: "Mathematics Teaching Assistant", img: "shivam-pandey" },
   { name: "Yash Gautam", role: "SDE + Instructor", img: "yash-gautam" },
 ];
+
+/** per step out from the centre: offset (in card widths), scale, brightness
+ *  and opacity — Masters' Union's coverflow values */
+const STEPS = [
+  { x: 0, scale: 1, bright: 1, alpha: 1 },
+  { x: 1, scale: 0.89, bright: 0.9, alpha: 0.88 },
+  { x: 1.89, scale: 0.78, bright: 0.75, alpha: 0.72 },
+  { x: 2.66, scale: 0.68, bright: 0.6, alpha: 0.5 },
+];
+const AUTOPLAY_MS = 3500;
 
 /** company logos as sot.upgrad.com shows them per faculty member
  *  (public/images/faculty/logos); w/h are the files' pixel sizes */
 const LOGOS = {
-  upgradsot: {
-    src: "upgradsot.webp",
-    alt: "upGrad School of Technology",
-    w: 595,
-    h: 191,
-  },
+  // the white-lettered version, to sit straight on the dark poster
+  upgradsot: { src: "/images/logo-sot-white.png", alt: "upGrad School of Technology", w: 467, h: 144 },
   linkedin: { src: "linkedin.webp", alt: "LinkedIn", w: 614, h: 177 },
   walmart: { src: "walmart.webp", alt: "Walmart", w: 681, h: 177 },
   paypal: { src: "paypal.webp", alt: "PayPal", w: 638, h: 177 },
@@ -127,351 +95,229 @@ const LOGOS = {
   barclays: { src: "barclays.webp", alt: "Barclays", w: 513, h: 100 },
   cisco: { src: "cisco_dark.webp", alt: "Cisco", w: 176, h: 100 },
   ineuron: { src: "ineuron.webp", alt: "iNeuron", w: 367, h: 100 },
-  krmangalam: {
-    src: "kr-mangalam.png",
-    alt: "K.R. Mangalam University",
-    w: 128,
-    h: 128,
-  },
+  krmangalam: { src: "kr-mangalam.png", alt: "K.R. Mangalam University", w: 128, h: 128 },
 } as const;
 type LogoKey = keyof typeof LOGOS;
 
 /** everyone else on sot.upgrad.com carries the upGrad SOT logo alone */
 const COMPANIES: Record<string, LogoKey[]> = {
-  "vishwa-mohan": [
-    "upgradsot",
-    "linkedin",
-    "walmart",
-    "paypal",
-    "oracle",
-    "pw",
-  ],
+  "vishwa-mohan": ["upgradsot", "linkedin", "walmart", "paypal", "oracle", "pw"],
   "rishi-saraf": ["upgradsot", "hotstar", "vmware", "walmart"],
   "gaurav-kaushik": ["salesforce", "microsoft", "paypal"],
   "gladden-rumao": ["upgradsot", "barclays"],
   "mithun-s": ["upgradsot", "cisco", "ineuron"],
   "akash-tiwari": ["upgradsot", "krmangalam"],
 };
-/** logo height by how many a card carries: one logo can be big, a full row
- *  of six has to share two lines of the box */
-const logoHeightFor = (n: number) =>
-  n === 1 ? 30 : n === 2 ? 22 : n === 3 ? 20 : 18;
+/** logo height, in card widths, by how many a card carries: one can be big,
+ *  a full set of six shares two rows of three, all inside the logo row */
+const logoHeightFor = (n: number) => (n === 1 ? 0.1 : n === 2 ? 0.075 : n === 3 ? 0.07 : 0.06);
 
-/** every card's backdrop, after the client's "PLACED" poster reference, in
- *  black: near-black throughout, the faintest lift at the foot, with a soft
- *  glossy sheen */
-const BACKDROP = [
-  // a glossy sheen across the glass
-  "linear-gradient(125deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 32%, rgba(255,255,255,0) 50%)",
-  // near-black throughout, the faintest lift and see-through at the foot
-  "linear-gradient(180deg, #040405 0%, #08080a 70%, rgba(20,21,24,0.96) 100%)",
-].join(", ");
+/** rough width of one uppercase character, in em, for the fit below */
+const CHAR_EM = 0.68;
+/** the name's size and lines, in card widths: one line when it fits big
+ *  enough, else two lines split where they balance best — never more, and
+ *  never taller than the gap between the logos and the head */
+function nameLayout(name: string) {
+  const one = 0.9 / (name.length * CHAR_EM);
+  if (one >= 0.08) return { size: Math.min(one, 0.13), lines: [name] };
+  const words = name.split(" ");
+  let best = [name];
+  let widest = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    const pair = [words.slice(0, i).join(" "), words.slice(i).join(" ")];
+    const w = Math.max(...pair.map((l) => l.length));
+    if (w < widest) [best, widest] = [pair, w];
+  }
+  return { size: Math.min(0.9 / (widest * CHAR_EM), 0.105), lines: best };
+}
 
-/** the PLACED poster's frosted glass: wide, soft vertical bands of light and
- *  shade, blurred */
-function Glass() {
+/** the name in big uppercase, centred, sized off the card width so the side
+ *  cards' scale-down carries it */
+function Name({ name }: { name: string }) {
+  const { size, lines } = nameLayout(name);
   return (
-    <span aria-hidden className="absolute inset-0">
-      {/* frosted vertical bands */}
-      <span className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0)_0px,rgba(255,255,255,0.06)_10px,rgba(255,255,255,0.015)_22px,rgba(0,0,0,0.3)_34px,rgba(255,255,255,0)_44px)] blur-[3px]" />
+    <span
+      style={{ fontSize: `calc(var(--card-w) * ${size.toFixed(3)})` }}
+      className="block w-full px-2 text-center font-extrabold uppercase leading-[0.95] tracking-[-0.035em] text-white [text-shadow:0_4px_14px_rgba(0,0,0,0.3)]"
+    >
+      {lines.map((l) => (
+        <span key={l} className="block whitespace-nowrap">
+          {l}
+        </span>
+      ))}
     </span>
   );
 }
-const INK = "#0b0d12";
-/** seconds for the strip to travel one full copy of the list */
-const LOOP_SECONDS = 55;
 
-function Handle({ className }: { className: string }) {
+/** the person's company logos in white, centred above the name, as Masters'
+ *  Union places its logo on its cards */
+function Logos({ img }: { img: string }) {
+  const keys = COMPANIES[img] ?? ["upgradsot"];
+  const h = logoHeightFor(keys.length);
   return (
-    <span
-      aria-hidden
-      className={`absolute z-[3] size-2.5 border border-ink bg-white ${className}`}
-    />
-  );
-}
-
-function StickerCard({
-  p,
-  index,
-  copy,
-}: {
-  p: Person;
-  /** position within one copy of the list, so both copies match exactly */
-  index: number;
-  copy: boolean;
-}) {
-  const logos = COMPANIES[p.img] ?? ["upgradsot"];
-  const logoHeight = logoHeightFor(logos.length);
-  return (
-    <li
-      data-card
-      aria-hidden={copy || undefined}
-      className={`group w-[280px] shrink-0 px-4 ${index % 2 ? "pt-12" : ""}`}
-    >
-      <div className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-rotate-2">
-        {/* the photo frame, outlined like a selected design layer */}
-        <div
-          className="relative border border-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.14)]"
-          style={{ background: BACKDROP }}
-        >
-          <Handle className="-left-[5px] -top-[5px]" />
-          <Handle className="-right-[5px] -top-[5px]" />
-          <Handle className="-bottom-[5px] -left-[5px]" />
-          <Handle className="-bottom-[5px] -right-[5px]" />
-
-          {/* designation, in the open space above the portrait */}
-          <p className="absolute inset-x-0 top-0 z-[2] px-5 pt-4 text-center text-[13px] font-semibold leading-snug text-white/90">
-            {p.role}
-          </p>
-
-          <div className="relative aspect-[1/1.12] overflow-hidden">
-            <Glass />
-            <div className="absolute inset-x-[6%] bottom-0 top-[22%] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]">
-              {/* the sticker look (a white band, an ink outline
-                  and a soft offset shadow) is baked into these PNGs: as CSS
-                  drop-shadow filters it had to be repainted on all 42 cards
-                  every frame and made the strip stutter */}
-              <Image
-                src={`/images/faculty/sticker-v2/${p.img}.png`}
-                alt={copy ? "" : p.name}
-                fill
-                sizes="280px"
-                className="object-contain object-bottom"
-              />
-            </div>
-          </div>
-
-          {/* name pill with a pointer, over the frame's lower edge */}
-          <span className="absolute bottom-3.5 left-1/2 z-[3] -translate-x-1/2 whitespace-nowrap">
-            <svg
-              aria-hidden
-              viewBox="0 0 16 16"
-              className="absolute -left-4 -top-3 size-4 -rotate-12 text-accent"
-              fill="currentColor"
-            >
-              <path
-                d="M2 1.5 14 7l-5.2 1.7L6.6 14z"
-                stroke={INK}
-                strokeWidth="0.6"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="inline-block rounded-[6px] border border-ink bg-accent px-3.5 py-1 text-[13px] font-semibold text-white shadow-[2px_2px_0_rgba(11,13,18,0.25)]">
-              {p.name}
-            </span>
-          </span>
-        </div>
-
-        {/* companies they've worked with, in a white box just inset under the
-            frame; room for two rows so every card is the same height */}
-        <ul className="mx-2 -mt-px flex min-h-[61px] flex-wrap items-center justify-center gap-x-2.5 gap-y-2 border border-t-0 border-ink bg-white px-2 py-2">
-          {logos.map((k) => {
-            const l = LOGOS[k];
-            return (
-              <li key={k}>
-                <Image
-                  src={`/images/faculty/logos/${l.src}`}
-                  alt={copy ? "" : l.alt}
-                  width={Math.round((l.w / l.h) * logoHeight)}
-                  height={logoHeight}
-                  className="block w-auto object-contain"
-                  style={{ height: logoHeight }}
-                />
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </li>
+    <span className="flex w-full justify-center">
+      {/* the logo row: 78% of the card, centred, so even six logos keep a
+          clear margin to the card's edges */}
+      <span className="flex w-[78%] flex-wrap items-center justify-center gap-x-[calc(var(--card-w)*0.035)] gap-y-[calc(var(--card-w)*0.03)]">
+        {keys.map((k) => {
+          const l = LOGOS[k];
+          return (
+            <Image
+              key={k}
+              src={l.src.startsWith("/") ? l.src : `/images/faculty/logos/${l.src}`}
+              alt={l.alt}
+              width={l.w}
+              height={l.h}
+              style={{
+                height: `calc(var(--card-w) * ${h})`,
+                width: `calc(var(--card-w) * ${((h * l.w) / l.h).toFixed(4)})`,
+              }}
+              className="object-contain brightness-0 invert"
+            />
+          );
+        })}
+      </span>
+    </span>
   );
 }
 
 export function Faculty() {
-  const root = useRef<HTMLElement>(null);
-  /** slides the strip one card back (-1) or on (1); set up with the loop */
-  const step = useRef<(dir: 1 | -1) => void>(() => {});
+  const [active, setActive] = useState(0);
+  const [auto, setAuto] = useState(true);
+  const swipe = useRef<number | null>(null);
+  const n = FACULTY.length;
 
-  useGSAP(
-    () => {
-      const q = gsap.utils.selector(root);
-      const track = q("[data-track]")[0];
-      const strip = q("[data-strip]")[0];
-      const mm = gsap.matchMedia();
+  const go = (i: number) => setActive(((i % n) + n) % n);
+  const step = (d: number) => {
+    setAuto(false);
+    go(active + d);
+  };
 
-      // travels right to left: slides back by one copy of the list, then
-      // repeats. On its own GPU layer (force3D) so each frame is just a move,
-      // never a repaint of the cards. Started many loops in, so the arrows can
-      // step it backwards past the start; with reduced motion it stands still
-      // and only the arrows move it.
-      const makeLoop = (auto: boolean) => {
-        const loop = gsap.fromTo(
-          track,
-          { xPercent: 0 },
-          {
-            xPercent: -50,
-            duration: LOOP_SECONDS,
-            ease: "none",
-            repeat: -1,
-            force3D: true,
-            paused: !auto,
-          },
-        );
-        loop.totalTime(LOOP_SECONDS * 100);
+  useEffect(() => {
+    if (!auto || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t = window.setInterval(() => setActive((a) => (a + 1) % n), AUTOPLAY_MS);
+    return () => window.clearInterval(t);
+  }, [auto, n]);
 
-        // the arrows: glide the loop one card's worth of its time either way
-        // (the repeat wraps it), the auto-scroll held while it does. However
-        // many clicks come in a row, it picks up again shortly after the last
-        // one — a beat's pause, then easing back up to speed (~1.5s in all)
-        let resume: gsap.core.Tween | null = null;
-        step.current = (dir) => {
-          resume?.kill();
-          loop.pause();
-          gsap.to(loop, {
-            totalTime: loop.totalTime() + (dir * LOOP_SECONDS) / FACULTY.length,
-            duration: 0.7,
-            ease: "power3.inOut",
-            // only an earlier step's glide, not the hover slow-down
-            overwrite: "auto",
-            onComplete: () => {
-              if (!auto) return;
-              resume = gsap.delayedCall(0.3, () => {
-                loop.timeScale(0).play();
-                gsap.to(loop, { timeScale: 1, duration: 0.5, ease: "power1.in", overwrite: "auto" });
-              });
-            },
-          });
-        };
-        return loop;
-      };
+  const onDown = (e: PointerEvent) => {
+    swipe.current = e.clientX;
+  };
+  const onUp = (e: PointerEvent) => {
+    if (swipe.current === null) return;
+    const dx = e.clientX - swipe.current;
+    swipe.current = null;
+    if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+  };
 
-      mm.add("(prefers-reduced-motion: reduce)", () => {
-        makeLoop(false);
-      });
-
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const loop = makeLoop(true);
-
-        // ease to a stop under the pointer, back up to speed on leave
-        const slow = () =>
-          gsap.to(loop, {
-            timeScale: 0,
-            duration: 0.6,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-        const go = () =>
-          gsap.to(loop, {
-            timeScale: 1,
-            duration: 0.8,
-            ease: "power2.in",
-            overwrite: "auto",
-          });
-        strip.addEventListener("mouseenter", slow);
-        strip.addEventListener("mouseleave", go);
-
-        // only the cards on screen when the strip arrives drop in; animating
-        // all 42 (most off-screen) cost frames for nothing
-        const onScreen = q("[data-card]").filter((c) => {
-          const r = c.getBoundingClientRect();
-          return r.right > 0 && r.left < window.innerWidth;
-        });
-        gsap.fromTo(
-          onScreen,
-          { y: 80, rotation: (i) => (i % 2 ? 5 : -5), autoAlpha: 0 },
-          {
-            y: 0,
-            rotation: 0,
-            autoAlpha: 1,
-            duration: 1.1,
-            ease: "expo.out",
-            stagger: 0.06,
-            scrollTrigger: {
-              trigger: strip,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          },
-        );
-
-        return () => {
-          strip.removeEventListener("mouseenter", slow);
-          strip.removeEventListener("mouseleave", go);
-        };
-      });
-      return () => mm.revert();
-    },
-    { scope: root },
-  );
+  const p = FACULTY[active];
 
   return (
-    <section
-      ref={root}
-      id="faculty"
-      className="bg-canvas pb-8 pt-8 lg:pb-16 lg:pt-28"
-    >
+    <section id="faculty" className="bg-black py-16 lg:py-20">
       <div className="container-page">
-        <SectionHeading
-          title="Taught by World's Top Tech and"
-          accent="Academic Minds"
-          intro={
-            // one line from sm up: the block is widened past the intro's
-            // 640px cap, evenly on both sides, so it stays centred
-            <span className="sm:-mx-12 sm:block sm:whitespace-nowrap">
-              Industry experts and innovators who turn real-world experience
-              into transformative learning.
-            </span>
-          }
-        />
-
-        {/* every faculty member, in one strip that keeps moving, held to the
-            same width as every other section. Its edges fade with white
-            overlays rather than a CSS mask, which would be re-applied over
-            the moving strip on every frame */}
-        <div
-          data-strip
-          className="relative mt-14 overflow-hidden [contain:paint] lg:mt-16"
-        >
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-canvas to-transparent sm:w-16"
-          />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-canvas to-transparent sm:w-16"
-          />
-          <ul
-            data-track
-            className="flex w-max py-6 will-change-transform [backface-visibility:hidden]"
-          >
-            {[...FACULTY, ...FACULTY].map((p, i) => (
-              <StickerCard
-                key={`${p.img}-${i}`}
-                p={p}
-                index={i % FACULTY.length}
-                copy={i >= FACULTY.length}
-              />
+        <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-[820px]">
+            <h2 className="font-display text-[clamp(1.625rem,2.4vw,2rem)] font-normal leading-[1.25] tracking-[-0.02em] text-[#e5e5e5]">
+              Taught by <span className="font-semibold text-white">World&rsquo;s Top Tech</span> and{" "}
+              <span className="font-semibold text-accent">Academic Minds</span>
+            </h2>
+            <p className="mt-3 text-[15px] leading-[1.6] text-[#e5e5e5]/80 sm:text-[16px]">
+              Industry experts and innovators who turn{" "}
+              <span className="font-medium text-white">real-world experience</span> into{" "}
+              <span className="font-medium text-white">transformative learning</span>.
+            </p>
+          </div>
+          <div className="flex shrink-0 gap-3">
+            {[
+              { d: -1, label: "Previous faculty", Icon: ArrowLeft },
+              { d: 1, label: "Next faculty", Icon: ArrowRight },
+            ].map(({ d, label, Icon }) => (
+              <button
+                key={d}
+                type="button"
+                aria-label={label}
+                onClick={() => step(d)}
+                className="grid size-12 place-items-center rounded-full border border-white/25 text-white transition-colors hover:border-white hover:bg-white hover:text-ink"
+              >
+                <Icon size={18} strokeWidth={2} aria-hidden />
+              </button>
             ))}
-          </ul>
+          </div>
+        </Reveal>
+
+        <div
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Faculty"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowLeft") step(-1);
+            if (e.key === "ArrowRight") step(1);
+          }}
+          onPointerDown={onDown}
+          onPointerUp={onUp}
+          onPointerCancel={() => (swipe.current = null)}
+          className="relative mt-12 h-[var(--card-h)] touch-pan-y select-none overflow-hidden outline-none [--card-h:calc(var(--card-w)*16/9)] [--card-w:200px] focus-visible:ring-2 focus-visible:ring-white/40 sm:[--card-w:236px] lg:mt-14 lg:[--card-w:256px]"
+        >
+          {/* fades into the black over the left and right edges */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 left-0 z-20 w-6 bg-gradient-to-r from-black to-transparent sm:w-12 lg:w-16"
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 z-20 w-6 bg-gradient-to-l from-black to-transparent sm:w-12 lg:w-16"
+          />
+          {FACULTY.map((f, i) => {
+            // shortest way round the loop from the active card
+            let d = i - active;
+            if (d > n / 2) d -= n;
+            if (d < -n / 2) d += n;
+            const s = STEPS[Math.min(Math.abs(d), STEPS.length - 1)];
+            const hidden = Math.abs(d) >= STEPS.length;
+            return (
+              <button
+                key={f.img}
+                type="button"
+                tabIndex={-1}
+                aria-hidden={d !== 0}
+                aria-label={`${f.name}, ${f.role}`}
+                onClick={() => d !== 0 && step(d)}
+                style={{
+                  transform: `translateX(calc(${Math.sign(d) * s.x} * var(--card-w))) scale(${s.scale})`,
+                  filter: `brightness(${s.bright})`,
+                  opacity: hidden ? 0 : s.alpha,
+                  zIndex: 10 - Math.abs(d),
+                  pointerEvents: hidden ? "none" : undefined,
+                }}
+                className="absolute left-1/2 top-0 -ml-[calc(var(--card-w)/2)] h-[var(--card-h)] w-[var(--card-w)] overflow-hidden rounded-[12px] bg-[#08080a] transition-[transform,opacity,filter] after:pointer-events-none after:absolute after:inset-0 after:z-10 after:rounded-[12px] after:ring-1 after:ring-inset after:ring-white/15 after:content-[''] duration-[520ms] ease-[cubic-bezier(0.32,0,0.2,1)]"
+              >
+                <Image
+                  src={`/images/faculty/posters-v6/${f.img}.webp`}
+                  alt=""
+                  fill
+                  sizes="256px"
+                  draggable={false}
+                  className="object-cover"
+                />
+                {/* logos, then the name big and centred under them, as
+                    Masters' Union sets its logo and title */}
+                <span className="absolute inset-x-0 top-[9%] flex flex-col items-center gap-[calc(var(--card-w)*0.045)]">
+                  <Logos img={f.img} />
+                  <Name name={f.name} />
+                </span>
+                {/* the designation, small at the foot */}
+                <span className="absolute inset-x-3 bottom-[5%] text-balance text-center text-[11.5px] font-medium leading-snug text-white/90 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] sm:text-[12.5px]">
+                  {f.role}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* move the strip by hand, one card at a time */}
-        <div className="mt-6 flex justify-center gap-2">
-          {([-1, 1] as const).map((dir) => (
-            <button
-              key={dir}
-              type="button"
-              onClick={() => step.current(dir)}
-              aria-label={dir < 0 ? "Previous faculty member" : "Next faculty member"}
-              className="grid size-11 place-items-center rounded-[6px] border border-ink/15 bg-white text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-              {dir < 0 ? (
-                <ArrowLeft size={18} strokeWidth={2} aria-hidden />
-              ) : (
-                <ArrowRight size={18} strokeWidth={2} aria-hidden />
-              )}
-            </button>
-          ))}
-        </div>
+        {/* who's in the centre card, for screen readers */}
+        <p aria-live="polite" className="sr-only">
+          {p.name}, {p.role}
+        </p>
       </div>
     </section>
   );
