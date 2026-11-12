@@ -15,7 +15,14 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /** sections with a black background: the nav switches to its dark style over
  *  them (campus-hero: the campus pages' film) */
-const DARK_SECTIONS = ["pathways", "leaders", "toolkit", "campus-hero"];
+const DARK_SECTIONS = [
+  "pathways",
+  "partners",
+  "faculty",
+  "leaders",
+  "toolkit",
+  "campus-hero",
+];
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },

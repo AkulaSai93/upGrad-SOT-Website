@@ -5,27 +5,30 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
- * "Festival Celebrations"
+ * "Campus Events"
  *
- * After the "Festival Celebration" row on newtonschool.co's NST page, which the
- * client asked for: student life on the two campuses, festival by festival.
+ * Student life on the two campuses, event by event (first after the "Festival
+ * Celebration" row on newtonschool.co's NST page), shown big so it reads as
+ * the life of a college worth joining.
  *
  * PHOTOS TO REPLACE: the six pictures in /images/festivals are Figma AI
  * stand-ins, not photographs of our students. Swap in real photos from each
  * campus (same file names, landscape, about 1536x1024) before this goes live,
  * and correct each festival's campus below to match.
  *
- * Layout: the festivals in one long row of photo cards, each a white card
- * with 6px corners — the picture, then the festival's name and its campus as
- * a small red tag. On desktop the section holds the screen while you scroll
- * and the row travels sideways past the heading, like walking past a wall of
- * photos, held within the page column; on phones the cards scroll sideways
- * by hand instead.
+ * Layout: the events in one long row of big photo cards, each filling most
+ * of the screen's height: the picture edge to edge under a dark fade from the
+ * foot, the event's name set huge over it in white, an "Event 01 / 06"
+ * counter and the campus as a tag; square corners with the faculty posters'
+ * corner handles. On desktop the section holds the screen while you scroll
+ * and the row, running the full width of the screen, travels sideways like
+ * walking past a wall of posters; on phones the cards scroll sideways by hand.
  *
  * Motion (GSAP, scrubbed by the scroll): the row slides from its first card to
  * its last, and inside each card the picture pans a little the other way, so
@@ -59,9 +62,15 @@ export function Festivals() {
           const row = q("[data-row]")[0] as HTMLElement;
           const frame = row.parentElement as HTMLElement;
           // as far as the row must travel for its last card to reach the
-          // right edge of the page column
-          const travel = () =>
-            -Math.max(0, row.scrollWidth - frame.clientWidth);
+          // frame's right padding
+          const travel = () => {
+            const cs = getComputedStyle(frame);
+            const inner =
+              frame.clientWidth -
+              parseFloat(cs.paddingLeft) -
+              parseFloat(cs.paddingRight);
+            return -Math.max(0, row.scrollWidth - inner);
+          };
           gsap
             .timeline({
               scrollTrigger: {
@@ -107,46 +116,62 @@ export function Festivals() {
   return (
     <section ref={root} id="festivals" className="bg-canvas">
       {/* lg+: a tall track; the screen inside holds while the row slides */}
-      <div data-track className="relative lg:h-[280vh]">
-        <div className="pb-8 pt-8 lg:sticky lg:top-0 lg:flex lg:h-[100svh] lg:flex-col lg:justify-center lg:overflow-hidden lg:pb-0 lg:pt-16">
+      <div data-track className="relative lg:h-[420vh]">
+        <div className="pb-8 pt-8 lg:sticky lg:top-0 lg:flex lg:h-[100svh] lg:flex-col lg:justify-start lg:overflow-hidden lg:pb-0 lg:pt-[calc(var(--header-h)+8px)]">
           <div className="container-page">
             <SectionHeading
-              title="Festival"
-              accent="Celebrations"
-              intro="Every festival, celebrated together — with music, colour and memories to keep."
+              title="Campus"
+              accent="Events"
+              intro="Festivals, fests and nights to remember: there’s always something happening on campus."
             />
+          </div>
 
-            <div className="-mx-5 mt-10 snap-x snap-mandatory overflow-x-auto px-5 pb-2 [scrollbar-width:none] lg:mx-0 lg:mt-12 lg:overflow-hidden lg:px-0 lg:pb-0">
-              <ul data-row className="flex w-max gap-4 will-change-transform">
-                {FESTIVALS.map((f) => (
-                  <li
-                    key={f.img}
-                    data-card
-                    className="w-[78vw] shrink-0 snap-center overflow-hidden rounded-[6px] border border-ink/10 bg-white p-2 sm:w-[340px] lg:w-[min(34vw,460px)]"
-                  >
-                    <div className="relative h-[300px] overflow-hidden rounded-[4px] lg:h-[min(400px,44svh)]">
-                      <div data-pic className="absolute inset-0 scale-[1.15]">
-                        <Image
-                          src={`/images/festivals/${f.img}.jpg`}
-                          alt={`${f.name} celebrations at ${f.campus}`}
-                          fill
-                          sizes="(min-width: 1024px) 460px, 80vw"
-                          className="object-cover"
-                        />
-                      </div>
+          {/* the row runs the full width of the screen */}
+          <div className="mt-8 snap-x snap-mandatory overflow-x-auto px-5 pb-3 pt-2 [scrollbar-width:none] lg:overflow-hidden lg:px-10 lg:py-[6px]">
+            <ul
+              data-row
+              className="flex w-max gap-5 will-change-transform lg:gap-6"
+            >
+              {FESTIVALS.map((f, i) => (
+                <li
+                  key={f.img}
+                  data-card
+                  className="relative h-[440px] w-[84vw] shrink-0 snap-center border border-ink bg-ink sm:w-[520px] lg:h-[min(64svh,640px)] lg:w-[min(66vw,1040px)]"
+                >
+                  <CornerHandles />
+                  <div className="absolute inset-0 overflow-hidden">
+                    <div data-pic className="absolute inset-0 scale-[1.15]">
+                      <Image
+                        src={`/images/festivals/${f.img}.jpg`}
+                        alt={`${f.name} at ${f.campus}`}
+                        fill
+                        sizes="(min-width: 1024px) 880px, 84vw"
+                        className="object-cover"
+                      />
                     </div>
-                    <div className="flex items-center justify-between gap-3 px-2 pb-1 pt-3">
-                      <p className="truncate text-[16px] font-semibold text-ink">
-                        {f.name}
-                      </p>
-                      <span className="shrink-0 whitespace-nowrap rounded-[4px] bg-accent/10 px-2 py-0.5 text-[12px] font-semibold text-accent">
+                    {/* a dark fade from the foot so the name reads */}
+                    <span
+                      aria-hidden
+                      className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.45)_35%,rgba(0,0,0,0)_65%)]"
+                    />
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8 lg:p-10">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className="rounded-[4px] bg-accent px-2.5 py-1 text-[12px] font-bold uppercase tracking-[0.12em]">
+                        Event {String(i + 1).padStart(2, "0")} /{" "}
+                        {String(FESTIVALS.length).padStart(2, "0")}
+                      </span>
+                      <span className="rounded-[4px] border border-white/40 px-2.5 py-1 text-[12px] font-semibold backdrop-blur-sm">
                         {f.campus}
                       </span>
                     </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                    <p className="mt-4 text-balance text-[clamp(2.25rem,5vw,4.5rem)] font-extrabold leading-[0.95] tracking-[-0.035em]">
+                      {f.name}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

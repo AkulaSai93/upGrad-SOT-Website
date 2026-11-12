@@ -106,7 +106,7 @@ export function LogoMark({ logo, white = false }: { logo: Logo; white?: boolean 
 
 export function AlumniCompanies() {
   return (
-    <section id="alumni" className="bg-canvas py-12 lg:py-24">
+    <section id="alumni" className="bg-canvas py-12 lg:py-16">
       <div className="container-page">
         <SectionHeading
           title="Our Alumni Work at"

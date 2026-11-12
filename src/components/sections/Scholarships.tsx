@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight, RotateCcw } from "lucide-react";
+import { CornerHandles } from "@/components/site/CornerHandles";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -111,7 +112,9 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
   };
 
   return (
-    <li data-card className="[perspective:1400px]">
+    <li data-card className="relative [perspective:1400px]">
+      {/* the faculty posters' corner handles, held still while the card flips */}
+      <CornerHandles />
       <div
         ref={inner}
         className="relative aspect-[4/5] [transform-style:preserve-3d]"
@@ -121,7 +124,7 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
         <div
           inert={flipped}
           style={{ background: GROUND }}
-          className="group absolute inset-0 overflow-hidden rounded-[6px] [backface-visibility:hidden]"
+          className="group absolute inset-0 overflow-hidden border border-ink [backface-visibility:hidden]"
         >
           <div className="flex h-full flex-col">
             <h3 className="shrink-0 px-4 pb-2 pt-5 text-center font-display text-[17px] font-bold leading-[1.2] tracking-[-0.02em] text-ink">
@@ -172,7 +175,7 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
         {/* back: the eligibility criteria */}
         <div
           inert={!flipped}
-          className="absolute inset-0 flex flex-col justify-between rounded-[6px] bg-accent p-6 text-white [backface-visibility:hidden] [transform:rotateY(180deg)]"
+          className="absolute inset-0 flex flex-col justify-between border border-ink bg-accent p-6 text-white [backface-visibility:hidden] [transform:rotateY(180deg)]"
         >
           <div>
             <p className="text-[12.5px] font-semibold text-white/75">
@@ -228,10 +231,18 @@ export function Scholarships() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const tl = gsap.timeline({
           defaults: { ease: "expo.out" },
-          scrollTrigger: { trigger: root.current, start: "top 70%", toggleActions: "play none none none" },
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top 70%",
+            toggleActions: "play none none none",
+          },
         });
         const n = { v: 0 };
-        tl.fromTo(q("[data-rise]"), { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.1, stagger: 0.1 })
+        tl.fromTo(
+          q("[data-rise]"),
+          { y: 40, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 1.1, stagger: 0.1 },
+        )
           .to(
             n,
             {
@@ -239,7 +250,8 @@ export function Scholarships() {
               duration: 1.6,
               ease: "power3.out",
               onUpdate: () => {
-                if (count.current) count.current.textContent = String(Math.round(n.v));
+                if (count.current)
+                  count.current.textContent = String(Math.round(n.v));
               },
             },
             0,
@@ -257,7 +269,12 @@ export function Scholarships() {
   );
 
   return (
-    <section ref={root} id="scholarships" style={{ background: YELLOW }} className="relative overflow-hidden py-10 lg:py-24">
+    <section
+      ref={root}
+      id="scholarships"
+      style={{ background: YELLOW }}
+      className="relative overflow-hidden py-10 lg:py-16"
+    >
       {/* a soft light across the top left, so the yellow reads rich, not flat */}
       <div
         aria-hidden
@@ -266,10 +283,16 @@ export function Scholarships() {
       <div className="container-page relative">
         <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:gap-16">
           <h2 className="text-ink max-lg:text-center">
-            <span data-rise className="block font-display text-[clamp(1.5rem,2.6vw,2.25rem)] font-bold tracking-[-0.025em]">
+            <span
+              data-rise
+              className="block font-display text-[clamp(1.5rem,2.6vw,2.25rem)] font-bold tracking-[-0.025em]"
+            >
               Get Upto
             </span>
-            <span data-rise className="mt-1 flex flex-wrap items-end gap-x-5 max-lg:justify-center">
+            <span
+              data-rise
+              className="mt-1 flex flex-wrap items-end gap-x-5 max-lg:justify-center"
+            >
               <span className="text-[clamp(6rem,17vw,14rem)] font-bold leading-[0.82] tracking-[-0.05em] tabular-nums">
                 <span ref={count}>100</span>
                 <span className="text-accent">%</span>
@@ -280,9 +303,13 @@ export function Scholarships() {
             </span>
           </h2>
 
-          <div data-rise className="max-lg:mx-auto max-lg:max-w-[460px] max-lg:text-center">
+          <div
+            data-rise
+            className="max-lg:mx-auto max-lg:max-w-[460px] max-lg:text-center"
+          >
             <p className="text-balance text-[15.5px] leading-[1.6] text-ink/80">
-              Invest in your future with scholarship opportunities that make quality education more affordable and accessible.
+              Invest in your future with scholarship opportunities that make
+              quality education more affordable and accessible.
             </p>
             {/* the hero's moving line: a dark streak sweeping round the edge */}
             <a
@@ -293,7 +320,10 @@ export function Scholarships() {
             >
               <span
                 aria-hidden
-                style={{ backgroundImage: "conic-gradient(transparent 200deg, #0b0d12)" }}
+                style={{
+                  backgroundImage:
+                    "conic-gradient(transparent 200deg, #0b0d12)",
+                }}
                 className="cta-glow absolute left-1/2 top-1/2 aspect-square w-[160%]"
               />
               <span className="relative z-[2] inline-flex items-center gap-2 rounded-[5px] bg-white px-6 py-3.5 text-[15px] font-semibold text-ink transition-colors duration-300 group-hover:bg-ink group-hover:text-white">

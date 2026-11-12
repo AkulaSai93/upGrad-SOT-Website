@@ -161,7 +161,7 @@ export function Specializations() {
     <section
       ref={root}
       id="specializations"
-      className="relative bg-canvas py-16 lg:py-28"
+      className="relative bg-canvas py-16 lg:py-16"
     >
       <div className="container-page relative">
         <SectionHeading

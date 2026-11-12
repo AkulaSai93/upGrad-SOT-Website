@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -11,7 +13,8 @@ import { Reveal } from "@/components/motion/Reveal";
  * Names and roles are sot.upgrad.com's (all 21 faculty).
  *
  * Layout after "Hear from Our Faculty about What They Teach" on
- * mastersunion.org, on black: the heading centred (light weight, the key
+ * mastersunion.org, on a ground that fades from white to black as the section
+ * reaches the middle of the screen (as Pathways does): the heading centred (light weight, the key
  * phrases heavier) with the intro under it; below, a coverflow of cards, and
  * under the cards the round prev/next arrows, centred. The active card sits centred at full
  * size; its neighbours step out to each side, smaller and dimmer, three deep,
@@ -247,7 +250,67 @@ function Handle({ className }: { className: string }) {
   );
 }
 
+gsap.registerPlugin(useGSAP);
+
+/** the section's colours: white at rest, black once you are in it (as
+ *  Pathways does); the heading, intro, arrows and edge fades follow */
+const LIGHT = {
+  "--fc-bg": "#ffffff",
+  "--fc-fg": "#0b0d12",
+  "--fc-soft": "#3d4452",
+  "--fc-muted": "rgba(61,68,82,0.85)",
+  "--fc-line": "rgba(11,13,18,0.2)",
+};
+const DARK = {
+  "--fc-bg": "#000000",
+  "--fc-fg": "#ffffff",
+  "--fc-soft": "#e5e5e5",
+  "--fc-muted": "rgba(229,229,229,0.8)",
+  "--fc-line": "rgba(255,255,255,0.25)",
+};
+
 export function Faculty() {
+  const section = useRef<HTMLElement>(null);
+
+  // fades to black when the section reaches the middle of the screen and
+  // back to white as you leave, measured live on every scroll; the nav
+  // follows (Navbar's DARK_SECTIONS)
+  useGSAP(
+    () => {
+      const el = section.current;
+      if (!el) return;
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const to = (vars: typeof LIGHT) =>
+        gsap.to(el, {
+          ...vars,
+          duration: reduced ? 0 : 0.6,
+          ease: "power2.out",
+          overwrite: true,
+        });
+      let dark: boolean | null = null;
+      const check = () => {
+        const r = el.getBoundingClientRect();
+        const now =
+          r.top < window.innerHeight * 0.55 &&
+          r.bottom > window.innerHeight * 0.45;
+        if (now !== dark) {
+          dark = now;
+          to(now ? DARK : LIGHT);
+        }
+      };
+      check();
+      window.addEventListener("scroll", check, { passive: true });
+      window.addEventListener("resize", check);
+      return () => {
+        window.removeEventListener("scroll", check);
+        window.removeEventListener("resize", check);
+      };
+    },
+    { scope: section },
+  );
+
   const [active, setActive] = useState(0);
   const [auto, setAuto] = useState(true);
   const swipe = useRef<number | null>(null);
@@ -282,19 +345,24 @@ export function Faculty() {
   const p = FACULTY[active];
 
   return (
-    <section id="faculty" className="bg-black py-16 lg:py-20">
+    <section
+      ref={section}
+      id="faculty"
+      className="bg-[var(--fc-bg)] pb-10 pt-16 lg:pb-10 lg:pt-16"
+      style={LIGHT as React.CSSProperties}
+    >
       <div className="container-page">
         <Reveal className="flex flex-col items-center text-center">
           <div className="max-w-[820px]">
-            <h2 className="font-display text-[clamp(1.625rem,2.4vw,2rem)] font-normal leading-[1.25] tracking-[-0.02em] text-[#e5e5e5]">
+            <h2 className="font-display text-[clamp(1.625rem,2.4vw,2rem)] font-normal leading-[1.25] tracking-[-0.02em] text-[var(--fc-soft)]">
               Taught by{" "}
-              <span className="font-semibold text-white">
+              <span className="font-semibold text-[var(--fc-fg)]">
                 World&rsquo;s Top Tech
               </span>{" "}
               and{" "}
               <span className="font-semibold text-accent">Academic Minds</span>
             </h2>
-            <p className="mt-3 text-[15px] leading-[1.6] text-[#e5e5e5]/80 sm:text-[16px]">
+            <p className="mt-3 text-[15px] leading-[1.6] text-[var(--fc-muted)] sm:text-[16px]">
               Industry experts and innovators who turn real-world experience
               into transformative learning.
             </p>
@@ -318,11 +386,11 @@ export function Faculty() {
           {/* fades into the black over the left and right edges */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 left-0 z-20 w-6 bg-gradient-to-r from-black to-transparent sm:w-12 lg:w-16"
+            className="pointer-events-none absolute inset-y-0 left-0 z-20 w-6 bg-gradient-to-r from-[var(--fc-bg)] to-transparent sm:w-12 lg:w-16"
           />
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 right-0 z-20 w-6 bg-gradient-to-l from-black to-transparent sm:w-12 lg:w-16"
+            className="pointer-events-none absolute inset-y-0 right-0 z-20 w-6 bg-gradient-to-l from-[var(--fc-bg)] to-transparent sm:w-12 lg:w-16"
           />
           {FACULTY.map((f, i) => {
             // shortest way round the loop from the active card
@@ -390,7 +458,7 @@ export function Faculty() {
               type="button"
               aria-label={label}
               onClick={() => step(d)}
-              className="grid size-12 place-items-center rounded-full border border-white/25 text-white transition-colors hover:border-white hover:bg-white hover:text-ink"
+              className="grid size-12 place-items-center rounded-full border border-[var(--fc-line)] text-[var(--fc-fg)] transition-colors hover:border-[var(--fc-fg)] hover:bg-[var(--fc-fg)] hover:text-[var(--fc-bg)]"
             >
               <Icon size={18} strokeWidth={2} aria-hidden />
             </button>

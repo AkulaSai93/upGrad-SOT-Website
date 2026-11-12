@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { LazyVideo } from "@/components/site/LazyVideo";
+import { CornerHandles } from "@/components/site/CornerHandles";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -336,19 +337,27 @@ export function BestOfBoth() {
   useEffect(() => {
     if (animated) return;
     const flat = flatRef.current;
-    if (!flat || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const tweens = gsap.utils.toArray<HTMLElement>("[data-from]", flat).map((el) =>
-      gsap.fromTo(
-        el,
-        { xPercent: el.dataset.from === "left" ? -70 : 70, autoAlpha: 0 },
-        {
-          xPercent: 0,
-          autoAlpha: 1,
-          ease: "none",
-          scrollTrigger: { trigger: el, start: "top 92%", end: "top 55%", scrub: 0.6 },
-        },
-      ),
-    );
+    if (!flat || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+      return;
+    const tweens = gsap.utils
+      .toArray<HTMLElement>("[data-from]", flat)
+      .map((el) =>
+        gsap.fromTo(
+          el,
+          { xPercent: el.dataset.from === "left" ? -70 : 70, autoAlpha: 0 },
+          {
+            xPercent: 0,
+            autoAlpha: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 92%",
+              end: "top 55%",
+              scrub: 0.6,
+            },
+          },
+        ),
+      );
     return () =>
       tweens.forEach((t) => {
         t.scrollTrigger?.kill();
@@ -454,12 +463,22 @@ export function BestOfBoth() {
                   marginInline: "calc((1 - var(--a)) * 12px)",
                 }}
               >
-                <span className="absolute left-0 top-1/2 block w-full -translate-y-1/2 overflow-hidden rounded-[6px] bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)] [height:min(68vh,620px)]">
-                  <LazyVideo
-                    sources={[{ src: HERO_VIDEO.src }]}
-                    poster={HERO_VIDEO.poster}
-                    className="size-full object-cover"
-                  />
+                <span
+                  className="absolute left-0 top-1/2 block w-full -translate-y-1/2 [height:min(68vh,620px)]"
+                  // the frame and its handles fade out as the video closes
+                  // to a sliver, so no line is left standing in the heading
+                  style={{ opacity: "clamp(0, (0.97 - var(--a)) * 25, 1)" }}
+                >
+                  {/* the faculty posters' frame: square corners, a thin ink
+                      edge and a "selection" handle on each corner */}
+                  <CornerHandles />
+                  <span className="block size-full overflow-hidden border border-ink bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)]">
+                    <LazyVideo
+                      sources={[{ src: HERO_VIDEO.src }]}
+                      poster={HERO_VIDEO.poster}
+                      className="size-full object-cover"
+                    />
+                  </span>
                 </span>
               </span>
 

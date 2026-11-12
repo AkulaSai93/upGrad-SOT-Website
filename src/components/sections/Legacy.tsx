@@ -6,6 +6,7 @@ import {
   ECOSYSTEM_CARDS,
   type EcosystemCard,
 } from "@/components/site/EcosystemCards";
+import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
 
 /**
@@ -13,7 +14,8 @@ import { SectionHeading } from "@/components/site/SectionHeading";
  *
  * The heading, then the numbers as stat cards in a four-column bento: a wide
  * card and two small, then two small and a wide one. Each card is white with
- * a light sticker edge (1px black top/left, 2.5px bottom/right): the number big, its title and a grey line, and the upGrad
+ * square corners, a thin ink frame and a "selection" handle on each corner
+ * (as on the faculty posters): the number big, its title and a grey line, and the upGrad
  * brand it belongs to — large on the right of a wide card, a wordmark at the
  * foot of a small one. The cards rise in on scroll; on hover the whole card lifts, grows a touch
  * and tilts slightly (no shadow), with a little spring; the
@@ -108,11 +110,11 @@ function StatCard({ stat }: { stat: Stat }) {
     // takes the hover
     <div data-reveal-item className={stat.wide ? "sm:col-span-2" : ""}>
       <div
-        className={`flex h-full min-h-[170px] rounded-[10px] border-solid border-black bg-white px-5 py-5 transition-[translate,scale,rotate] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:-rotate-1 hover:scale-[1.03] sm:px-6 ${
+        className={`relative flex h-full min-h-[170px] border border-ink bg-white px-5 py-5 transition-[translate,scale,rotate] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:-rotate-1 hover:scale-[1.03] sm:px-6 ${
           stat.wide ? "items-center justify-between gap-6" : "flex-col"
         }`}
-        style={{ borderWidth: "1px 2.5px 2.5px 1px" }}
       >
+        <CornerHandles />
         <div>
           <p
             className={`font-display font-bold leading-none tracking-[-0.04em] text-ink ${
@@ -145,7 +147,7 @@ function StatCard({ stat }: { stat: Stat }) {
 export function Legacy() {
   return (
     <section id="legacy" className="bg-canvas">
-      <div className="container-page flex flex-col items-center gap-12 pb-6 pt-12 lg:gap-14 lg:pb-8 lg:pt-28">
+      <div className="container-page flex flex-col items-center gap-12 pb-6 pt-12 lg:gap-14 lg:pb-8 lg:pt-16">
         <SectionHeading
           title="Backed by"
           accent="upGrad’s Learning Ecosystem"

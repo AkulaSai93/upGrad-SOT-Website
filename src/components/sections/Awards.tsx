@@ -169,7 +169,7 @@ export function Awards() {
     <section
       ref={root}
       id="awards"
-      className="bg-canvas pb-8 pt-8 lg:pb-16 lg:pt-28"
+      className="bg-canvas pb-8 pt-8 lg:pb-16 lg:pt-16"
     >
       <div className="container-page">
         <SectionHeading

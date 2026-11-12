@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
+import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
 
 /**
@@ -9,8 +10,9 @@ import { SectionHeading } from "@/components/site/SectionHeading";
  * a bento of four clean cards (white, hairline edge, 8px corners). On the
  * left, a wide card with a label, a big headline (its key phrase in red) and
  * a photo fading in on the right, with two small stat cards under it; on the
- * right, a tall card that runs the full height. Every card has the site's
- * black sticker edge and its programme's colour instead of the brand red:
+ * right, a tall card that runs the full height. Every card has the faculty
+ * posters' frame (square corners, a thin ink edge, a handle on each corner)
+ * and its programme's colour instead of the brand red:
  * ICPC's blue (from its logo) on the ICPC cards, the brand red on the
  * ambassadors card. The two small cards fill with that colour on hover;
  * the tall one stays still. Kept clean: short lines,
@@ -29,10 +31,9 @@ const AMBASSADORS = [
   { name: "Preetam G", img: "gsa-preetam-v2" },
 ];
 
-// the site's sticker edge: black, thin on the top and left, thicker on the
-// bottom and right
-const card = "rounded-[8px] border-solid border-black bg-white";
-const sticker = { borderWidth: "1px 2.5px 2.5px 1px" };
+// the faculty posters' frame: square corners, a thin ink edge, and a
+// "selection" handle on each corner (CornerHandles, inside each card)
+const card = "relative border border-ink bg-white";
 // each card takes its programme's colour (--tint for its text, --tint-fill on
 // hover, --on-tint for the text over the fill): ICPC's blue, from the ICPC
 // Foundation logo, and the brand red for the Google Student Ambassadors
@@ -54,7 +55,7 @@ const hoverFill =
 
 export function Achievements() {
   return (
-    <section id="achievements" className="bg-canvas py-12 lg:py-24">
+    <section id="achievements" className="bg-canvas py-12 lg:py-16">
       <div className="container-page">
         <SectionHeading
           title="Early Wins from"
@@ -69,9 +70,10 @@ export function Achievements() {
           {/* ICPC: the wide card, the team photo fading in on the right */}
           <article
             data-reveal-item
-            className={`${card} relative flex min-h-[260px] overflow-hidden lg:col-span-2`}
-            style={{ ...sticker, ...ICPC }}
+            className={`${card} flex min-h-[260px] lg:col-span-2`}
+            style={ICPC}
           >
+            <CornerHandles />
             <div className="relative z-[1] flex flex-col justify-center p-6 sm:max-w-[50%] lg:px-8 lg:py-6">
               <Image
                 src="/images/achievements/icpc-foundation.webp"
@@ -115,9 +117,10 @@ export function Achievements() {
           {/* Google Student Ambassadors: the tall card on the right */}
           <article
             data-reveal-item
-            className={`${card} flex flex-col overflow-hidden lg:row-span-2`}
-            style={{ ...sticker, ...BRAND }}
+            className={`${card} flex flex-col lg:row-span-2`}
+            style={BRAND}
           >
+            <CornerHandles />
             {/* the two portraits fill the card down to its copy and, as the
                 ICPC photo does on its left, fade out at their foot into the
                 card's white, each name set on the fade */}
@@ -179,8 +182,9 @@ export function Achievements() {
               key={s.value}
               data-reveal-item
               className={`${card} ${hoverFill} flex flex-col justify-center px-6 py-5 lg:px-7 lg:py-6`}
-              style={{ ...sticker, ...ICPC }}
+              style={ICPC}
             >
+              <CornerHandles />
               <p className="text-[clamp(2rem,3vw,2.75rem)] font-semibold leading-none tracking-[-0.03em] text-[var(--tint)] transition-colors duration-300 group-hover:text-[var(--on-tint)]">
                 {s.value}
               </p>

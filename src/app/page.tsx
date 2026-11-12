@@ -3,13 +3,18 @@ import { Hero } from "@/components/sections/Hero";
 import { Legacy } from "@/components/sections/Legacy";
 import { BestOfBoth } from "@/components/sections/BestOfBoth";
 import { Specializations } from "@/components/sections/Specializations";
-import { Curriculum } from "@/components/sections/Curriculum";
+import {
+  Curriculum,
+  CurriculumJourney,
+} from "@/components/sections/Curriculum";
 import { AlumniCompanies } from "@/components/sections/AlumniCompanies";
+import { Partners } from "@/components/sections/Partners";
 import { Pathways } from "@/components/sections/Pathways";
 import { Achievements } from "@/components/sections/Achievements";
 import { Campuses } from "@/components/sections/Campuses";
 import { Leaders } from "@/components/sections/Leaders";
 import { Faculty } from "@/components/sections/Faculty";
+import { Voices } from "@/components/sections/Voices";
 import { Festivals } from "@/components/sections/Festivals";
 import { IITRace } from "@/components/sections/IITRace";
 import { Spotlight } from "@/components/sections/Spotlight";
@@ -33,12 +38,15 @@ export default function Home() {
         <Legacy />
         <BestOfBoth />
         <Specializations />
+        <Partners />
         <Curriculum />
         <AlumniCompanies />
         <Pathways />
         <Achievements />
+        <CurriculumJourney />
         <Campuses />
         <Faculty />
+        <Voices />
         <Festivals />
         <IITRace />
         <Spotlight />

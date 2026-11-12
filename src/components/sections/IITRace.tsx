@@ -98,7 +98,7 @@ export function IITRace() {
   );
 
   return (
-    <section ref={root} id="iit-race" className="bg-canvas pb-8 lg:pb-14">
+    <section ref={root} id="iit-race" className="bg-canvas pb-8 pt-10 lg:pb-14 lg:pt-20">
       {/* the two shows in white on a full-width red band, running right to left */}
       <div aria-hidden className="overflow-hidden bg-accent py-3">
         <div data-track className="flex w-max will-change-transform">

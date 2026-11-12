@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "@/components/site/SectionHeading";
+import { CornerHandles } from "@/components/site/CornerHandles";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -147,7 +148,7 @@ export function Admission() {
   );
 
   return (
-    <section ref={root} id="admission" className="bg-canvas py-8 lg:py-28">
+    <section ref={root} id="admission" className="bg-canvas py-8 lg:py-16">
       <div className="container-page">
         <SectionHeading
           title="Admission"
@@ -216,8 +217,9 @@ export function Admission() {
           <div className="lg:sticky lg:top-28 lg:self-start">
             <div
               data-cta
-              className="rounded-[6px] border-2 border-ink bg-accent p-7 text-white sm:p-9"
+              className="relative border border-ink bg-accent p-7 text-white sm:p-9"
             >
+              <CornerHandles />
               <h3 className="font-display text-[clamp(1.5rem,2.3vw,2rem)] font-bold leading-[1.15] tracking-[-0.02em]">
                 Study Without Limits: Up to 100% Scholarships
               </h3>

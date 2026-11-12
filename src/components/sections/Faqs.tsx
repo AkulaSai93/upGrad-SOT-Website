@@ -130,7 +130,7 @@ export function Faqs({ university }: { university?: string } = {}) {
   );
 
   return (
-    <section ref={root} id="faqs" className="bg-canvas py-8 lg:py-28">
+    <section ref={root} id="faqs" className="bg-canvas py-8 lg:py-16">
       <div className="container-page">
         <SectionHeading
           title="Frequently Asked"

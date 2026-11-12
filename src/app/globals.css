@@ -149,6 +149,17 @@ html {
   animation: border-spin 4s linear infinite;
 }
 
+/* A light passing across the closing CTA band (see Testimonials): it sweeps
+   from left to right, then rests a moment before the next pass. */
+@keyframes light-pass {
+  0% { transform: translateX(-120%); }
+  55% { transform: translateX(650%); }
+  100% { transform: translateX(650%); }
+}
+.light-pass {
+  animation: light-pass 6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
 /* On-enter reveal for scroll-revealed cards (see Specializations). Cards start
    lowered and transparent; the observer adds .is-in once they scroll into view. */
 .reveal-card {
@@ -193,6 +204,7 @@ html {
   .reveal-item { opacity: 1; transform: none; transition: none; }
   .reveal-card { opacity: 1; transform: none; transition: none; }
   .cta-glow { animation: none; }
+  .light-pass { animation: none; opacity: 0; }
   .marquee-track { animation: none; }
   html { scroll-behavior: auto; }
 }

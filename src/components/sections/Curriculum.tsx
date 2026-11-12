@@ -5,7 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Reveal } from "@/components/motion/Reveal";
+import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
+import { VideoPlayer, type Video } from "@/components/site/VideoPlayer";
+import { Play } from "lucide-react";
 
 gsap.registerPlugin(useGSAP);
 
@@ -14,11 +17,8 @@ gsap.registerPlugin(useGSAP);
  *
  * Copy, subjects, skills and projects are sot.upgrad.com's (project lines
  * shortened). Project pictures are the 24 illustrations from the client's
- * Figma file (WwyVkKp6ax6XLGEw9hVViH, nodes 5:2 to 5:25, in project order):
- * each one's white window body is cut out (/images/curriculum/panels) and set
- * as a browser window, with one shared title bar, on the faculty cards' black
- * frosted glass in place of the original colour gradients, lit like Scaler's
- * project thumbnails (soft glows top-left and bottom-right, a faint beam).
+ * Figma file (WwyVkKp6ax6XLGEw9hVViH, nodes 5:2 to 5:25, in project order),
+ * each on its own colour gradient (/images/curriculum/figma).
  *
  * Layout after "The people teaching" on quadcse.com: under the site's usual
  * centred heading, one row per year. A single grey rail runs down the left of
@@ -270,26 +270,36 @@ const YEARS: Year[] = [
   },
 ];
 
-/** the year's column: number, title and line */
-function YearColumn({ year, index }: { year: Year; index: number }) {
+/** a pillar's column: its number big in red, its title and line */
+function PillarColumn({ pillar, index }: { pillar: Pillar; index: number }) {
   return (
     <div className="relative border-l border-line pl-5 sm:pl-7 lg:sticky lg:top-[calc(var(--header-h)+32px)] lg:border-0">
       {/* below lg, a red tick tops the column's own rule */}
-      <span aria-hidden className="absolute -left-px top-0 h-16 w-[2px] bg-accent lg:hidden" />
-      <p className="flex items-start font-display font-extrabold leading-none tracking-[-0.05em] text-accent">
-        <span className="text-[clamp(3.5rem,5vw,4.5rem)]">{String(index + 1).padStart(2, "0")}</span>
-        <span className="ml-1 mt-1.5 text-[12px] font-bold uppercase tracking-[0.12em]">Year</span>
+      <span
+        aria-hidden
+        className="absolute -left-px top-0 h-16 w-[2px] bg-accent lg:hidden"
+      />
+      <p className="font-display text-[clamp(3.5rem,5vw,4.5rem)] font-extrabold leading-none tracking-[-0.05em] text-accent">
+        {String(index + 1).padStart(2, "0")}
       </p>
-      <h3 className="mt-3 text-[20px] font-bold leading-tight tracking-[-0.02em] text-ink">
-        {year.title}
+      <h3 className="mt-3 text-[22px] font-bold leading-tight tracking-[-0.02em] text-ink">
+        {pillar.title}
       </h3>
-      <p className="mt-2 max-w-[280px] text-[14.5px] leading-[1.6] text-body">{year.body}</p>
+      <p className="mt-2 max-w-[280px] text-[14.5px] leading-[1.6] text-body">
+        {pillar.body}
+      </p>
     </div>
   );
 }
 
 /** a block's label in the year panel, with Scaler's accent bar */
-function Label({ children, tone = "accent" }: { children: string; tone?: "accent" | "ink" }) {
+function Label({
+  children,
+  tone = "accent",
+}: {
+  children: string;
+  tone?: "accent" | "ink";
+}) {
   return (
     <h4
       className={`border-l-[3px] border-accent pl-3 text-[17px] font-semibold leading-tight ${
@@ -301,33 +311,43 @@ function Label({ children, tone = "accent" }: { children: string; tone?: "accent
   );
 }
 
-/** the year's panel, after the curriculum on scaler.com/school-of-technology:
+/** a year's content, after the curriculum on scaler.com/school-of-technology:
  *  its title and line, the projects slider, the skills as chips, and the
- *  subject list behind a "View Subject List" toggle */
-function YearPanel({ year, index }: { year: Year; index: number }) {
+ *  subject list behind a "View Subject List" toggle. `skillsTone` colours the
+ *  skills label (red in the tabbed card, Figma 38:6053) */
+function YearBody({
+  year,
+  index,
+  skillsTone = "ink",
+  compact = false,
+}: {
+  year: Year;
+  index: number;
+  skillsTone?: "accent" | "ink";
+  /** the tabbed card: tighter gaps between the blocks, and the title alone
+   *  ("Foundations"), since the tab above already names the year */
+  compact?: boolean;
+}) {
   const [open, setOpen] = useState(false);
+  const gap = compact ? "mt-6" : "mt-8";
   return (
-    <div
-      className="min-w-0 rounded-[8px] border-solid border-black bg-white p-5 sm:p-8"
-      // Figma 20:4571: 1px top/left, 3px bottom/right
-      style={{ borderWidth: "1px 3px 3px 1px" }}
-    >
+    <>
       <h3 className="text-[clamp(1.375rem,2vw,1.75rem)] font-medium leading-[1.25] tracking-[-0.02em] text-ink">
-        Year {index + 1} : {year.title}
+        {compact ? year.title : `Year ${index + 1} : ${year.title}`}
       </h3>
       <p className="mt-2 text-[15px] leading-[1.6] text-body">{year.body}</p>
 
-      <div className="mt-8">
+      <div className={gap}>
         <ProjectSlider projects={year.projects} />
       </div>
 
-      <div className="mt-8">
-        <Label tone="ink">Skills you&rsquo;ll build</Label>
+      <div className={gap}>
+        <Label tone={skillsTone}>Skills you&rsquo;ll build</Label>
         <ul className="mt-4 flex flex-wrap gap-2.5">
           {year.skills.map((sk) => (
             <li
               key={sk}
-              className="rounded-[4px] border-[0.5px] border-black bg-white/60 px-3.5 py-2 text-[14px] leading-[14px] text-ink"
+              className="rounded-[4px] bg-[#f4f4f5] px-3.5 py-2 text-[14px] leading-[14px] text-[#3a3a3a]"
             >
               {sk}
             </li>
@@ -337,34 +357,36 @@ function YearPanel({ year, index }: { year: Year; index: number }) {
 
       {/* the black frame only shows once the list is open */}
       <div
-        className={`mt-8 overflow-hidden rounded-[4px] border transition-colors duration-300 ${
+        className={`${gap} overflow-hidden rounded-[4px] border transition-colors duration-300 ${
           open ? "border-black" : "border-transparent"
         }`}
       >
-        {/* the toggle bar, from Figma (HOWFOSvIxaWIA2rZi55F0e, node 20:4571):
-            a red gradient, white label and white book / double-chevron icons */}
+        {/* the toggle bar: a soft charcoal (ink on hover), white
+            label and white book / double-chevron icons (Figma 20:4571) */}
         <button
           type="button"
           aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
           // no browser focus ring on click (it drew a blue edge); keyboard
-          // focus still shows, as a white inset ring on the red
-          className="flex w-full items-center justify-between rounded-[4px] px-5 py-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/70"
-          style={{
-            backgroundImage:
-              "linear-gradient(179.72deg, rgb(231, 0, 11) 2.94%, rgb(193, 0, 7) 50%, rgb(159, 7, 18) 97.06%), linear-gradient(90deg, #fff 0%, #fff 100%)",
-          }}
+          // focus still shows, as a white inset ring on the black
+          className="flex w-full items-center justify-between rounded-[4px] bg-[#2b2e36] px-5 py-4 text-left outline-none transition-colors duration-300 hover:bg-ink focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/70"
         >
           <span className="flex items-center gap-2">
             <span className="relative size-6 shrink-0 overflow-clip">
               <span className="absolute inset-[12.5%_18.75%]">
                 <span className="absolute inset-[-3.33%_-4%]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/curriculum/icons/subject-book-white.svg" alt="" className="block size-full max-w-none" />
+                  <img
+                    src="/images/curriculum/icons/subject-book-white.svg"
+                    alt=""
+                    className="block size-full max-w-none"
+                  />
                 </span>
               </span>
             </span>
-            <span className="text-[14px] font-medium leading-[21.56px] text-white">View Subject List</span>
+            <span className="text-[14px] font-medium leading-[21.56px] text-white">
+              View Subject List
+            </span>
           </span>
           <span
             className={`relative size-6 shrink-0 overflow-clip transition-transform duration-300 ${open ? "rotate-180" : ""}`}
@@ -372,7 +394,11 @@ function YearPanel({ year, index }: { year: Year; index: number }) {
             <span className="absolute inset-y-1/4 left-[29.17%] right-[29.17%]">
               <span className="absolute inset-[-5%_-6%]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/curriculum/icons/subject-chevrons-white.svg" alt="" className="block size-full max-w-none" />
+                <img
+                  src="/images/curriculum/icons/subject-chevrons-white.svg"
+                  alt=""
+                  className="block size-full max-w-none"
+                />
               </span>
             </span>
           </span>
@@ -385,7 +411,10 @@ function YearPanel({ year, index }: { year: Year; index: number }) {
           <div className="overflow-hidden">
             <ol className="grid gap-x-8 gap-y-2.5 px-5 py-4 sm:grid-cols-2">
               {year.subjects.map((sub, i) => (
-                <li key={sub} className="flex gap-4 text-[14.5px] leading-snug text-ink">
+                <li
+                  key={sub}
+                  className="flex gap-4 text-[14.5px] leading-snug text-ink"
+                >
                   <span className="w-5 shrink-0 font-semibold tabular-nums text-accent">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -396,69 +425,251 @@ function YearPanel({ year, index }: { year: Year; index: number }) {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+type Pillar = {
+  key: string;
+  title: string;
+  body: string;
+  /** the label over its row of videos */
+  label: string;
+  videos: { id: string; title: string }[];
+};
+
+/** "What makes uGSOT built for the AI age", in four pillars, each with a row
+ *  of Shorts from the school's YouTube channel (@upGradSchoolofTechnology)
+ *  that shows it; thumbnails in /images/journey. Captions are shortened from
+ *  the videos' titles. */
+const PILLARS: Pillar[] = [
+  {
+    key: "y1",
+    title: "Start Strong",
+    body: "From day one: orientation, first-week guides and a founding batch building it together.",
+    label: "On campus",
+    videos: [
+      { id: "LUiEPZiMc6M", title: "Founding Batch 2026–30 kicks off" },
+      { id: "hC4YxBgeQ0E", title: "Orientation day on campus" },
+      { id: "heOBtPAl24w", title: "First week of college survival guide" },
+      { id: "8cT_bD0GTBg", title: "7 first-year mistakes to avoid" },
+    ],
+  },
+  {
+    key: "y2",
+    title: "Learn By Building",
+    body: "Coding battles, real projects, and building AI rather than just using it.",
+    label: "Building",
+    videos: [
+      { id: "rnMH5swIn94", title: "A real student coding battle" },
+      { id: "T5QwtXlf02Y", title: "Don’t wait for final year to build" },
+      { id: "b_rZ-y54QKE", title: "Everyone uses AI. Who builds it?" },
+      { id: "CHeadHnjVU4", title: "Build the model, not a wrapper app" },
+    ],
+  },
+  {
+    key: "y3",
+    title: "Go Deep in AI & Quantum",
+    body: "Get ahead on the tech that comes next, and land internships that get you hired.",
+    label: "AI, quantum & internships",
+    videos: [
+      { id: "hYx1y8ilkWo", title: "Why learn quantum computing now" },
+      {
+        id: "sEF2j8xC91w",
+        title: "If you knew how AI worked, what would you build?",
+      },
+      {
+        id: "drNgH8I1RCE",
+        title: "Degrees get interviews, internships get you hired",
+      },
+      { id: "pnjbJgI50-w", title: "International vs. Indian internships" },
+    ],
+  },
+  {
+    key: "y4",
+    title: "Launch Your Career",
+    body: "Hiring, startups and funding: be ready for what comes after graduation.",
+    label: "Careers & startups",
+    videos: [
+      { id: "UfcYFWNynfc", title: "What tech hiring looks like now" },
+      { id: "MqrKN3rYzc8", title: "When your university backs your startup" },
+      { id: "ge_-IHtkR1g", title: "Why funding should come fifth, not first" },
+      { id: "U9lIlNb6m7c", title: "Future-proof your career for 2030" },
+    ],
+  },
+];
+
+/** one Short, as on scaler.com's "What makes SST": the upright thumbnail
+ *  with a play button, then its caption */
+function VideoCard({
+  v,
+  onOpen,
+}: {
+  v: { id: string; title: string };
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`Play video: ${v.title}`}
+      className="group flex w-[180px] shrink-0 snap-start flex-col rounded-[4px] border border-line bg-white p-2 text-left outline-none transition-colors hover:border-ink focus-visible:ring-2 focus-visible:ring-accent sm:w-[196px]"
+    >
+      <span className="relative block aspect-[9/16] overflow-hidden rounded-[2px] bg-ink">
+        <Image
+          src={`/images/journey/${v.id}.webp`}
+          alt=""
+          fill
+          sizes="200px"
+          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+        />
+        <span
+          aria-hidden
+          className="absolute left-1/2 top-1/2 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-black/55 text-white backdrop-blur-sm transition-colors duration-300 group-hover:bg-accent"
+        >
+          <Play
+            size={16}
+            fill="currentColor"
+            strokeWidth={0}
+            className="translate-x-[1px]"
+          />
+        </span>
+      </span>
+      <span className="line-clamp-2 px-1 pb-1 pt-2.5 text-[13.5px] font-semibold leading-snug text-ink">
+        {v.title}
+      </span>
+    </button>
+  );
+}
+
+/** a year's Shorts in a sideways row with prev/next arrows (each greyed at
+ *  its end); it swipes or scrolls by touch too */
+function VideoRow({
+  pillar,
+  onOpen,
+}: {
+  pillar: Pillar;
+  onOpen: (v: Video) => void;
+}) {
+  const track = useRef<HTMLDivElement>(null);
+  const [ends, setEnds] = useState({ start: true, end: false });
+  const videos = pillar.videos;
+
+  const sync = () => {
+    const el = track.current;
+    if (!el) return;
+    setEnds({
+      start: el.scrollLeft <= 2,
+      end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 2,
+    });
+  };
+
+  useEffect(() => {
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, []);
+
+  const slide = (dir: 1 | -1) => {
+    const el = track.current;
+    if (!el) return;
+    const card = el.querySelector("button");
+    const step = card
+      ? card.getBoundingClientRect().width + 16
+      : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * step * 2, behavior: "smooth" });
+  };
+
+  return (
+    <div className="min-w-0">
+      <div className="flex items-center justify-between gap-4">
+        <Label>{`Watch: ${pillar.label}`}</Label>
+        <div className="flex gap-2">
+          {[
+            {
+              d: -1 as const,
+              label: "Previous videos",
+              icon: "arrow-prev",
+              off: ends.start,
+            },
+            {
+              d: 1 as const,
+              label: "Next videos",
+              icon: "arrow-next",
+              off: ends.end,
+            },
+          ].map(({ d, label, icon, off }) => (
+            <button
+              key={d}
+              type="button"
+              aria-label={label}
+              disabled={off}
+              onClick={() => slide(d)}
+              className="grid size-10 place-items-center rounded-[4px] border border-[#d9d9d2] transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-35"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/images/curriculum/icons/${icon}.svg`}
+                alt=""
+                width={17}
+                height={17}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+      <Reveal stagger={0.07} className="mt-4 overflow-hidden">
+        <div
+          ref={track}
+          onScroll={sync}
+          className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {videos.map((v) => (
+            <div key={v.id} data-reveal-item className="shrink-0">
+              <VideoCard
+                v={v}
+                onOpen={() =>
+                  onOpen({
+                    id: v.id,
+                    name: v.title,
+                    thumb: `/images/journey/${v.id}.webp`,
+                    vertical: true,
+                  })
+                }
+              />
+            </div>
+          ))}
+        </div>
+      </Reveal>
     </div>
   );
 }
 
-/** the faculty cards' black frosted glass: a glossy sheen over near-black,
- *  the faintest lift at the foot */
-const GLASS = [
-  "linear-gradient(125deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 32%, rgba(255,255,255,0) 50%)",
-  "linear-gradient(180deg, #040405 0%, #08080a 70%, rgba(20,21,24,0.96) 100%)",
-].join(", ");
-
-/** one project: its illustration as a browser window on black glass, then its
- *  title and line */
+/** one project: its coloured thumbnail (the client's Figma illustrations,
+ *  each on its own gradient, /images/curriculum/figma), then its title and
+ *  line */
 function ProjectCard({ project }: { project: Project }) {
   return (
     <article
       data-reveal-item
-      className="group flex w-[260px] shrink-0 snap-start flex-col rounded-[8px] border border-black bg-white p-2.5 sm:w-[280px]"
+      className="group flex w-[260px] shrink-0 snap-start flex-col rounded-[4px] border border-black bg-white p-2.5 sm:w-[280px]"
     >
-      <div className="relative h-[145px] shrink-0 overflow-hidden rounded-[6px]" style={{ background: GLASS }}>
-        {/* frosted vertical bands */}
-        <span
-          aria-hidden
-          className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0)_0px,rgba(255,255,255,0.06)_10px,rgba(255,255,255,0.015)_22px,rgba(0,0,0,0.3)_34px,rgba(255,255,255,0)_44px)] blur-[3px]"
+      <div className="relative aspect-video shrink-0 overflow-hidden rounded-[2px]">
+        <Image
+          src={`/images/curriculum/figma/${project.img}.webp`}
+          alt=""
+          fill
+          sizes="280px"
+          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
         />
-        {/* soft light, as on Scaler's project thumbnails: a bright glow in
-            from the top-left, a gentler one at the bottom-right, and a faint
-            diagonal beam between; it brightens a touch on hover */}
-        <span
-          aria-hidden
-          className="absolute inset-0 opacity-90 transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            background: [
-              "radial-gradient(70% 90% at 0% 0%, rgba(255,255,255,0.32), rgba(255,255,255,0) 60%)",
-              "radial-gradient(60% 80% at 100% 100%, rgba(255,255,255,0.16), rgba(255,255,255,0) 60%)",
-              "linear-gradient(115deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.07) 46%, rgba(255,255,255,0) 62%)",
-            ].join(", "),
-          }}
-        />
-        {/* the window, in a soft glass frame: one title bar for all, then the
-            illustration's white body (any spare room is the same white) */}
-        <div className="absolute inset-x-[13%] inset-y-[9%] rounded-[7px] bg-white/10 p-[5px] ring-1 ring-white/15 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]">
-          <div className="flex size-full flex-col overflow-hidden rounded-[4px] bg-white">
-            <div className="flex h-[13px] shrink-0 items-center gap-[3px] bg-[#f3f4f6] px-[6px]">
-              <span className="size-[4px] rounded-full bg-[#5fb878]" />
-              <span className="size-[4px] rounded-full bg-[#f2c94c]" />
-              <span className="size-[4px] rounded-full bg-[#e5484d]" />
-            </div>
-            <div className="relative min-h-0 flex-1">
-              <Image
-                src={`/images/curriculum/panels/${project.img}.webp`}
-                alt=""
-                fill
-                sizes="200px"
-                className="object-contain"
-              />
-            </div>
-          </div>
-        </div>
       </div>
       <div className="flex flex-1 flex-col px-1.5 pb-1.5 pt-3">
-        <h4 className="text-balance text-[15px] font-semibold leading-[20.625px] tracking-[-0.025em] text-black">{project.title}</h4>
-        <p className="mt-1 text-[13px] leading-[17.875px] text-body">{project.body}</p>
+        <h4 className="text-balance text-[15px] font-semibold leading-[20.625px] tracking-[-0.025em] text-black">
+          {project.title}
+        </h4>
+        <p className="mt-1 text-[13px] leading-[17.875px] text-body">
+          {project.body}
+        </p>
       </div>
     </article>
   );
@@ -490,8 +701,13 @@ function ProjectSlider({ projects }: { projects: Project[] }) {
     if (!el) return;
     // one card and its gap, or two when the row is wide
     const card = el.querySelector("article");
-    const step = card ? card.getBoundingClientRect().width + 16 : el.clientWidth * 0.8;
-    el.scrollBy({ left: dir * step * (el.clientWidth > 700 ? 2 : 1), behavior: "smooth" });
+    const step = card
+      ? card.getBoundingClientRect().width + 16
+      : el.clientWidth * 0.8;
+    el.scrollBy({
+      left: dir * step * (el.clientWidth > 700 ? 2 : 1),
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -500,8 +716,18 @@ function ProjectSlider({ projects }: { projects: Project[] }) {
         <Label>Projects you&rsquo;ll build</Label>
         <div className="flex gap-2">
           {[
-            { d: -1 as const, label: "Previous projects", icon: "arrow-prev", off: ends.start },
-            { d: 1 as const, label: "Next projects", icon: "arrow-next", off: ends.end },
+            {
+              d: -1 as const,
+              label: "Previous projects",
+              icon: "arrow-prev",
+              off: ends.start,
+            },
+            {
+              d: 1 as const,
+              label: "Next projects",
+              icon: "arrow-next",
+              off: ends.end,
+            },
           ].map(({ d, label, icon, off }) => (
             <button
               key={d}
@@ -512,15 +738,17 @@ function ProjectSlider({ projects }: { projects: Project[] }) {
               className="grid size-10 place-items-center rounded-[4px] border border-[#d9d9d2] transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-35"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/images/curriculum/icons/${icon}.svg`} alt="" width={17} height={17} />
+              <img
+                src={`/images/curriculum/icons/${icon}.svg`}
+                alt=""
+                width={17}
+                height={17}
+              />
             </button>
           ))}
         </div>
       </div>
-      <Reveal
-        stagger={0.07}
-        className="mt-4 overflow-hidden"
-      >
+      <Reveal stagger={0.07} className="mt-4 overflow-hidden">
         <div
           ref={track}
           onScroll={sync}
@@ -535,8 +763,118 @@ function ProjectSlider({ projects }: { projects: Project[] }) {
   );
 }
 
+/**
+ * The curriculum as a tabbed card, Figma HOWFOSvIxaWIA2rZi55F0e node 38:6053:
+ * under the site's centred heading, one white card (square corners, a thin
+ * ink frame and a "selection" handle on each corner, as on the faculty
+ * posters) holding a row of
+ * four year tabs (the chosen one filled red, "YEAR - 1" over its title) and,
+ * below them, that year's content: "Year 1 : Foundations" and its line, the
+ * projects slider, the skills (label in red) and the "View Subject List"
+ * toggle. Choosing a tab swaps the content in with a short rise. The tabs are
+ * a real tablist (arrow keys move between them); below sm they scroll
+ * sideways.
+ */
 export function Curriculum() {
+  const [active, setActive] = useState(0);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const year = YEARS[active];
+
+  const onKey = (e: React.KeyboardEvent) => {
+    const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    const next = (active + d + YEARS.length) % YEARS.length;
+    setActive(next);
+    tabs.current[next]?.focus();
+  };
+
+  return (
+    <section id="curriculum" className="bg-canvas py-12 lg:py-16">
+      <div className="container-page">
+        <SectionHeading
+          title="Build Industry Preferred Skills Through"
+          accent="Practical Learning"
+          breakBeforeAccent
+          intro="A structured learning journey designed with input from industry experts."
+        />
+
+        <Reveal className="mt-12 lg:mt-16">
+          <div className="relative mx-auto max-w-[1116px] border border-ink bg-white p-5 sm:px-8 sm:py-6">
+            <CornerHandles />
+            {/* the year tabs */}
+            <div
+              role="tablist"
+              aria-label="Curriculum years"
+              onKeyDown={onKey}
+              className="flex overflow-x-auto rounded-[4px] border border-[#e5e5e5] p-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              {YEARS.map((y, i) => {
+                const on = i === active;
+                return (
+                  <button
+                    key={y.key}
+                    ref={(el) => {
+                      tabs.current[i] = el;
+                    }}
+                    type="button"
+                    role="tab"
+                    id={`curriculum-tab-${y.key}`}
+                    aria-selected={on}
+                    aria-controls="curriculum-panel"
+                    tabIndex={on ? 0 : -1}
+                    onClick={() => setActive(i)}
+                    className={`min-w-[150px] flex-1 px-5 py-2.5 text-left outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60 ${
+                      on
+                        ? "bg-accent text-white"
+                        : "bg-white text-[#525252] hover:bg-sunken"
+                    } ${i === 0 ? "rounded-l-[3px]" : ""} ${i === YEARS.length - 1 ? "rounded-r-[3px]" : ""}`}
+                  >
+                    <span className="block text-[14px] uppercase leading-5 tracking-[0.35px]">
+                      Year - {i + 1}
+                    </span>
+                    <span className="block text-[12px] leading-4 opacity-80">
+                      {y.title}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* the chosen year; keyed so a new tab remounts it and rises in */}
+            <div
+              key={year.key}
+              id="curriculum-panel"
+              role="tabpanel"
+              aria-labelledby={`curriculum-tab-${year.key}`}
+              className="animate-rise mt-5"
+            >
+              <YearBody
+                year={year}
+                index={active}
+                skillsTone="accent"
+                compact
+              />
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * "What Makes uGSOT Built for the AI Age": four numbered pillars down a rail
+ * (a red line fills it with the scroll), each pillar's column held beside a
+ * sideways row of
+ * Shorts from the school's YouTube channel, after "What makes SST India's
+ * Ivy League for the AI Age" on scaler.com/school-of-technology (a numbered
+ * pillar on the left, upright video cards with a play button and caption on
+ * the right). Each video opens in the site's player in its 9:16 frame.
+ */
+export function CurriculumJourney() {
   const list = useRef<HTMLDivElement>(null);
+  const [playing, setPlaying] = useState<Video | null>(null);
 
   // the red line fills the rail as the years scroll by: empty when the list's
   // top reaches the middle of the screen, full when its bottom does. Measured
@@ -551,7 +889,9 @@ export function Curriculum() {
       const update = () => {
         const r = el.getBoundingClientRect();
         const mid = window.innerHeight / 2;
-        const p = r.height ? Math.min(1, Math.max(0, (mid - r.top) / r.height)) : 0;
+        const p = r.height
+          ? Math.min(1, Math.max(0, (mid - r.top) / r.height))
+          : 0;
         fill.style.transform = `scaleY(${p})`;
       };
       update();
@@ -566,19 +906,24 @@ export function Curriculum() {
   );
 
   return (
-    <section id="curriculum" className="bg-canvas py-12 lg:py-28">
+    <section id="curriculum-journey" className="bg-canvas py-12 lg:py-16">
       <div className="container-page">
         <SectionHeading
-          title="Build Industry Preferred Skills Through"
-          accent="Practical Learning"
-          breakBeforeAccent
-          intro="A structured learning journey designed with input from industry experts."
+          title="What Makes uGSOT"
+          accent="Built for the AI Age"
+          intro="See it for yourself: stories from our campus, students and leaders."
         />
 
-        <div ref={list} className="relative mt-12 space-y-16 lg:mt-16 lg:space-y-24">
+        <div
+          ref={list}
+          className="relative mt-12 space-y-16 lg:mt-16 lg:space-y-24"
+        >
           {/* from lg, one rail down the whole list and the red line that
               fills it with the scroll, as on quadcse.com */}
-          <span aria-hidden className="absolute inset-y-0 left-0 !mt-0 hidden w-[2px] bg-ink/10 lg:block" />
+          <span
+            aria-hidden
+            className="absolute inset-y-0 left-0 !mt-0 hidden w-[2px] bg-ink/10 lg:block"
+          />
           <span
             aria-hidden
             data-rail-fill
@@ -587,17 +932,21 @@ export function Curriculum() {
             style={{ transform: "scaleY(0)" }}
             className="absolute inset-y-0 left-0 !mt-0 hidden w-[2px] origin-top bg-accent will-change-transform lg:block"
           />
-          {YEARS.map((year, i) => (
+          {PILLARS.map((pillar, i) => (
             <div
-              key={year.key}
+              key={pillar.key}
               className="grid gap-8 lg:grid-cols-[minmax(260px,320px)_1fr] lg:items-start lg:gap-12"
             >
-              <YearColumn year={year} index={i} />
-              <YearPanel year={year} index={i} />
+              <PillarColumn pillar={pillar} index={i} />
+              <VideoRow pillar={pillar} onOpen={setPlaying} />
             </div>
           ))}
         </div>
       </div>
+
+      {playing && (
+        <VideoPlayer video={playing} onClose={() => setPlaying(null)} />
+      )}
     </section>
   );
 }

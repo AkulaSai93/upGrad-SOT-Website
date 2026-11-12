@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { SectionHeading } from "@/components/site/SectionHeading";
+import { CornerHandles } from "@/components/site/CornerHandles";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -202,7 +203,7 @@ export function Testimonials() {
     <section
       ref={root}
       id="testimonials"
-      className="overflow-x-clip bg-canvas pt-8 lg:pt-28"
+      className="overflow-x-clip bg-canvas pt-8 lg:pt-16"
     >
       <div className="container-page">
         <SectionHeading
@@ -238,12 +239,13 @@ export function Testimonials() {
                 data-card
                 aria-hidden={i !== active}
                 onClick={() => setActive(i)}
-                className={`rounded-[6px] border-2 p-7 transition-colors duration-500 [grid-area:1/1] ${
+                className={`relative border p-7 transition-colors duration-500 [grid-area:1/1] ${
                   i === active
                     ? "border-ink bg-accent text-white"
                     : "cursor-pointer border-ink/10 bg-white text-ink"
                 }`}
               >
+                <CornerHandles dim={i !== active} />
                 <figcaption className="flex items-center gap-5">
                   <Image
                     src={`/images/students/${st.img}.png`}
@@ -316,14 +318,19 @@ export function Testimonials() {
         className="relative mt-20 overflow-hidden py-12 lg:mt-24 lg:py-14"
         style={{ background: FLUTED }}
       >
+        {/* a light passing across the band now and then, as on
+            newtonschool.co's closing band; the band itself is unchanged */}
+        <span
+          aria-hidden
+          className="light-pass pointer-events-none absolute inset-y-0 left-0 w-[16%] bg-[linear-gradient(90deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.22)_50%,rgba(255,255,255,0)_100%)]"
+        />
         <div
           data-rise
           className="container-page flex flex-col items-center gap-7 text-center md:flex-row md:items-center md:justify-between md:text-left"
         >
           <div className="max-w-[560px]">
             <h3 className="font-display text-[clamp(1.375rem,2.2vw,1.875rem)] font-bold leading-[1.2] tracking-[-0.02em] text-white">
-              Get started on your journey towards your{" "}
-              dream tech career
+              Get started on your journey towards your dream tech career
             </h3>
             <p className="mt-3 text-[15px] leading-relaxed text-white/80">
               Appear for uGNET scholarship test, interview, and admission in one

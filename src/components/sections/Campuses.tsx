@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, BadgeCheck, GraduationCap, MapPin } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
+import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
 
 /**
@@ -20,7 +21,8 @@ import { SectionHeading } from "@/components/site/SectionHeading";
  * tilted red "Campus" tag (no logo, chips or address, which the card below
  * already gives). Under it: an eyebrow, the university's name on one line
  * (from sm; on phones it may wrap), its location, three key highlights and a full-width button. The card is
- * kept clean as Scaler's is: white, a hairline edge, 8px corners, no shadow;
+ * kept clean: white, no shadow, with the faculty posters' frame (square
+ * corners, a thin ink edge, a "selection" handle on each corner);
  * the eyebrow and "Key highlights" in red; each highlight's icon on a small
  * lit tile (a light-deep-light red sheen, white glyph). Hovering a card lifts
  * it a touch and slowly zooms its poster.
@@ -32,9 +34,18 @@ const CAMPUSES = [
     name: "Sri Siddhartha Academy of Higher Education",
     location: "Tumkuru (Outer Bangalore), Karnataka",
     highlights: [
-      { icon: BadgeCheck, text: "NAAC A+ accredited, UGC recognised and AICTE approved" },
-      { icon: MapPin, text: "70+ acre green campus in Tumkuru, Outer Bangalore" },
-      { icon: GraduationCap, text: "AI-First B.Tech in Computer Science, 4 years / 8 semesters" },
+      {
+        icon: BadgeCheck,
+        text: "NAAC A+ accredited, UGC recognised and AICTE approved",
+      },
+      {
+        icon: MapPin,
+        text: "70+ acre green campus in Tumkuru, Outer Bangalore",
+      },
+      {
+        icon: GraduationCap,
+        text: "AI-First B.Tech in Computer Science, 4 years / 8 semesters",
+      },
     ],
     href: "https://sot.upgrad.com/university/ssahe",
   },
@@ -45,8 +56,14 @@ const CAMPUSES = [
     location: "Pune, Maharashtra",
     highlights: [
       { icon: BadgeCheck, text: "NAAC A accredited university" },
-      { icon: MapPin, text: "Campus in Pune, one of India's leading tech and startup hubs" },
-      { icon: GraduationCap, text: "AI-First B.Tech in Computer Science with upGrad School of Technology" },
+      {
+        icon: MapPin,
+        text: "Campus in Pune, one of India's leading tech and startup hubs",
+      },
+      {
+        icon: GraduationCap,
+        text: "AI-First B.Tech in Computer Science with upGrad School of Technology",
+      },
     ],
     href: "https://sot.upgrad.com/university/adypu",
   },
@@ -54,27 +71,32 @@ const CAMPUSES = [
 
 export function Campuses() {
   return (
-    <section id="campuses" className="bg-canvas py-12 lg:py-28">
+    <section id="campuses" className="bg-canvas py-12 lg:py-16">
       <div className="container-page">
         <SectionHeading
           title="Our"
           accent="Campuses"
           intro={
             <>
-              uGSOT is collaborating with cutting-edge university campuses across India,
-              <br className="hidden sm:block" /> giving students world-class learning spaces
-              right where innovation thrives
+              uGSOT is collaborating with cutting-edge university campuses
+              across India,
+              <br className="hidden sm:block" /> giving students world-class
+              learning spaces right where innovation thrives
             </>
           }
         />
 
-        <Reveal stagger={0.12} className="mt-12 grid gap-6 lg:mt-14 lg:grid-cols-2 lg:gap-8">
+        <Reveal
+          stagger={0.12}
+          className="mt-12 grid gap-6 lg:mt-14 lg:grid-cols-2 lg:gap-8"
+        >
           {CAMPUSES.map((c) => (
             <article
               key={c.key}
               data-reveal-item
-              className="group flex flex-col overflow-hidden rounded-[8px] border border-line bg-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1"
+              className="group relative flex flex-col border border-ink bg-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1"
             >
+              <CornerHandles />
               <div className="relative aspect-video overflow-hidden bg-ink">
                 <Image
                   src={`/images/campuses/cards-v2/${c.key}.webp`}
@@ -100,7 +122,10 @@ export function Campuses() {
                 </p>
                 <ul className="mt-3 space-y-3">
                   {c.highlights.map(({ icon: Icon, text }) => (
-                    <li key={text} className="flex items-center gap-3 text-[14px] leading-snug text-ink">
+                    <li
+                      key={text}
+                      className="flex items-center gap-3 text-[14px] leading-snug text-ink"
+                    >
                       {/* Scaler's lit icon tile: a diagonal light-deep-light
                           sheen in the brand red with a white glyph */}
                       <span
@@ -118,14 +143,26 @@ export function Campuses() {
                 </ul>
 
                 <div className="mt-auto pt-6">
+                  {/* the hero's moving line (GlowButton): a black sliver sweeping
+                      round the outside of the red button, on the page */}
                   <Link
                     href={c.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent px-6 py-3 text-[14.5px] font-semibold text-white transition-colors hover:bg-accent-hover"
+                    className="group/cta relative flex w-full overflow-hidden rounded-[6px] p-[1.5px]"
                   >
-                    Explore campus
-                    <ArrowUpRight size={17} strokeWidth={2} aria-hidden />
+                    <span
+                      aria-hidden
+                      style={{
+                        backgroundImage:
+                          "conic-gradient(transparent 200deg, #0b0d12)",
+                      }}
+                      className="cta-glow absolute left-1/2 top-1/2 aspect-square w-[160%]"
+                    />
+                    <span className="relative z-[2] flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent px-6 py-3 text-[14.5px] font-semibold text-white transition-colors group-hover/cta:bg-accent-hover">
+                      Explore campus
+                      <ArrowUpRight size={17} strokeWidth={2} aria-hidden />
+                    </span>
                   </Link>
                 </div>
               </div>
