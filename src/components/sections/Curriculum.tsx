@@ -3,31 +3,31 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(useGSAP);
 
 /**
  * "Build Industry-Preferred Skills Through Practical Learning"
  *
  * Copy, subjects, skills and projects are sot.upgrad.com's (project lines
- * shortened). Project pictures (/images/curriculum/photos) are photo-style
- * scenes of students building each project, generated with Figma AI to stand
- * in until real photos of the campus are shot.
+ * shortened). Project pictures are the 24 illustrations from the client's
+ * Figma file (WwyVkKp6ax6XLGEw9hVViH, nodes 5:2 to 5:25, in project order):
+ * each one's white window body is cut out (/images/curriculum/panels) and set
+ * as a browser window, with one shared title bar, on the faculty cards' black
+ * frosted glass in place of the original colour gradients, lit like Scaler's
+ * project thumbnails (soft glows top-left and bottom-right, a faint beam).
  *
  * Layout after "The people teaching" on quadcse.com: under the site's usual
  * centred heading, one row per year. A single grey rail runs down the left of
- * all four; beside it, on the left of each row and held in view while its
- * cards scroll past, the year's number big in red, its title and line. On the right, its
- * skills (chips) and subjects (a numbered list) side by side in one quiet
- * panel, and under them the year's six projects as a sideways slider of cards
- * (picture, title and line) with
- * prev/next arrows beside its label. Below lg each row
- * stacks: the year's column, then the rest.
+ * all four; beside it, held in view while its row scrolls past, the year's
+ * number big in red, its title and line. On the right, the year's panel after Scaler's curriculum
+ * (scaler.com/school-of-technology): "Year 1 : Foundations" and its line,
+ * "Projects you'll build" as a sideways slider of cards with prev/next arrows,
+ * "Skills you'll build" as chips, and the subjects behind a "View Subject
+ * List" toggle. Below lg each row stacks: the year's column, then its panel.
  *
  * Motion: a red line fills the rail from the top, scrubbed by the scroll
  * (quadcse.com's); each row's cards rise in, staggered, as it scrolls into
@@ -288,66 +288,177 @@ function YearColumn({ year, index }: { year: Year; index: number }) {
   );
 }
 
-/** a small label over each block on the right */
-function Label({ children }: { children: string }) {
+/** a block's label in the year panel, with Scaler's accent bar */
+function Label({ children, tone = "accent" }: { children: string; tone?: "accent" | "ink" }) {
   return (
-    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-muted">{children}</p>
+    <h4
+      className={`border-l-[3px] border-accent pl-3 text-[17px] font-semibold leading-tight ${
+        tone === "accent" ? "text-accent" : "text-ink"
+      }`}
+    >
+      {children}
+    </h4>
   );
 }
 
-/** the year's skills and subjects, side by side in one quiet panel */
-function SkillsAndSubjects({ year }: { year: Year }) {
+/** the year's panel, after the curriculum on scaler.com/school-of-technology:
+ *  its title and line, the projects slider, the skills as chips, and the
+ *  subject list behind a "View Subject List" toggle */
+function YearPanel({ year, index }: { year: Year; index: number }) {
+  const [open, setOpen] = useState(false);
   return (
-    <div className="grid gap-6 rounded-[8px] border border-line bg-sunken/40 p-5 sm:p-6 md:grid-cols-2 md:gap-8">
-      <div>
-        <Label>Skills you&rsquo;ll build</Label>
-        <ul className="mt-3 flex flex-wrap gap-2">
+    <div
+      className="min-w-0 rounded-[8px] border-solid border-black bg-white p-5 sm:p-8"
+      // Figma 20:4571: 1px top/left, 3px bottom/right
+      style={{ borderWidth: "1px 3px 3px 1px" }}
+    >
+      <h3 className="text-[clamp(1.375rem,2vw,1.75rem)] font-medium leading-[1.25] tracking-[-0.02em] text-ink">
+        Year {index + 1} : {year.title}
+      </h3>
+      <p className="mt-2 text-[15px] leading-[1.6] text-body">{year.body}</p>
+
+      <div className="mt-8">
+        <ProjectSlider projects={year.projects} />
+      </div>
+
+      <div className="mt-8">
+        <Label tone="ink">Skills you&rsquo;ll build</Label>
+        <ul className="mt-4 flex flex-wrap gap-2.5">
           {year.skills.map((sk) => (
             <li
               key={sk}
-              className="rounded-[4px] border border-line bg-surface px-3 py-1.5 text-[13px] font-medium text-ink"
+              className="rounded-[4px] border-[0.5px] border-black bg-white/60 px-3.5 py-2 text-[14px] leading-[14px] text-ink"
             >
               {sk}
             </li>
           ))}
         </ul>
       </div>
-      <div className="md:border-l md:border-line md:pl-8">
-        <Label>Subjects</Label>
-        <ol className="mt-3 space-y-2">
-          {year.subjects.map((sub, i) => (
-            <li key={sub} className="flex gap-3 text-[13.5px] leading-snug text-ink">
-              <span className="w-5 shrink-0 font-semibold tabular-nums text-accent">
-                {String(i + 1).padStart(2, "0")}
+
+      {/* the black frame only shows once the list is open */}
+      <div
+        className={`mt-8 overflow-hidden rounded-[4px] border transition-colors duration-300 ${
+          open ? "border-black" : "border-transparent"
+        }`}
+      >
+        {/* the toggle bar, from Figma (HOWFOSvIxaWIA2rZi55F0e, node 20:4571):
+            a red gradient, white label and white book / double-chevron icons */}
+        <button
+          type="button"
+          aria-expanded={open}
+          onClick={() => setOpen((o) => !o)}
+          // no browser focus ring on click (it drew a blue edge); keyboard
+          // focus still shows, as a white inset ring on the red
+          className="flex w-full items-center justify-between rounded-[4px] px-5 py-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/70"
+          style={{
+            backgroundImage:
+              "linear-gradient(179.72deg, rgb(231, 0, 11) 2.94%, rgb(193, 0, 7) 50%, rgb(159, 7, 18) 97.06%), linear-gradient(90deg, #fff 0%, #fff 100%)",
+          }}
+        >
+          <span className="flex items-center gap-2">
+            <span className="relative size-6 shrink-0 overflow-clip">
+              <span className="absolute inset-[12.5%_18.75%]">
+                <span className="absolute inset-[-3.33%_-4%]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/curriculum/icons/subject-book-white.svg" alt="" className="block size-full max-w-none" />
+                </span>
               </span>
-              {sub}
-            </li>
-          ))}
-        </ol>
+            </span>
+            <span className="text-[14px] font-medium leading-[21.56px] text-white">View Subject List</span>
+          </span>
+          <span
+            className={`relative size-6 shrink-0 overflow-clip transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+          >
+            <span className="absolute inset-y-1/4 left-[29.17%] right-[29.17%]">
+              <span className="absolute inset-[-5%_-6%]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/curriculum/icons/subject-chevrons-white.svg" alt="" className="block size-full max-w-none" />
+              </span>
+            </span>
+          </span>
+        </button>
+        <div
+          className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <ol className="grid gap-x-8 gap-y-2.5 px-5 py-4 sm:grid-cols-2">
+              {year.subjects.map((sub, i) => (
+                <li key={sub} className="flex gap-4 text-[14.5px] leading-snug text-ink">
+                  <span className="w-5 shrink-0 font-semibold tabular-nums text-accent">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {sub}
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-/** one project: its picture, title and line */
+/** the faculty cards' black frosted glass: a glossy sheen over near-black,
+ *  the faintest lift at the foot */
+const GLASS = [
+  "linear-gradient(125deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 32%, rgba(255,255,255,0) 50%)",
+  "linear-gradient(180deg, #040405 0%, #08080a 70%, rgba(20,21,24,0.96) 100%)",
+].join(", ");
+
+/** one project: its illustration as a browser window on black glass, then its
+ *  title and line */
 function ProjectCard({ project }: { project: Project }) {
   return (
     <article
       data-reveal-item
-      className="group flex w-[260px] shrink-0 snap-start flex-col overflow-hidden rounded-[8px] sm:w-[280px] border border-line bg-surface shadow-[var(--shadow-sm)] transition-shadow duration-500 hover:shadow-[var(--shadow-md)]"
+      className="group flex w-[260px] shrink-0 snap-start flex-col rounded-[8px] border border-black bg-white p-2.5 sm:w-[280px]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-sunken">
-        <Image
-          src={`/images/curriculum/photos/${project.img}.webp`}
-          alt=""
-          fill
-          sizes="280px"
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+      <div className="relative h-[145px] shrink-0 overflow-hidden rounded-[6px]" style={{ background: GLASS }}>
+        {/* frosted vertical bands */}
+        <span
+          aria-hidden
+          className="absolute inset-0 bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0)_0px,rgba(255,255,255,0.06)_10px,rgba(255,255,255,0.015)_22px,rgba(0,0,0,0.3)_34px,rgba(255,255,255,0)_44px)] blur-[3px]"
         />
+        {/* soft light, as on Scaler's project thumbnails: a bright glow in
+            from the top-left, a gentler one at the bottom-right, and a faint
+            diagonal beam between; it brightens a touch on hover */}
+        <span
+          aria-hidden
+          className="absolute inset-0 opacity-90 transition-opacity duration-500 group-hover:opacity-100"
+          style={{
+            background: [
+              "radial-gradient(70% 90% at 0% 0%, rgba(255,255,255,0.32), rgba(255,255,255,0) 60%)",
+              "radial-gradient(60% 80% at 100% 100%, rgba(255,255,255,0.16), rgba(255,255,255,0) 60%)",
+              "linear-gradient(115deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.07) 46%, rgba(255,255,255,0) 62%)",
+            ].join(", "),
+          }}
+        />
+        {/* the window, in a soft glass frame: one title bar for all, then the
+            illustration's white body (any spare room is the same white) */}
+        <div className="absolute inset-x-[13%] inset-y-[9%] rounded-[7px] bg-white/10 p-[5px] ring-1 ring-white/15 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]">
+          <div className="flex size-full flex-col overflow-hidden rounded-[4px] bg-white">
+            <div className="flex h-[13px] shrink-0 items-center gap-[3px] bg-[#f3f4f6] px-[6px]">
+              <span className="size-[4px] rounded-full bg-[#5fb878]" />
+              <span className="size-[4px] rounded-full bg-[#f2c94c]" />
+              <span className="size-[4px] rounded-full bg-[#e5484d]" />
+            </div>
+            <div className="relative min-h-0 flex-1">
+              <Image
+                src={`/images/curriculum/panels/${project.img}.webp`}
+                alt=""
+                fill
+                sizes="200px"
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="flex flex-1 flex-col p-4">
-        <h4 className="text-[14.5px] font-bold leading-snug text-ink">{project.title}</h4>
-        <p className="mt-1 text-[13px] leading-snug text-body">{project.body}</p>
+      <div className="flex flex-1 flex-col px-1.5 pb-1.5 pt-3">
+        <h4 className="text-balance text-[15px] font-semibold leading-[20.625px] tracking-[-0.025em] text-black">{project.title}</h4>
+        <p className="mt-1 text-[13px] leading-[17.875px] text-body">{project.body}</p>
       </div>
     </article>
   );
@@ -389,18 +500,19 @@ function ProjectSlider({ projects }: { projects: Project[] }) {
         <Label>Projects you&rsquo;ll build</Label>
         <div className="flex gap-2">
           {[
-            { d: -1 as const, label: "Previous projects", Icon: ArrowLeft, off: ends.start },
-            { d: 1 as const, label: "Next projects", Icon: ArrowRight, off: ends.end },
-          ].map(({ d, label, Icon, off }) => (
+            { d: -1 as const, label: "Previous projects", icon: "arrow-prev", off: ends.start },
+            { d: 1 as const, label: "Next projects", icon: "arrow-next", off: ends.end },
+          ].map(({ d, label, icon, off }) => (
             <button
               key={d}
               type="button"
               aria-label={label}
               disabled={off}
               onClick={() => slide(d)}
-              className="grid size-10 place-items-center rounded-[4px] border border-line-strong text-ink transition-colors hover:border-ink hover:bg-ink hover:text-white disabled:pointer-events-none disabled:opacity-35"
+              className="grid size-10 place-items-center rounded-[4px] border border-[#d9d9d2] transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-35"
             >
-              <Icon size={17} strokeWidth={2} aria-hidden />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/images/curriculum/icons/${icon}.svg`} alt="" width={17} height={17} />
             </button>
           ))}
         </div>
@@ -427,18 +539,28 @@ export function Curriculum() {
   const list = useRef<HTMLDivElement>(null);
 
   // the red line fills the rail as the years scroll by: empty when the list's
-  // top reaches the middle of the screen, full when its bottom does
+  // top reaches the middle of the screen, full when its bottom does. Measured
+  // live on every scroll rather than from cached trigger positions, which go
+  // stale as the sections above settle (images, the stacked Pathways cards)
+  // and left the line already full
   useGSAP(
     () => {
-      gsap.fromTo(
-        "[data-rail-fill]",
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: "none",
-          scrollTrigger: { trigger: list.current, start: "top center", end: "bottom center", scrub: true },
-        },
-      );
+      const el = list.current;
+      const fill = el?.querySelector<HTMLElement>("[data-rail-fill]");
+      if (!el || !fill) return;
+      const update = () => {
+        const r = el.getBoundingClientRect();
+        const mid = window.innerHeight / 2;
+        const p = r.height ? Math.min(1, Math.max(0, (mid - r.top) / r.height)) : 0;
+        fill.style.transform = `scaleY(${p})`;
+      };
+      update();
+      window.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", update);
+      return () => {
+        window.removeEventListener("scroll", update);
+        window.removeEventListener("resize", update);
+      };
     },
     { scope: list },
   );
@@ -471,10 +593,7 @@ export function Curriculum() {
               className="grid gap-8 lg:grid-cols-[minmax(260px,320px)_1fr] lg:items-start lg:gap-12"
             >
               <YearColumn year={year} index={i} />
-              <div className="min-w-0 space-y-8">
-                <SkillsAndSubjects year={year} />
-                <ProjectSlider projects={year.projects} />
-              </div>
+              <YearPanel year={year} index={i} />
             </div>
           ))}
         </div>

@@ -27,7 +27,26 @@ export function SmoothScroll() {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
+    // ScrollTrigger measures where each scrubbed section starts and ends once;
+    // when the page grows or shrinks afterwards (images, sticky stacks, revealed
+    // sections) those marks go stale and, say, the Spotlight cards spread before
+    // you reach them. Re-measure whenever the page height settles on a new value.
+    let height = document.body.scrollHeight;
+    let timer = 0;
+    const ro = new ResizeObserver(() => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const h = document.body.scrollHeight;
+        if (Math.abs(h - height) < 2) return;
+        height = h;
+        ScrollTrigger.refresh();
+      }, 200);
+    });
+    ro.observe(document.body);
+
     return () => {
+      ro.disconnect();
+      window.clearTimeout(timer);
       gsap.ticker.remove(tick);
       instance.destroy();
       lenis = null;

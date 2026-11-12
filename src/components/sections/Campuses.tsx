@@ -15,12 +15,15 @@ import { SectionHeading } from "@/components/site/SectionHeading";
  *
  * Layout after "Explore Programmes" on scaler.com/school-of-technology: two
  * big cards side by side (stacked below lg). Each opens with a 16:9 poster —
- * public/images/campuses/cards, made in the style of Scaler's thumbnails:
- * the campus photo under a dark-to-red fade, the city set huge with a tilted
- * red "Campus" tag, the NAAC grade and programme as chips, and the partner
- * university named top right. Under it: an eyebrow, the university's name,
- * its location, three key highlights with icons and a full-width button.
- * Hovering a card lifts it and slowly zooms its poster.
+ * public/images/campuses/cards-v2, made in the style of Scaler's thumbnails:
+ * the campus photo under a dark fade with only the city set huge and a
+ * tilted red "Campus" tag (no logo, chips or address, which the card below
+ * already gives). Under it: an eyebrow, the university's name on one line
+ * (from sm; on phones it may wrap), its location, three key highlights and a full-width button. The card is
+ * kept clean as Scaler's is: white, a hairline edge, 8px corners, no shadow;
+ * the eyebrow and "Key highlights" in red; each highlight's icon on a small
+ * lit tile (a light-deep-light red sheen, white glyph). Hovering a card lifts
+ * it a touch and slowly zooms its poster.
  */
 const CAMPUSES = [
   {
@@ -70,11 +73,11 @@ export function Campuses() {
             <article
               key={c.key}
               data-reveal-item
-              className="group flex flex-col overflow-hidden rounded-[10px] border border-line bg-surface shadow-[var(--shadow-sm)] transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:shadow-[var(--shadow-lg)]"
+              className="group flex flex-col overflow-hidden rounded-[8px] border border-line bg-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1"
             >
               <div className="relative aspect-video overflow-hidden bg-ink">
                 <Image
-                  src={`/images/campuses/cards/${c.key}.webp`}
+                  src={`/images/campuses/cards-v2/${c.key}.webp`}
                   alt={`${c.name}, ${c.location}`}
                   fill
                   quality={90}
@@ -83,38 +86,43 @@ export function Campuses() {
                 />
               </div>
 
-              <div className="flex flex-1 flex-col p-5 lg:px-7 lg:py-6">
-                <p className="text-[11.5px] font-bold uppercase tracking-[0.16em] text-accent">
+              <div className="flex flex-1 flex-col p-5 lg:p-6">
+                <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-accent">
                   {c.eyebrow}
                 </p>
-                <h3 className="mt-1.5 font-display text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold leading-tight tracking-[-0.025em] text-ink">
+                <h3 className="mt-2 text-[clamp(1.125rem,1.55vw,1.5rem)] font-medium leading-tight sm:whitespace-nowrap tracking-[-0.02em] text-ink">
                   {c.name}
                 </h3>
-                <p className="mt-1 inline-flex items-center gap-1.5 text-[14px] text-body">
-                  <MapPin size={15} strokeWidth={2} aria-hidden />
-                  {c.location}
-                </p>
+                <p className="mt-1.5 text-[14px] text-body">{c.location}</p>
 
-                <p className="mt-4 text-[11.5px] font-bold uppercase tracking-[0.16em] text-muted">
+                <p className="mt-5 text-[12px] font-bold uppercase tracking-[0.16em] text-accent">
                   Key highlights
                 </p>
-                <ul className="mt-2.5 space-y-2">
+                <ul className="mt-3 space-y-3">
                   {c.highlights.map(({ icon: Icon, text }) => (
-                    <li key={text} className="flex items-center gap-2.5 text-[14px] leading-snug text-ink">
-                      <span className="grid size-7 shrink-0 place-items-center rounded-[6px] bg-accent-soft text-accent">
-                        <Icon size={14} strokeWidth={2} aria-hidden />
+                    <li key={text} className="flex items-center gap-3 text-[14px] leading-snug text-ink">
+                      {/* Scaler's lit icon tile: a diagonal light-deep-light
+                          sheen in the brand red with a white glyph */}
+                      <span
+                        className="grid size-8 shrink-0 place-items-center rounded-[4px] text-white"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(135deg, #ff8fa3 0%, var(--accent) 42%, var(--accent) 58%, #ffb3c0 100%)",
+                        }}
+                      >
+                        <Icon size={16} strokeWidth={2} aria-hidden />
                       </span>
                       {text}
                     </li>
                   ))}
                 </ul>
 
-                <div className="mt-auto pt-5">
+                <div className="mt-auto pt-6">
                   <Link
                     href={c.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-[6px] bg-accent px-6 py-3 text-[14.5px] font-semibold text-white transition-colors hover:bg-accent-hover"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent px-6 py-3 text-[14.5px] font-semibold text-white transition-colors hover:bg-accent-hover"
                   >
                     Explore campus
                     <ArrowUpRight size={17} strokeWidth={2} aria-hidden />

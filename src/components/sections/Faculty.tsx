@@ -11,9 +11,9 @@ import { Reveal } from "@/components/motion/Reveal";
  * Names and roles are sot.upgrad.com's (all 21 faculty).
  *
  * Layout after "Hear from Our Faculty about What They Teach" on
- * mastersunion.org, on black: the heading on the left (light weight, the key
- * phrases heavier), the intro under it and round prev/next arrows on the
- * right; below, a coverflow of cards. The active card sits centred at full
+ * mastersunion.org, on black: the heading centred (light weight, the key
+ * phrases heavier) with the intro under it; below, a coverflow of cards, and
+ * under the cards the round prev/next arrows, centred. The active card sits centred at full
  * size; its neighbours step out to each side, smaller and dimmer, three deep,
  * the rest hidden. Fades into the black soften the strip's edges.
  *
@@ -34,14 +34,26 @@ type Person = { name: string; role: string; img: string };
 
 const FACULTY: Person[] = [
   { name: "Vishwa Mohan", role: "CEO of upGrad SOT", img: "vishwa-mohan" },
-  { name: "Rishi Saraf", role: "Cofounder & CEO DevDynamics", img: "rishi-saraf" },
+  {
+    name: "Rishi Saraf",
+    role: "Cofounder & CEO DevDynamics",
+    img: "rishi-saraf",
+  },
   {
     name: "Gaurav Kaushik",
     role: "Senior Staff Software Engineer & Problem Solving Track Lead",
     img: "gaurav-kaushik",
   },
-  { name: "Gladden Rumao", role: "Staff Software AI Engineer", img: "gladden-rumao" },
-  { name: "Jyoti Nigam", role: "Data Scientist at upGrad SOT", img: "jyoti-nigam" },
+  {
+    name: "Gladden Rumao",
+    role: "Staff Software AI Engineer",
+    img: "gladden-rumao",
+  },
+  {
+    name: "Jyoti Nigam",
+    role: "Data Scientist at upGrad SOT",
+    img: "jyoti-nigam",
+  },
   {
     name: "Rishabh Bafna",
     role: "Senior AI Engineer & Lead Instructor",
@@ -53,18 +65,42 @@ const FACULTY: Person[] = [
     role: "Senior Mathematician and Lead Instructor",
     img: "piyush-jain",
   },
-  { name: "Bhavishya Rao", role: "Mathematics Teaching Assistant", img: "bhavishya-rao" },
+  {
+    name: "Bhavishya Rao",
+    role: "Mathematics Teaching Assistant",
+    img: "bhavishya-rao",
+  },
   { name: "Akash Tiwari", role: "SDE + Instructor", img: "akash-tiwari" },
   { name: "Rahul Yadav", role: "SDE 2 + Lead Instructor", img: "rahul-yadav" },
   { name: "Deepak Mishra", role: "SDE + Instructor", img: "deepak-mishra" },
-  { name: "Drishti Aggarwal", role: "SDE + Instructor", img: "drishti-aggarwal" },
-  { name: "Dhanshree", role: "Mathematics Teaching Assistant", img: "dhanshree" },
+  {
+    name: "Drishti Aggarwal",
+    role: "SDE + Instructor",
+    img: "drishti-aggarwal",
+  },
+  {
+    name: "Dhanshree",
+    role: "Mathematics Teaching Assistant",
+    img: "dhanshree",
+  },
   { name: "Simran Pathania", role: "SDE + SME", img: "simran-pathania" },
   { name: "Jai Prasad B", role: "SDE + Instructor", img: "jai-prasad-b" },
   { name: "Avinash Agrawal", role: "SDE + Instructor", img: "avinash-agrawal" },
-  { name: "Shivam Shrivastava", role: "SDE + Instructor", img: "shivam-shrivastava" },
-  { name: "Ananya Saini", role: "Mathematics Teaching Assistant", img: "ananya-saini" },
-  { name: "Shivam Pandey", role: "Mathematics Teaching Assistant", img: "shivam-pandey" },
+  {
+    name: "Shivam Shrivastava",
+    role: "SDE + Instructor",
+    img: "shivam-shrivastava",
+  },
+  {
+    name: "Ananya Saini",
+    role: "Mathematics Teaching Assistant",
+    img: "ananya-saini",
+  },
+  {
+    name: "Shivam Pandey",
+    role: "Mathematics Teaching Assistant",
+    img: "shivam-pandey",
+  },
   { name: "Yash Gautam", role: "SDE + Instructor", img: "yash-gautam" },
 ];
 
@@ -82,7 +118,12 @@ const AUTOPLAY_MS = 3500;
  *  (public/images/faculty/logos); w/h are the files' pixel sizes */
 const LOGOS = {
   // the white-lettered version, to sit straight on the dark poster
-  upgradsot: { src: "/images/logo-sot-white.png", alt: "upGrad School of Technology", w: 467, h: 144 },
+  upgradsot: {
+    src: "/images/logo-sot-white.png",
+    alt: "upGrad School of Technology",
+    w: 467,
+    h: 144,
+  },
   linkedin: { src: "linkedin.webp", alt: "LinkedIn", w: 614, h: 177 },
   walmart: { src: "walmart.webp", alt: "Walmart", w: 681, h: 177 },
   paypal: { src: "paypal.webp", alt: "PayPal", w: 638, h: 177 },
@@ -95,13 +136,25 @@ const LOGOS = {
   barclays: { src: "barclays.webp", alt: "Barclays", w: 513, h: 100 },
   cisco: { src: "cisco_dark.webp", alt: "Cisco", w: 176, h: 100 },
   ineuron: { src: "ineuron.webp", alt: "iNeuron", w: 367, h: 100 },
-  krmangalam: { src: "kr-mangalam.png", alt: "K.R. Mangalam University", w: 128, h: 128 },
+  krmangalam: {
+    src: "kr-mangalam.png",
+    alt: "K.R. Mangalam University",
+    w: 128,
+    h: 128,
+  },
 } as const;
 type LogoKey = keyof typeof LOGOS;
 
 /** everyone else on sot.upgrad.com carries the upGrad SOT logo alone */
 const COMPANIES: Record<string, LogoKey[]> = {
-  "vishwa-mohan": ["upgradsot", "linkedin", "walmart", "paypal", "oracle", "pw"],
+  "vishwa-mohan": [
+    "upgradsot",
+    "linkedin",
+    "walmart",
+    "paypal",
+    "oracle",
+    "pw",
+  ],
   "rishi-saraf": ["upgradsot", "hotstar", "vmware", "walmart"],
   "gaurav-kaushik": ["salesforce", "microsoft", "paypal"],
   "gladden-rumao": ["upgradsot", "barclays"],
@@ -110,7 +163,8 @@ const COMPANIES: Record<string, LogoKey[]> = {
 };
 /** logo height, in card widths, by how many a card carries: one can be big,
  *  a full set of six shares two rows of three, all inside the logo row */
-const logoHeightFor = (n: number) => (n === 1 ? 0.1 : n === 2 ? 0.075 : n === 3 ? 0.07 : 0.06);
+const logoHeightFor = (n: number) =>
+  n === 1 ? 0.1 : n === 2 ? 0.075 : n === 3 ? 0.07 : 0.06;
 
 /** rough width of one uppercase character, in em, for the fit below */
 const CHAR_EM = 0.68;
@@ -164,7 +218,9 @@ function Logos({ img }: { img: string }) {
           return (
             <Image
               key={k}
-              src={l.src.startsWith("/") ? l.src : `/images/faculty/logos/${l.src}`}
+              src={
+                l.src.startsWith("/") ? l.src : `/images/faculty/logos/${l.src}`
+              }
               alt={l.alt}
               width={l.w}
               height={l.h}
@@ -204,8 +260,12 @@ export function Faculty() {
   };
 
   useEffect(() => {
-    if (!auto || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = window.setInterval(() => setActive((a) => (a + 1) % n), AUTOPLAY_MS);
+    if (!auto || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+      return;
+    const t = window.setInterval(
+      () => setActive((a) => (a + 1) % n),
+      AUTOPLAY_MS,
+    );
     return () => window.clearInterval(t);
   }, [auto, n]);
 
@@ -224,33 +284,20 @@ export function Faculty() {
   return (
     <section id="faculty" className="bg-black py-16 lg:py-20">
       <div className="container-page">
-        <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <Reveal className="flex flex-col items-center text-center">
           <div className="max-w-[820px]">
             <h2 className="font-display text-[clamp(1.625rem,2.4vw,2rem)] font-normal leading-[1.25] tracking-[-0.02em] text-[#e5e5e5]">
-              Taught by <span className="font-semibold text-white">World&rsquo;s Top Tech</span> and{" "}
+              Taught by{" "}
+              <span className="font-semibold text-white">
+                World&rsquo;s Top Tech
+              </span>{" "}
+              and{" "}
               <span className="font-semibold text-accent">Academic Minds</span>
             </h2>
             <p className="mt-3 text-[15px] leading-[1.6] text-[#e5e5e5]/80 sm:text-[16px]">
-              Industry experts and innovators who turn{" "}
-              <span className="font-medium text-white">real-world experience</span> into{" "}
-              <span className="font-medium text-white">transformative learning</span>.
+              Industry experts and innovators who turn real-world experience
+              into transformative learning.
             </p>
-          </div>
-          <div className="flex shrink-0 gap-3">
-            {[
-              { d: -1, label: "Previous faculty", Icon: ArrowLeft },
-              { d: 1, label: "Next faculty", Icon: ArrowRight },
-            ].map(({ d, label, Icon }) => (
-              <button
-                key={d}
-                type="button"
-                aria-label={label}
-                onClick={() => step(d)}
-                className="grid size-12 place-items-center rounded-full border border-white/25 text-white transition-colors hover:border-white hover:bg-white hover:text-ink"
-              >
-                <Icon size={18} strokeWidth={2} aria-hidden />
-              </button>
-            ))}
           </div>
         </Reveal>
 
@@ -330,6 +377,24 @@ export function Faculty() {
               </button>
             );
           })}
+        </div>
+
+        {/* the arrows, centred under the cards */}
+        <div className="mt-8 flex justify-center gap-3 lg:mt-10">
+          {[
+            { d: -1, label: "Previous faculty", Icon: ArrowLeft },
+            { d: 1, label: "Next faculty", Icon: ArrowRight },
+          ].map(({ d, label, Icon }) => (
+            <button
+              key={d}
+              type="button"
+              aria-label={label}
+              onClick={() => step(d)}
+              className="grid size-12 place-items-center rounded-full border border-white/25 text-white transition-colors hover:border-white hover:bg-white hover:text-ink"
+            >
+              <Icon size={18} strokeWidth={2} aria-hidden />
+            </button>
+          ))}
         </div>
 
         {/* who's in the centre card, for screen readers */}

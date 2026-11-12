@@ -22,7 +22,7 @@ import { SectionHeading } from "@/components/site/SectionHeading";
  * white for dark grounds; on this white page those render as a dark
  * silhouette (`dark`) instead of vanishing.
  */
-type Logo = {
+export type Logo = {
   name: string;
   file: string;
   /** Figma frame width, at the frame's 44.08 height */
@@ -40,7 +40,7 @@ const LOGO_H = 26;
 
 // 24 of the Figma file's 29, the best-known, so the grid fills evenly at
 // every width (2, 3, 4 or 6 across); the last row is the one that fades
-const LOGOS: Logo[] = [
+export const LOGOS: Logo[] = [
   { name: "Google", file: "google.png", w: 121.39, crop: { w: 104.75, h: 120.19, l: -2.79, t: -10.77 } },
   { name: "Microsoft", file: "microsoft.png", w: 183.373, crop: { w: 123.08, h: 188.13, l: -11.54, t: -45.81 } },
   { name: "Amazon", file: "amazon.png", w: 145.64, dark: true, cover: true },
@@ -67,8 +67,9 @@ const LOGOS: Logo[] = [
   { name: "Zomato", file: "zomato.png", w: 179.395, crop: { w: 105.14, h: 427.91, l: -2.57, t: -164.53 } },
 ];
 
-/** one logo in its Figma frame, scaled to LOGO_H */
-function LogoMark({ logo }: { logo: Logo }) {
+/** one logo in its Figma frame, scaled to LOGO_H; `white` knocks it out to
+ *  white for dark grounds (the Legacy section's stat cards use it) */
+export function LogoMark({ logo, white = false }: { logo: Logo; white?: boolean }) {
   const scale = LOGO_H / FRAME_H;
   const c = logo.crop;
   return (
@@ -95,7 +96,9 @@ function LogoMark({ logo }: { logo: Logo }) {
               }
             : undefined
         }
-        className={`${logo.cover ? "object-cover" : ""} ${logo.dark ? "brightness-0" : ""}`}
+        className={`${logo.cover ? "object-cover" : ""} ${
+          white ? "brightness-0 invert" : logo.dark ? "brightness-0" : ""
+        }`}
       />
     </span>
   );

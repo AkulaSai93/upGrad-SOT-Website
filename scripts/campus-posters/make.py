@@ -1,4 +1,4 @@
-# Campus card posters (public/images/campuses/cards). Fills poster.html once per
+# Campus card posters (public/images/campuses/cards-v2). Fills poster.html once per
 # campus, then render each at 1600x900 with headless Chrome and save as WebP:
 #   cp public/images/campuses/{ssahe,adypu}.webp public/images/logo-sot-white.png <dir>
 #   python3 make.py poster.html <dir>

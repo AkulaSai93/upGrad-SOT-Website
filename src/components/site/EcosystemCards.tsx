@@ -15,6 +15,7 @@
  * Images keep the design's crop: each sits in a fixed box centred with the
  * design's offsets, and the inner <img> repeats the design's percentage crop.
  */
+export type EcosystemCard = Card;
 type Card = {
   name: string;
   file: string;
@@ -37,7 +38,7 @@ type Card = {
   crop?: { w: string; h: string; left: string; top: string };
 };
 
-const CARDS: Card[] = [
+export const ECOSYSTEM_CARDS: Card[] = [
   {
     name: "upGrad",
     file: "fig-upgrad.webp",
@@ -147,8 +148,9 @@ const GROUP_H = 206.29;
 const cq = (px: number) => `${((px * 100) / GROUP_W).toFixed(4)}cqw`;
 
 /** a card's logo, placed and cropped as in the design, sized in shares of
- *  the card face so it scales with whatever size the face is */
-function CardFace({ c }: { c: Card }) {
+ *  the card face so it scales with whatever size the face is (also used by
+ *  the Legacy section's tiles) */
+export function CardFace({ c }: { c: Card }) {
   return (
     <div
       className="absolute -translate-x-1/2 -translate-y-1/2"
@@ -207,7 +209,7 @@ export function EcosystemCards() {
     <>
       {/* phones: the cluster */}
       <ul className="mx-auto grid w-full max-w-[380px] grid-cols-3 px-3 py-2 sm:hidden">
-        {CARDS.map((c, i) => {
+        {ECOSYSTEM_CARDS.map((c, i) => {
           const k = CLUSTER[i];
           return (
             <li
@@ -235,7 +237,7 @@ export function EcosystemCards() {
         style={{ maxWidth: GROUP_W, containerType: "inline-size" }}
       >
         <ul className="relative w-full" style={{ height: cq(GROUP_H) }}>
-          {CARDS.map((c) => (
+          {ECOSYSTEM_CARDS.map((c) => (
             <li
               key={c.name}
               data-reveal-item

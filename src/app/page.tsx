@@ -6,6 +6,7 @@ import { Specializations } from "@/components/sections/Specializations";
 import { Curriculum } from "@/components/sections/Curriculum";
 import { AlumniCompanies } from "@/components/sections/AlumniCompanies";
 import { Pathways } from "@/components/sections/Pathways";
+import { Achievements } from "@/components/sections/Achievements";
 import { Campuses } from "@/components/sections/Campuses";
 import { Leaders } from "@/components/sections/Leaders";
 import { Faculty } from "@/components/sections/Faculty";
@@ -35,6 +36,7 @@ export default function Home() {
         <Curriculum />
         <AlumniCompanies />
         <Pathways />
+        <Achievements />
         <Campuses />
         <Faculty />
         <Festivals />
