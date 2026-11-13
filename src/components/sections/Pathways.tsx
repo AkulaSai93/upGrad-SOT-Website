@@ -566,7 +566,7 @@ export function Pathways() {
             --pw-head for where the cards stop */}
         <div
           ref={head}
-          className="sticky top-[var(--header-h)] z-0 bg-[var(--pw-bg)] pb-2 pt-1 lg:pb-6 lg:pt-3"
+          className="sticky top-[var(--header-h)] z-0 bg-[var(--pw-bg)] pb-4 pt-1 lg:pb-6 lg:pt-3"
         >
           <SectionHeading
             title="One Degree,"
