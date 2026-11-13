@@ -518,7 +518,7 @@ function VideoCard({
       type="button"
       onClick={onOpen}
       aria-label={`Play video: ${v.title}`}
-      className="group flex w-[180px] shrink-0 snap-start flex-col rounded-[4px] border border-line bg-white p-2 text-left outline-none transition-colors hover:border-ink focus-visible:ring-2 focus-visible:ring-accent sm:w-[196px]"
+      className="group flex w-[180px] shrink-0 snap-start flex-col rounded-[4px] border border-black/[0.08] bg-white p-2 text-left outline-none transition-colors hover:border-ink focus-visible:ring-2 focus-visible:ring-accent sm:w-[196px]"
     >
       <span className="relative block aspect-[9/16] overflow-hidden rounded-[2px] bg-ink">
         <Image
@@ -610,7 +610,7 @@ function VideoRow({
               aria-label={label}
               disabled={off}
               onClick={() => slide(d)}
-              className="grid size-10 place-items-center rounded-[4px] border border-[#d9d9d2] transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-35"
+              className="grid size-10 place-items-center rounded-[4px] border border-black/[0.08] transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-35"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -657,7 +657,7 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <article
       data-reveal-item
-      className="group relative flex w-[260px] shrink-0 snap-start flex-col border border-[#cfd1d7] bg-white p-2.5 sm:w-[280px]"
+      className="group relative flex w-[260px] shrink-0 snap-start flex-col border border-black/[0.08] bg-white p-2.5 sm:w-[280px]"
     >
       <div className="relative aspect-video shrink-0 overflow-hidden rounded-[2px]">
         <Image
@@ -740,7 +740,7 @@ function ProjectSlider({ projects }: { projects: Project[] }) {
               aria-label={label}
               disabled={off}
               onClick={() => slide(d)}
-              className="grid size-10 place-items-center rounded-[4px] border border-[#d9d9d2] transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-35"
+              className="grid size-10 place-items-center rounded-[4px] border border-black/[0.08] transition-colors hover:border-ink disabled:pointer-events-none disabled:opacity-35"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -832,7 +832,7 @@ export function Curriculum() {
           {YEARS.map((y, i) => {
             const on = open === i;
             return (
-              <div key={y.key} className="border border-[#cfd1d7] bg-white">
+              <div key={y.key} className="border border-black/[0.08] bg-white">
                 <button
                   type="button"
                   aria-expanded={on}
@@ -896,14 +896,14 @@ export function Curriculum() {
 
         {/* desktop: the tabbed card */}
         <Reveal className="mt-12 hidden lg:mt-16 lg:block">
-          <div className="relative mx-auto max-w-[1116px] border border-[#cfd1d7] bg-white p-5 sm:px-8 sm:py-6">
+          <div className="relative mx-auto max-w-[1116px] border border-black/[0.08] bg-white p-5 sm:px-8 sm:py-6">
             <CornerHandles />
             {/* the year tabs */}
             <div
               role="tablist"
               aria-label="Curriculum years"
               onKeyDown={onKey}
-              className="flex overflow-x-auto rounded-[4px] border border-[#e5e5e5] p-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="flex overflow-x-auto rounded-[4px] border border-black/[0.08] p-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               {YEARS.map((y, i) => {
                 const on = i === active;

@@ -2,11 +2,11 @@
 
 import { CountUp } from "@/components/motion/CountUp";
 import { Reveal } from "@/components/motion/Reveal";
-import { CornerHandles } from "@/components/site/CornerHandles";
 import {
   ECOSYSTEM_CARDS,
   type EcosystemCard,
 } from "@/components/site/EcosystemCards";
+import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
 
 /**
@@ -112,7 +112,7 @@ function StatCard({ stat }: { stat: Stat }) {
     // it); the card inside takes the hover
     <div data-reveal-item className={stat.wide ? "col-span-2" : ""}>
       <div
-        className={`relative flex h-full min-h-[150px] border border-[#cfd1d7] bg-white px-5 py-5 transition-[translate,scale,rotate] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:-rotate-1 hover:scale-[1.03] sm:px-7 sm:py-6 ${
+        className={`relative flex h-full min-h-[150px] border border-black/[0.08] bg-white px-5 py-5 transition-[translate,scale,rotate] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:-rotate-1 hover:scale-[1.03] sm:px-7 sm:py-6 ${
           stat.wide
             ? "items-center justify-between gap-6"
             : "flex-col justify-between gap-4"

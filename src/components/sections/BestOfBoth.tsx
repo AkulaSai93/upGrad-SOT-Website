@@ -156,7 +156,7 @@ function Rows({ items, dark }: { items: Item[]; dark: boolean }) {
             i > 0
               ? dark
                 ? "border-t border-white/[0.14]"
-                : "border-t border-black/[0.06]"
+                : "border-t border-black/[0.08]"
               : ""
           }`}
         >
@@ -472,7 +472,7 @@ export function BestOfBoth() {
                   {/* the faculty posters' frame: square corners, a thin ink
                       edge and a "selection" handle on each corner */}
                   <CornerHandles />
-                  <span className="block size-full overflow-hidden border border-[#cfd1d7] bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)]">
+                  <span className="block size-full overflow-hidden border border-black/[0.08] bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)]">
                     <LazyVideo
                       sources={[{ src: HERO_VIDEO.src }]}
                       poster={HERO_VIDEO.poster}

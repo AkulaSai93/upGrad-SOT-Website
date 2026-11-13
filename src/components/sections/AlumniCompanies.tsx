@@ -250,7 +250,7 @@ export function AlumniCompanies() {
 
         <Reveal className="relative mt-8 lg:mt-14">
           {/* hairline grid: the 1px gaps show the line colour between cells */}
-          <ul className="grid grid-cols-4 gap-px border border-line bg-line [--logo-h:15px] sm:[--logo-h:20px] lg:grid-cols-6 lg:[--logo-h:26px]">
+          <ul className="grid grid-cols-4 gap-px border border-black/[0.08] bg-line [--logo-h:15px] sm:[--logo-h:20px] lg:grid-cols-6 lg:[--logo-h:26px]">
             {LOGOS.map((logo) => (
               <li
                 key={logo.name}

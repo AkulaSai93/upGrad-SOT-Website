@@ -72,7 +72,7 @@ function Card({ c, onOpen }: { c: Video; onOpen: (v: Video) => void }) {
       type="button"
       onClick={() => onOpen(c)}
       aria-label={`Play podcast: ${c.name}`}
-      className="group block w-full rounded-[6px] border border-ink/10 bg-white p-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      className="group block w-full rounded-[6px] border border-black/[0.08] bg-white p-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-accent"
     >
       <span className="relative block aspect-video overflow-hidden rounded-[4px] bg-sunken">
         <Image

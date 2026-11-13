@@ -233,7 +233,7 @@ export function Footer() {
         {/* the foot: logo, quick links and profiles; the disclaimer; the
             fine print */}
         <div data-rise className="mt-12">
-          <div className="flex flex-col gap-6 border-b border-ink/10 pb-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-6 border-b border-black/[0.08] pb-6 md:flex-row md:items-center md:justify-between">
             <Image
               src="/images/logo-sot.png"
               alt="upGrad School of Technology"

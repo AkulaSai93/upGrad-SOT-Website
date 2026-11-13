@@ -118,9 +118,9 @@ function Book({ s }: { s: Story }) {
       className="relative block aspect-[3/4] w-[112px] shrink-0 [perspective:1000px] sm:w-[136px]"
     >
       {/* page edges, then the first page */}
-      <span className="absolute inset-y-[3px] left-[6px] right-[-6px] rounded-r-[4px] border border-ink/10 bg-white" />
-      <span className="absolute inset-y-[1.5px] left-[3px] right-[-3px] rounded-r-[4px] border border-ink/10 bg-white" />
-      <span className="absolute inset-0 overflow-hidden rounded-r-[4px] border border-ink/10 bg-white px-3 py-4">
+      <span className="absolute inset-y-[3px] left-[6px] right-[-6px] rounded-r-[4px] border border-black/[0.08] bg-white" />
+      <span className="absolute inset-y-[1.5px] left-[3px] right-[-3px] rounded-r-[4px] border border-black/[0.08] bg-white" />
+      <span className="absolute inset-0 overflow-hidden rounded-r-[4px] border border-black/[0.08] bg-white px-3 py-4">
         <span className="block text-[9px] font-semibold uppercase tracking-[0.12em] text-accent">
           {s.outlet}
         </span>
@@ -164,7 +164,7 @@ function StoryCard({ s, copy }: { s: Story; copy: boolean }) {
         data-story
         // phones: the book above the words, in a card narrow enough to be
         // seen whole in the strip; from sm the two sit side by side
-        className="group flex h-full w-[min(72vw,300px)] flex-col items-start gap-5 rounded-[4px] border border-ink/10 bg-white p-5 sm:w-[min(86vw,540px)] sm:flex-row sm:items-center sm:gap-7"
+        className="group flex h-full w-[min(72vw,300px)] flex-col items-start gap-5 rounded-[4px] border border-black/[0.08] bg-white p-5 sm:w-[min(86vw,540px)] sm:flex-row sm:items-center sm:gap-7"
       >
         <Book s={s} />
         <div className="min-w-0">

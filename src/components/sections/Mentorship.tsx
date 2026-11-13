@@ -288,7 +288,7 @@ export function Mentorship() {
             type="button"
             onClick={() => go(active - 1)}
             aria-label="Previous session"
-            className="grid size-11 shrink-0 place-items-center rounded-[6px] border border-ink/15 bg-white text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white"
+            className="grid size-11 shrink-0 place-items-center rounded-[6px] border border-black/[0.08] bg-white text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white"
           >
             <ArrowLeft size={18} aria-hidden />
           </button>
@@ -309,7 +309,7 @@ export function Mentorship() {
             type="button"
             onClick={() => go(active + 1)}
             aria-label="Next session"
-            className="grid size-11 shrink-0 place-items-center rounded-[6px] border border-ink/15 bg-white text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white"
+            className="grid size-11 shrink-0 place-items-center rounded-[6px] border border-black/[0.08] bg-white text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white"
           >
             <ArrowRight size={18} aria-hidden />
           </button>

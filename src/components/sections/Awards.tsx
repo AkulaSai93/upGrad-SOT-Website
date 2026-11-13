@@ -75,7 +75,7 @@ function AwardCard({ a, copy }: { a: (typeof AWARDS)[number]; copy: boolean }) {
   return (
     <li
       aria-hidden={copy || undefined}
-      className="mr-4 flex w-[min(80vw,340px)] shrink-0 flex-col items-center rounded-[6px] border border-ink/10 bg-white px-6 py-7 text-center"
+      className="mr-4 flex w-[min(80vw,340px)] shrink-0 flex-col items-center rounded-[6px] border border-black/[0.08] bg-white px-6 py-7 text-center"
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- small logos, served as they are */}
       <img

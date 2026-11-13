@@ -96,7 +96,7 @@ export function BuiltDifferent() {
             <div
               key={feature.title}
               data-reveal-item
-              className="group/feature relative flex flex-col overflow-hidden border-b border-line py-8 last:border-b-0 sm:py-10 md:border-r md:[&:nth-last-child(-n+2)]:border-b-0 lg:border-b lg:border-l lg:border-r lg:[&:nth-child(4n)]:border-r-0 lg:[&:nth-last-child(-n+4)]:border-b-0"
+              className="group/feature relative flex flex-col overflow-hidden border-b border-black/[0.08] py-8 last:border-b-0 sm:py-10 md:border-r md:[&:nth-last-child(-n+2)]:border-b-0 lg:border-b lg:border-l lg:border-r lg:[&:nth-child(4n)]:border-r-0 lg:[&:nth-last-child(-n+4)]:border-b-0"
             >
               {/* left accent bar: 4x32, grows to 80 and glows red on hover */}
               <div

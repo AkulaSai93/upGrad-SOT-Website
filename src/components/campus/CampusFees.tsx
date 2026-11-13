@@ -98,7 +98,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
         <div
           data-fee-cards
           data-fee-rise
-          className="mt-8 hidden overflow-hidden rounded-[6px] border border-ink/10 lg:mt-12 lg:block"
+          className="mt-8 hidden overflow-hidden rounded-[6px] border border-black/[0.08] lg:mt-12 lg:block"
         >
           <table className="w-full text-[14px]">
             <thead>
@@ -110,7 +110,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
                   <th
                     key={s.sem}
                     scope="col"
-                    className="border-l border-ink/10 px-5 py-4 font-semibold text-ink"
+                    className="border-l border-black/[0.08] px-5 py-4 font-semibold text-ink"
                   >
                     Semester {s.sem}
                   </th>
@@ -119,7 +119,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
             </thead>
             <tbody>
               {components.map((c) => (
-                <tr key={c} className="border-t border-ink/10">
+                <tr key={c} className="border-t border-black/[0.08]">
                   <th
                     scope="row"
                     className="px-5 py-4 text-left font-medium text-body"
@@ -129,14 +129,14 @@ export function CampusFees({ campus }: { campus: Campus }) {
                   {fees.semesters.map((s) => (
                     <td
                       key={s.sem}
-                      className="border-l border-ink/10 px-5 py-4 tabular-nums text-body"
+                      className="border-l border-black/[0.08] px-5 py-4 tabular-nums text-body"
                     >
                       {amountOf(s, c) ?? "-"}
                     </td>
                   ))}
                 </tr>
               ))}
-              <tr className="border-t border-ink/10 text-ink">
+              <tr className="border-t border-black/[0.08] text-ink">
                 <th
                   scope="row"
                   className="px-5 py-4 text-left font-bold uppercase tracking-[0.04em]"
@@ -146,7 +146,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
                 {fees.semesters.map((s) => (
                   <td
                     key={s.sem}
-                    className="border-l border-ink/10 px-5 py-4 font-bold tabular-nums"
+                    className="border-l border-black/[0.08] px-5 py-4 font-bold tabular-nums"
                   >
                     {s.total}
                   </td>
@@ -163,7 +163,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
             return (
               <li
                 key={s.sem}
-                className="overflow-hidden rounded-[6px] border border-ink/10"
+                className="overflow-hidden rounded-[6px] border border-black/[0.08]"
               >
                 <button
                   type="button"
@@ -190,13 +190,13 @@ export function CampusFees({ campus }: { campus: Campus }) {
                     {s.items.map((it) => (
                       <div
                         key={it.label}
-                        className="flex justify-between gap-4 border-t border-ink/10 px-4 py-3"
+                        className="flex justify-between gap-4 border-t border-black/[0.08] px-4 py-3"
                       >
                         <dt className="text-body">{it.label}</dt>
                         <dd className="tabular-nums text-body">{it.amount}</dd>
                       </div>
                     ))}
-                    <div className="flex justify-between gap-4 border-t border-ink/10 px-4 py-3 font-bold text-ink">
+                    <div className="flex justify-between gap-4 border-t border-black/[0.08] px-4 py-3 font-bold text-ink">
                       <dt className="uppercase tracking-[0.04em]">Total</dt>
                       <dd className="font-display">{s.total}</dd>
                     </div>
@@ -282,7 +282,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
                 {g.rooms.map((r) => (
                   <li
                     key={r.occupancy}
-                    className="rounded-[6px] border border-ink/10 bg-white p-5"
+                    className="rounded-[6px] border border-black/[0.08] bg-white p-5"
                   >
                     <p className="font-display text-[17px] font-bold tracking-[-0.02em] text-ink">
                       {r.occupancy}
@@ -306,7 +306,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
                     {r.acNote && (
                       <p className="mt-2 text-[12px] text-body">{r.acNote}</p>
                     )}
-                    <dl className="mt-4 space-y-2 border-t border-ink/10 pt-4 text-[13px]">
+                    <dl className="mt-4 space-y-2 border-t border-black/[0.08] pt-4 text-[13px]">
                       {r.location && (
                         <div className="flex justify-between gap-3">
                           <dt className="text-muted">Location</dt>

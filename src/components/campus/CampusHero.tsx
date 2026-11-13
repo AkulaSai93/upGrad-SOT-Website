@@ -154,14 +154,14 @@ export function CampusHero({ campus }: { campus: Campus }) {
       <div className="container-page">
         <dl
           data-facts
-          className="relative z-10 mx-auto -mt-12 grid max-w-[1080px] grid-cols-2 rounded-[6px] border border-ink/10 bg-white sm:-mt-14 lg:grid-cols-4"
+          className="relative z-10 mx-auto -mt-12 grid max-w-[1080px] grid-cols-2 rounded-[6px] border border-black/[0.08] bg-white sm:-mt-14 lg:grid-cols-4"
         >
           {campus.facts.map((f, i) => (
             <div
               key={f.label}
-              className={`p-4 sm:p-6 ${i % 2 === 1 ? "border-l border-ink/10" : ""} ${
-                i > 1 ? "max-lg:border-t max-lg:border-ink/10" : ""
-              } ${i === 2 ? "lg:border-l lg:border-ink/10" : ""}`}
+              className={`p-4 sm:p-6 ${i % 2 === 1 ? "border-l border-black/[0.08]" : ""} ${
+                i > 1 ? "max-lg:border-t max-lg:border-black/[0.08]" : ""
+              } ${i === 2 ? "lg:border-l lg:border-black/[0.08]" : ""}`}
             >
               <dt className="text-[12px] font-semibold uppercase tracking-[0.08em] text-muted">{f.label}</dt>
               <dd className="mt-1.5">

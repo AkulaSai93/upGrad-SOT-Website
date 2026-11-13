@@ -24,7 +24,7 @@ export function HeroFacts({ className = "" }: { className?: string }) {
           key={fact.label}
           /* the two cells sit side by side at every width, with a rule
              between them */
-          className={i > 0 ? "border-l border-ink/15 pl-5 sm:pl-7" : undefined}
+          className={i > 0 ? "border-l border-black/[0.08] pl-5 sm:pl-7" : undefined}
         >
           <dt className="whitespace-nowrap text-[11px] font-semibold tracking-[0.12em] text-muted lg:text-[10.5px] lg:tracking-[0.14em]">
             {fact.label}

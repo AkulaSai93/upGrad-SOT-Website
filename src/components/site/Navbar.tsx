@@ -301,7 +301,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
             ? "border-transparent bg-transparent"
             : dark
               ? "border-white/10 bg-black/85 backdrop-blur-xl"
-              : "border-black/[0.06] bg-white/90 backdrop-blur-xl"
+              : "border-black/[0.08] bg-white/90 backdrop-blur-xl"
         }`}
       >
         <nav className="container-page flex h-[60px] items-center justify-between gap-4">
@@ -441,7 +441,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
             </button>
           </div>
           <nav aria-label="Site" className="px-6 sm:px-8">
-            <ul className="border-t border-ink/10">
+            <ul className="border-t border-black/[0.08]">
               {MENU.map((row, i) => {
                 const active = group === i;
                 const head = (
@@ -484,7 +484,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
                 return (
                   <li
                     key={row.label}
-                    className="menu-link border-b border-ink/10"
+                    className="menu-link border-b border-black/[0.08]"
                   >
                     {row.links ? (
                       <button
@@ -565,7 +565,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`upGrad School of Technology on ${s.label}`}
-                    className="grid size-9 place-items-center rounded-[6px] border border-ink/10 text-ink/70 transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white"
+                    className="grid size-9 place-items-center rounded-[6px] border border-black/[0.08] text-ink/70 transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white"
                   >
                     <svg
                       viewBox="0 0 24 24"

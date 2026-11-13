@@ -245,7 +245,7 @@ function Handle({ className }: { className: string }) {
   return (
     <span
       aria-hidden
-      className={`absolute z-[3] size-[7px] border border-[#b9bcc4] bg-white ${className}`}
+      className={`absolute z-[3] size-[7px] border border-black/[0.08] bg-white ${className}`}
     />
   );
 }

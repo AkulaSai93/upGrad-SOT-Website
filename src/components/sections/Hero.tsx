@@ -416,7 +416,7 @@ export function Hero() {
               <Magnetic strength={0.25}>
                 <Link
                   href="#brochure"
-                  className="inline-flex items-center justify-center gap-2.5 rounded-[6px] border border-ink/25 bg-white/60 px-6 py-[14.5px] backdrop-blur-md text-[15px] font-semibold text-ink transition-colors hover:border-ink hover:bg-ink hover:text-white max-sm:w-full max-sm:py-[17.5px] max-sm:text-[16px]"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-[6px] border border-black/[0.08] bg-white/60 px-6 py-[14.5px] backdrop-blur-md text-[15px] font-semibold text-ink transition-colors hover:border-ink hover:bg-ink hover:text-white max-sm:w-full max-sm:py-[17.5px] max-sm:text-[16px]"
                 >
                   <Download size={16} strokeWidth={2} aria-hidden />
                   Download Brochure

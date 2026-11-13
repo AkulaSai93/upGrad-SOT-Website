@@ -104,7 +104,7 @@ export function CampusLoans() {
                 className={`flex min-w-[150px] shrink-0 snap-start items-center gap-3 rounded-[6px] border bg-white px-4 py-3.5 text-left transition-colors duration-300 sm:min-w-0 ${
                   on
                     ? "border-ink ring-1 ring-ink"
-                    : "border-ink/10 hover:border-ink/30"
+                    : "border-black/[0.08] hover:border-ink/30"
                 }`}
               >
                 <span className="relative h-8 w-10 shrink-0">
@@ -136,7 +136,7 @@ export function CampusLoans() {
         >
           <div data-loan-terms>
             {/* tablet and up: a table */}
-            <div className="hidden overflow-hidden rounded-[6px] border border-ink/10 sm:block">
+            <div className="hidden overflow-hidden rounded-[6px] border border-black/[0.08] sm:block">
               <table className="w-full table-fixed text-[14px]">
                 <thead>
                   <tr className="bg-[#f6f7f9] text-left">
@@ -150,7 +150,7 @@ export function CampusLoans() {
                       <th
                         key={c}
                         scope="col"
-                        className="border-l border-ink/10 px-5 py-4 font-semibold text-ink"
+                        className="border-l border-black/[0.08] px-5 py-4 font-semibold text-ink"
                       >
                         {c}
                       </th>
@@ -161,7 +161,7 @@ export function CampusLoans() {
                   {lender.rows.map((r) => (
                     <tr
                       key={r.label}
-                      className="border-t border-ink/10 align-top"
+                      className="border-t border-black/[0.08] align-top"
                     >
                       <th
                         scope="row"
@@ -175,7 +175,7 @@ export function CampusLoans() {
                           colSpan={
                             r.values.length === 1 ? lender.columns.length : 1
                           }
-                          className="border-l border-ink/10 px-5 py-4 leading-relaxed text-body"
+                          className="border-l border-black/[0.08] px-5 py-4 leading-relaxed text-body"
                         >
                           {v}
                         </td>
@@ -187,7 +187,7 @@ export function CampusLoans() {
             </div>
 
             {/* phones: each term, its values under their loan type */}
-            <dl className="divide-y divide-ink/10 overflow-hidden rounded-[6px] border border-ink/10 sm:hidden">
+            <dl className="divide-y divide-black/[0.08] overflow-hidden rounded-[6px] border border-black/[0.08] sm:hidden">
               {lender.rows.map((r) => (
                 <div key={r.label} className="px-4 py-3.5">
                   <dt className="text-[13px] font-semibold text-ink">

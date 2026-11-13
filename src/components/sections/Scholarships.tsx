@@ -124,7 +124,7 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
         <div
           inert={flipped}
           style={{ background: GROUND }}
-          className="group absolute inset-0 overflow-hidden border border-[#cfd1d7] [backface-visibility:hidden]"
+          className="group absolute inset-0 overflow-hidden border border-black/[0.08] [backface-visibility:hidden]"
         >
           <div className="flex h-full flex-col">
             <h3 className="shrink-0 px-4 pb-2 pt-5 text-center font-display text-[17px] font-bold leading-[1.2] tracking-[-0.02em] text-ink">
@@ -175,7 +175,7 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
         {/* back: the eligibility criteria */}
         <div
           inert={!flipped}
-          className="absolute inset-0 flex flex-col justify-between border border-[#cfd1d7] bg-accent p-6 text-white [backface-visibility:hidden] [transform:rotateY(180deg)]"
+          className="absolute inset-0 flex flex-col justify-between border border-black/[0.08] bg-accent p-6 text-white [backface-visibility:hidden] [transform:rotateY(180deg)]"
         >
           <div>
             <p className="text-[12.5px] font-semibold text-white/75">
@@ -340,7 +340,7 @@ export function Scholarships() {
         </div>
 
         {/* one under another on phones, two across on tablets, four on desktop */}
-        <ul className="mt-10 grid gap-5 border-t border-ink/15 pt-10 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4 lg:pt-14">
+        <ul className="mt-10 grid gap-5 border-t border-black/[0.08] pt-10 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4 lg:pt-14">
           {SCHOLARSHIPS.map((s) => (
             <ScholarshipCard key={s.key} s={s} />
           ))}

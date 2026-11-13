@@ -136,7 +136,7 @@ export function Festivals() {
                 <li
                   key={f.img}
                   data-card
-                  className="relative h-[440px] w-[84vw] shrink-0 snap-center border border-[#cfd1d7] bg-ink sm:w-[520px] lg:h-[min(64svh,640px)] lg:w-[min(66vw,1040px)]"
+                  className="relative h-[440px] w-[84vw] shrink-0 snap-center border border-black/[0.08] bg-ink sm:w-[520px] lg:h-[min(64svh,640px)] lg:w-[min(66vw,1040px)]"
                 >
                   <CornerHandles />
                   <div className="absolute inset-0 overflow-hidden">

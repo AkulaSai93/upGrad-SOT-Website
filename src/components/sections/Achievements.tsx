@@ -36,7 +36,7 @@ const AMBASSADORS = [
 
 // the faculty posters' frame: square corners, a thin ink edge, and a
 // "selection" handle on each corner (CornerHandles, inside each card)
-const card = "relative border border-[#cfd1d7] bg-white";
+const card = "relative border border-black/[0.08] bg-white";
 // each card takes its programme's colour (--tint for its text, --tint-fill on
 // hover, --on-tint for the text over the fill): ICPC's blue, from the ICPC
 // Foundation logo, and the brand red for the Google Student Ambassadors

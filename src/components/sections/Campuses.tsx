@@ -94,7 +94,7 @@ export function Campuses() {
             <article
               key={c.key}
               data-reveal-item
-              className="group relative flex flex-col border border-[#cfd1d7] bg-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1"
+              className="group relative flex flex-col border border-black/[0.08] bg-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1"
             >
               <CornerHandles />
               <div className="relative aspect-video overflow-hidden bg-ink">

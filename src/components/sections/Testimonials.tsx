@@ -242,8 +242,8 @@ export function Testimonials() {
                 onClick={() => setActive(i)}
                 className={`relative border p-5 transition-colors duration-500 [grid-area:1/1] sm:p-7 ${
                   i === active
-                    ? "border-[#cfd1d7] bg-accent text-white"
-                    : "cursor-pointer border-ink/10 bg-white text-ink"
+                    ? "border-black/[0.08] bg-accent text-white"
+                    : "cursor-pointer border-black/[0.08] bg-white text-ink"
                 }`}
               >
                 <CornerHandles dim={i !== active} />

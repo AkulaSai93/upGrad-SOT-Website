@@ -1,6 +1,6 @@
 /**
  * The four "selection" handles on a card's corners, as on the faculty
- * posters: a small white square with a soft grey edge over each corner,
+ * posters: a small white square with the site's border grey as its edge over each corner,
  * like a frame selected in a design tool. Put it inside a positioned
  * (relative) card that does not clip its overflow. `dim` greys them, for
  * cards that are not the one in focus.
@@ -17,7 +17,7 @@ export function CornerHandles({ dim = false }: { dim?: boolean }) {
         <span
           key={pos}
           aria-hidden
-          className={`pointer-events-none absolute z-[3] size-[7px] border border-[#b9bcc4] transition-colors duration-700 ${
+          className={`pointer-events-none absolute z-[3] size-[7px] border border-black/[0.08] transition-colors duration-700 ${
             dim ? "bg-white/60" : "bg-white"
           } ${pos}`}
         />

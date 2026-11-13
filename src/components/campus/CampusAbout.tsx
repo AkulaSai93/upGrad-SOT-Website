@@ -193,7 +193,7 @@ export function CampusAbout({ campus }: { campus: Campus }) {
           <div
             role="tablist"
             aria-label="Campus facilities"
-            className="grid w-full grid-cols-2 gap-1 rounded-[6px] border border-ink/10 bg-white p-1 sm:flex sm:w-auto"
+            className="grid w-full grid-cols-2 gap-1 rounded-[6px] border border-black/[0.08] bg-white p-1 sm:flex sm:w-auto"
           >
             {campus.facilities.map((g, i) => (
               <button

@@ -103,7 +103,7 @@ function Card({ p }: { p: Partner }) {
   return (
     <span className="flex size-full flex-col overflow-hidden border border-white/20 bg-white">
       {/* the picture */}
-      <span className="relative block h-[58%] shrink-0 border-b border-black/10">
+      <span className="relative block h-[58%] shrink-0 border-b border-black/[0.08]">
         <Image
           src={`/images/partners/${p.photo}`}
           alt=""

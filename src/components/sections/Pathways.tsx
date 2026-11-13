@@ -414,7 +414,7 @@ function TileViz({ viz }: { viz: Tile["viz"] }) {
 
 function Card({ path }: { path: Path }) {
   return (
-    <article className="relative grid gap-3 border border-[#cfd1d7] bg-white p-2.5 shadow-[0_-14px_30px_-12px_rgba(11,13,18,0.18)] sm:p-4 lg:min-h-[420px] lg:grid-cols-[1.08fr_1fr] lg:gap-10 lg:p-5">
+    <article className="relative grid gap-3 border border-black/[0.08] bg-white p-2.5 shadow-[0_-14px_30px_-12px_rgba(11,13,18,0.18)] sm:p-4 lg:min-h-[420px] lg:grid-cols-[1.08fr_1fr] lg:gap-10 lg:p-5">
       {/* the faculty posters' frame: square corners, a thin ink edge and a
           "selection" handle on each corner */}
       <CornerHandles />
@@ -450,7 +450,7 @@ function Card({ path }: { path: Path }) {
           {path.tiles.map((t) => (
             <div
               key={t.label}
-              className="flex flex-col items-center rounded-[8px] border border-line p-3 lg:items-start lg:p-4"
+              className="flex flex-col items-center rounded-[8px] border border-black/[0.08] p-3 lg:items-start lg:p-4"
             >
               <p className="text-[13px] text-muted">{t.label}</p>
               <p className="mt-1 text-[clamp(1.125rem,1.7vw,1.5rem)] font-semibold leading-tight tracking-[-0.02em] text-ink">

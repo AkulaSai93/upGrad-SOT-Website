@@ -152,7 +152,7 @@ export function Faqs({ university }: { university?: string } = {}) {
                 key={f.q}
                 data-row
                 className={`rounded-[6px] border bg-white transition-colors duration-300 ${
-                  isOpen ? "border-ink/20" : "border-ink/10 hover:border-ink/20"
+                  isOpen ? "border-ink/20" : "border-black/[0.08] hover:border-ink/20"
                 }`}
               >
                 <h3>

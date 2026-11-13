@@ -277,7 +277,7 @@ export function Social() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${handle} on ${s.label}`}
-              className="inline-flex items-center justify-center gap-3 rounded-[6px] border border-ink/15 bg-white px-5 py-3.5 text-[15px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white sm:px-6 sm:text-[16px]"
+              className="inline-flex items-center justify-center gap-3 rounded-[6px] border border-black/[0.08] bg-white px-5 py-3.5 text-[15px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white sm:px-6 sm:text-[16px]"
             >
               <span
                 aria-hidden

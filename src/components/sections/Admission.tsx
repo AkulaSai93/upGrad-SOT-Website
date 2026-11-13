@@ -217,7 +217,7 @@ export function Admission() {
           <div className="lg:sticky lg:top-28 lg:self-start">
             <div
               data-cta
-              className="relative border border-[#cfd1d7] bg-accent p-7 text-white sm:p-9"
+              className="relative border border-black/[0.08] bg-accent p-7 text-white sm:p-9"
             >
               <CornerHandles />
               <h3 className="font-display text-[clamp(1.5rem,2.3vw,2rem)] font-bold leading-[1.15] tracking-[-0.02em]">
