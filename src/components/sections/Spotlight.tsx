@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Play } from "lucide-react";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { VideoPlayer, type Video } from "@/components/site/VideoPlayer";
 
@@ -25,8 +25,9 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * together towards the edges, flattening and settling as they go, until the
  * heading sits uncovered in the middle. Every card plays its video in the player overlay.
  * Below lg there is no hold: the heading, then the cards on a strip that
- * drifts right to left without end (easing to a stop under the mouse); under
- * reduced motion it holds still and scrolls sideways.
+ * drifts right to left without end (easing to a stop under the mouse), with
+ * arrows under it, as under the faculty, to step it a card either way; under
+ * reduced motion it holds still and scrolls sideways (the arrows scroll it).
  */
 const v = (id: string, name: string): Video => ({
   id,
@@ -112,6 +113,37 @@ function Card({ c, onOpen }: { c: Video; onOpen: (v: Video) => void }) {
 export function Spotlight() {
   const root = useRef<HTMLElement>(null);
   const [playing, setPlaying] = useState<Video | null>(null);
+  const strip = useRef<HTMLDivElement>(null);
+  // the phone strip's endless drift, so the arrows can step it
+  const drift = useRef<gsap.core.Tween | null>(null);
+
+  // the arrows under the phone strip: move it on by one card either way
+  // (from wherever the drift has it), then let it drift on
+  const step = (d: number) => {
+    const el = strip.current;
+    const track = el?.querySelector<HTMLElement>("[data-strack]");
+    const card = track?.firstElementChild as HTMLElement | null;
+    if (!el || !track || !card) return;
+    const one =
+      card.offsetWidth + parseFloat(getComputedStyle(card).marginRight);
+    const loop = drift.current;
+    if (!loop) {
+      // reduced motion: the strip is a plain sideways scroller
+      el.scrollBy({ left: d * one, behavior: "smooth" });
+      return;
+    }
+    const time = (one / (track.offsetWidth / 2)) * loop.duration();
+    loop.pause();
+    gsap.to(loop, {
+      totalTime: loop.totalTime() + d * time,
+      duration: 0.6,
+      ease: "power3.out",
+      overwrite: true,
+      onComplete: () => {
+        loop.play();
+      },
+    });
+  };
 
   useGSAP(
     () => {
@@ -190,6 +222,10 @@ export function Spotlight() {
               force3D: true,
             },
           );
+          // start a long way into the loop, so stepping back never runs
+          // past its start
+          loop.totalTime(loop.duration() * 1000);
+          drift.current = loop;
           const ease = (e: Event) =>
             gsap.to(loop, {
               timeScale:
@@ -218,6 +254,7 @@ export function Spotlight() {
             },
           );
           return () => {
+            drift.current = null;
             strip.removeEventListener("pointerenter", ease);
             strip.removeEventListener("pointerleave", ease);
           };
@@ -273,6 +310,7 @@ export function Spotlight() {
       {/* below lg: the cards on a moving strip under the heading, its ends
           fading into the page */}
       <div
+        ref={strip}
         data-strip
         className="mt-10 overflow-hidden py-2 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)] motion-reduce:overflow-x-auto lg:hidden"
       >
@@ -288,6 +326,24 @@ export function Spotlight() {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* below lg: the arrows, centred under the strip, as under the faculty */}
+      <div className="mt-6 flex justify-center gap-3 lg:hidden">
+        {[
+          { d: -1, label: "Previous video", Icon: ArrowLeft },
+          { d: 1, label: "Next video", Icon: ArrowRight },
+        ].map(({ d, label, Icon }) => (
+          <button
+            key={d}
+            type="button"
+            aria-label={label}
+            onClick={() => step(d)}
+            className="grid size-11 place-items-center rounded-[6px] border border-black/[0.08] bg-white text-ink transition-colors hover:border-ink"
+          >
+            <Icon size={18} strokeWidth={2} aria-hidden />
+          </button>
+        ))}
       </div>
 
       {playing && (

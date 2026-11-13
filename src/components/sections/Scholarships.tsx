@@ -294,10 +294,17 @@ export function Scholarships() {
               className="mt-3 flex flex-wrap items-end gap-x-5 gap-y-4 max-lg:justify-center lg:mt-1"
             >
               <span className="text-[clamp(5.5rem,17vw,14rem)] font-bold leading-[0.9] lg:leading-[0.82] tracking-[-0.05em] tabular-nums">
-                <span ref={count}>100</span>
+                <span
+                  ref={count}
+                  // room for three digits from the start, so the count from
+                  // 0 to 100 never changes the line's width
+                  className="inline-block min-w-[3ch] text-right"
+                >
+                  100
+                </span>
                 <span className="text-accent">%</span>
               </span>
-              <span className="pb-[0.12em] font-display text-[clamp(1.75rem,3.6vw,3.25rem)] font-bold leading-none tracking-[-0.03em]">
+              <span className="pb-[0.12em] font-display text-[clamp(1.75rem,3.6vw,3.25rem)] font-bold leading-none tracking-[-0.03em] max-lg:basis-full">
                 Scholarship
               </span>
             </span>

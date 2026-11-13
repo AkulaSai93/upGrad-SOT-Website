@@ -458,7 +458,7 @@ export function Faculty() {
               type="button"
               aria-label={label}
               onClick={() => step(d)}
-              className="grid size-12 place-items-center rounded-full border border-[var(--fc-line)] text-[var(--fc-fg)] transition-colors hover:border-[var(--fc-fg)] hover:bg-[var(--fc-fg)] hover:text-[var(--fc-bg)]"
+              className="grid size-11 place-items-center rounded-[6px] border border-[var(--fc-line)] text-[var(--fc-fg)] transition-colors hover:border-[var(--fc-fg)]"
             >
               <Icon size={18} strokeWidth={2} aria-hidden />
             </button>

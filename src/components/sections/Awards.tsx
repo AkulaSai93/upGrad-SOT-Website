@@ -75,20 +75,22 @@ function AwardCard({ a, copy }: { a: (typeof AWARDS)[number]; copy: boolean }) {
   return (
     <li
       aria-hidden={copy || undefined}
-      className="mr-4 flex w-[min(80vw,340px)] shrink-0 flex-col items-center rounded-[6px] border border-black/[0.08] bg-white px-6 py-7 text-center"
+      className="mr-4 flex w-[min(80vw,340px)] shrink-0 flex-col items-center rounded-[6px] border border-black/[0.08] bg-white px-5 py-5 text-center sm:px-6 sm:py-7"
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- small logos, served as they are */}
       <img
         src={`/images/awards/${a.logo}.webp`}
         alt={copy ? "" : a.source}
-        className="h-14 w-auto max-w-[200px] object-contain"
+        className="h-11 w-auto max-w-[180px] object-contain sm:h-14 sm:max-w-[200px]"
         loading="lazy"
       />
-      <p className="mt-4 text-[13.5px] text-body">{a.source}</p>
-      <h3 className="mt-3 font-display text-[18px] font-bold leading-snug tracking-[-0.01em] text-accent">
+      <p className="mt-3 text-[13px] text-body sm:mt-4 sm:text-[13.5px]">
+        {a.source}
+      </p>
+      <h3 className="mt-2 font-display text-[16px] font-bold sm:mt-3 sm:text-[18px] leading-snug tracking-[-0.01em] text-accent">
         {a.title}
       </h3>
-      <p className="mt-1.5 line-clamp-3 text-[14px] leading-relaxed text-ink/80">
+      <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-ink/80 sm:mt-1.5 sm:line-clamp-3 sm:text-[14px]">
         {a.line}
       </p>
     </li>
