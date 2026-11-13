@@ -31,17 +31,28 @@ export function SmoothScroll() {
     // when the page grows or shrinks afterwards (images, sticky stacks, revealed
     // sections) those marks go stale and, say, the Spotlight cards spread before
     // you reach them. Re-measure whenever the page height settles on a new value.
+    // Two guards keep this from stuttering a phone mid-scroll: a height change
+    // that comes only from the browser's address bar sliding in or out (the
+    // viewport height changed with it) is ignored, and the re-measure waits
+    // until the page has stopped scrolling.
     let height = document.body.scrollHeight;
+    let viewH = window.innerHeight;
     let timer = 0;
-    const ro = new ResizeObserver(() => {
+    const settle = () => {
       window.clearTimeout(timer);
       timer = window.setTimeout(() => {
+        if (instance.isScrolling) return settle();
         const h = document.body.scrollHeight;
+        const vh = window.innerHeight;
+        const barOnly = vh !== viewH;
+        viewH = vh;
         if (Math.abs(h - height) < 2) return;
         height = h;
+        if (barOnly) return;
         ScrollTrigger.refresh();
-      }, 200);
-    });
+      }, 250);
+    };
+    const ro = new ResizeObserver(settle);
     ro.observe(document.body);
 
     return () => {

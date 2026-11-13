@@ -262,7 +262,10 @@ export function Hero() {
     >
       <div
         ref={stage}
-        className="sticky top-0 isolate h-svh min-h-[640px] overflow-clip max-lg:h-dvh"
+        // svh on phones too (not dvh): a stage sized to the dynamic viewport
+        // resized itself every time the address bar slid in or out, which
+        // re-laid the page out mid-scroll
+        className="sticky top-0 isolate h-svh min-h-[640px] overflow-clip"
       >
         {/* --------------------------------------------- background image */}
         {/* Full-bleed illustration, Conclave-style: students looking out at a

@@ -568,7 +568,7 @@ export function BestOfBoth() {
           </div>
           {/* phones and tablets: the campus film, which desktop shows inside
               the heading, as a full-width strip after the two panels */}
-          <div className="relative aspect-video w-full overflow-hidden bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)]">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)]">
             <LazyVideo
               sources={[{ src: HERO_VIDEO.src }]}
               poster={HERO_VIDEO.poster}

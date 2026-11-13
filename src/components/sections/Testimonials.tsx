@@ -231,28 +231,29 @@ export function Testimonials() {
           }}
         >
           {/* the carousel: every card in one grid cell, so the stage keeps the
-              height of the tallest */}
-          <div className="mx-auto grid w-full max-w-[460px] [perspective:1100px] max-md:[&>[aria-hidden=true]]:!opacity-0">
+              height of the tallest; on phones the front card is a little
+              narrower so its neighbours peek in at the sides, as on desktop */}
+          <div className="mx-auto grid w-[80%] max-w-[460px] [perspective:1100px] md:w-full">
             {STUDENTS.map((st, i) => (
               <figure
                 key={st.name}
                 data-card
                 aria-hidden={i !== active}
                 onClick={() => setActive(i)}
-                className={`relative border p-7 transition-colors duration-500 [grid-area:1/1] ${
+                className={`relative border p-5 transition-colors duration-500 [grid-area:1/1] sm:p-7 ${
                   i === active
                     ? "border-[#cfd1d7] bg-accent text-white"
                     : "cursor-pointer border-ink/10 bg-white text-ink"
                 }`}
               >
                 <CornerHandles dim={i !== active} />
-                <figcaption className="flex items-center gap-5">
+                <figcaption className="flex items-center gap-4 sm:gap-5">
                   <Image
                     src={`/images/students/${st.img}.png`}
                     alt=""
                     width={100}
                     height={100}
-                    className="size-[100px] shrink-0 rounded-[6px] object-cover"
+                    className="size-[72px] shrink-0 rounded-[6px] object-cover sm:size-[100px]"
                   />
                   <span>
                     <span className="block text-[18px] font-semibold">
