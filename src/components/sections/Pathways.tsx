@@ -571,20 +571,14 @@ export function Pathways() {
           <SectionHeading
             title="One Degree,"
             accent="Three Pathways"
-            intro={
-              // pinned with the title from lg; on phones it scrolls away
-              // below (so the pinned heading stays short)
-              <span className="max-lg:hidden">
-                A successful tech career, your own startup, or pursue higher
-                education.
-              </span>
-            }
+            // pinned with the title on every screen size; on phones both
+            // are set smaller (the title on one line) so a card still fits
+            // under them
+            intro="A successful tech career, your own startup, or pursue higher education."
+            titleClassName="max-lg:whitespace-nowrap max-lg:text-[clamp(1.25rem,6vw,1.75rem)]"
+            className="max-lg:[&>p]:mt-1.5 max-lg:[&>p]:text-[13px] max-lg:[&>p]:leading-[1.45]"
           />
         </div>
-        <p className="mx-auto max-w-[640px] text-center text-[15px] leading-[1.6] text-[var(--heading-muted)] lg:hidden">
-          A successful tech career, your own startup, or pursue higher
-          education.
-        </p>
 
         {/* the cards stack: each is sticky at the same height, just under
             the pinned heading (or lower, if it would not fit under it, so
