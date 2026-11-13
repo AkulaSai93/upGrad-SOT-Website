@@ -115,7 +115,7 @@ const STEPS = [
   { x: 1.89, scale: 0.78, bright: 0.75, alpha: 0.72 },
   { x: 2.66, scale: 0.68, bright: 0.6, alpha: 0.5 },
 ];
-const AUTOPLAY_MS = 3500;
+const AUTOPLAY_MS = 2200;
 
 /** company logos as sot.upgrad.com shows them per faculty member
  *  (public/images/faculty/logos); w/h are the files' pixel sizes */
@@ -414,7 +414,7 @@ export function Faculty() {
                   zIndex: 10 - Math.abs(d),
                   pointerEvents: hidden ? "none" : undefined,
                 }}
-                className="absolute left-1/2 top-[6px] -ml-[calc(var(--card-w)/2)] h-[var(--card-h)] w-[var(--card-w)] transition-[transform,opacity,filter] duration-[520ms] ease-[cubic-bezier(0.32,0,0.2,1)]"
+                className="absolute left-1/2 top-[6px] -ml-[calc(var(--card-w)/2)] h-[var(--card-h)] w-[var(--card-w)] transition-[transform,opacity,filter] duration-[420ms] ease-[cubic-bezier(0.32,0,0.2,1)]"
               >
                 {/* the card itself, square-cornered */}
                 <span className="absolute inset-0 overflow-hidden border border-white/20 bg-[#08080a]">

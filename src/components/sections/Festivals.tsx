@@ -25,8 +25,8 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * Layout: the events in one long row of big photo cards, each filling most
  * of the screen's height: the picture edge to edge under a dark fade from the
  * foot, the event's name set huge over it in white, an "Event 01 / 06"
- * counter and the campus as a tag; square corners with the faculty posters'
- * corner handles. On desktop the section holds the screen while you scroll
+ * counter and the campus as a tag; square corners, the photo inset in a thin white
+ * frame with the site's grey border and the faculty posters' corner handles. On desktop the section holds the screen while you scroll
  * and the row, running the full width of the screen, travels sideways like
  * walking past a wall of posters; on phones the cards scroll sideways by hand.
  *
@@ -136,10 +136,10 @@ export function Festivals() {
                 <li
                   key={f.img}
                   data-card
-                  className="relative h-[440px] w-[84vw] shrink-0 snap-center border border-black/[0.08] bg-ink sm:w-[520px] lg:h-[min(64svh,640px)] lg:w-[min(66vw,1040px)]"
+                  className="relative h-[440px] w-[84vw] shrink-0 snap-center border border-black/[0.08] bg-white sm:w-[520px] lg:h-[min(64svh,640px)] lg:w-[min(66vw,1040px)]"
                 >
                   <CornerHandles />
-                  <div className="absolute inset-0 overflow-hidden">
+                  <div className="absolute inset-[6px] overflow-hidden bg-ink">
                     <div data-pic className="absolute inset-0 scale-[1.15]">
                       <Image
                         src={`/images/festivals/${f.img}.jpg`}
@@ -155,7 +155,7 @@ export function Festivals() {
                       className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.45)_35%,rgba(0,0,0,0)_65%)]"
                     />
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8 lg:p-10">
+                  <div className="absolute inset-x-[6px] bottom-[6px] p-6 text-white sm:p-8 lg:p-10">
                     <div className="flex flex-wrap items-center gap-2.5">
                       <span className="rounded-[4px] bg-accent px-2.5 py-1 text-[12px] font-bold uppercase tracking-[0.12em]">
                         Event {String(i + 1).padStart(2, "0")} /{" "}
