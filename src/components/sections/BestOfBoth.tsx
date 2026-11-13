@@ -472,7 +472,7 @@ export function BestOfBoth() {
                   {/* the faculty posters' frame: square corners, a thin ink
                       edge and a "selection" handle on each corner */}
                   <CornerHandles />
-                  <span className="block size-full overflow-hidden border border-ink bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)]">
+                  <span className="block size-full overflow-hidden border border-[#cfd1d7] bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)]">
                     <LazyVideo
                       sources={[{ src: HERO_VIDEO.src }]}
                       poster={HERO_VIDEO.poster}
@@ -533,37 +533,49 @@ export function BestOfBoth() {
           </div>
         </div>
       ) : (
-        <div ref={flatRef} className="container-page overflow-x-clip py-8">
-          {/* the two lines come in from either side, as the halves do on desktop */}
-          <h2 className="text-center font-display text-[clamp(1.375rem,5.8vw,2.25rem)] font-bold leading-[1.2] tracking-[-0.03em] text-ink">
-            <span data-from="left" className="block">
-              Where World-Class University
-            </span>
-            <span data-from="right" className="block">
-              Meets <span className={accentClass}>Silicon Valley Learning</span>
-            </span>
-          </h2>
-          <div className="mt-12 grid gap-5 md:grid-cols-2">
-            <div data-from="left">
-              <Panel
-                watermark="UNIVERSITY"
-                title="University Advantage"
-                tagline="Gives you the foundation"
-                items={UNIVERSITY}
-                dark={false}
-              />
-            </div>
-            <div data-from="right">
-              <Panel
-                watermark="SILICON"
-                title="Silicon Valley Style Learning"
-                tagline="Helps you go further"
-                items={SILICON}
-                dark
-              />
+        <>
+          <div ref={flatRef} className="container-page overflow-x-clip py-8">
+            {/* the two lines come in from either side, as the halves do on desktop */}
+            <h2 className="text-center font-display text-[clamp(1.375rem,5.8vw,2.25rem)] font-bold leading-[1.2] tracking-[-0.03em] text-ink">
+              <span data-from="left" className="block">
+                Where World-Class University
+              </span>
+              <span data-from="right" className="block">
+                Meets{" "}
+                <span className={accentClass}>Silicon Valley Learning</span>
+              </span>
+            </h2>
+            <div className="mt-12 grid gap-5 md:grid-cols-2">
+              <div data-from="left">
+                <Panel
+                  watermark="UNIVERSITY"
+                  title="University Advantage"
+                  tagline="Gives you the foundation"
+                  items={UNIVERSITY}
+                  dark={false}
+                />
+              </div>
+              <div data-from="right">
+                <Panel
+                  watermark="SILICON"
+                  title="Silicon Valley Style Learning"
+                  tagline="Helps you go further"
+                  items={SILICON}
+                  dark
+                />
+              </div>
             </div>
           </div>
-        </div>
+          {/* phones and tablets: the campus film, which desktop shows inside
+              the heading, as a full-width strip after the two panels */}
+          <div className="relative aspect-video w-full overflow-hidden bg-[linear-gradient(145deg,#e9edf4,#f3e6e8)]">
+            <LazyVideo
+              sources={[{ src: HERO_VIDEO.src }]}
+              poster={HERO_VIDEO.poster}
+              className="size-full object-cover"
+            />
+          </div>
+        </>
       )}
     </section>
   );

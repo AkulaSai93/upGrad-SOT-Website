@@ -245,7 +245,7 @@ function Handle({ className }: { className: string }) {
   return (
     <span
       aria-hidden
-      className={`absolute z-[3] size-2.5 border border-ink bg-white ${className}`}
+      className={`absolute z-[3] size-[7px] border border-[#b9bcc4] bg-white ${className}`}
     />
   );
 }
@@ -438,10 +438,10 @@ export function Faculty() {
                   </span>
                 </span>
                 {/* "selection" handles on the four corners */}
-                <Handle className="-left-[5px] -top-[5px]" />
-                <Handle className="-right-[5px] -top-[5px]" />
-                <Handle className="-bottom-[5px] -left-[5px]" />
-                <Handle className="-bottom-[5px] -right-[5px]" />
+                <Handle className="-left-[3px] -top-[3px]" />
+                <Handle className="-right-[3px] -top-[3px]" />
+                <Handle className="-bottom-[3px] -left-[3px]" />
+                <Handle className="-bottom-[3px] -right-[3px]" />
               </button>
             );
           })}

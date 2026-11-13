@@ -88,7 +88,10 @@ export function BuiltDifferent() {
           intro="Designed to go beyond traditional education with hands-on learning, global exposure, industry integration, and career-focused outcomes."
         />
 
-        <Reveal stagger={0.06} className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <Reveal
+          stagger={0.06}
+          className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+        >
           {FEATURES.map((feature) => (
             <div
               key={feature.title}

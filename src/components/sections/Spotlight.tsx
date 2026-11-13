@@ -182,11 +182,21 @@ export function Spotlight() {
           const loop = gsap.fromTo(
             q("[data-strack]"),
             { xPercent: 0 },
-            { xPercent: -50, duration: 45, ease: "none", repeat: -1, force3D: true },
+            {
+              xPercent: -50,
+              duration: 45,
+              ease: "none",
+              repeat: -1,
+              force3D: true,
+            },
           );
           const ease = (e: Event) =>
             gsap.to(loop, {
-              timeScale: e.type === "pointerenter" && (e as PointerEvent).pointerType === "mouse" ? 0 : 1,
+              timeScale:
+                e.type === "pointerenter" &&
+                (e as PointerEvent).pointerType === "mouse"
+                  ? 0
+                  : 1,
               duration: 0.7,
               ease: "power2.out",
             });
@@ -200,7 +210,11 @@ export function Spotlight() {
               autoAlpha: 1,
               duration: 1,
               ease: "expo.out",
-              scrollTrigger: { trigger: strip, start: "top 90%", toggleActions: "play none none none" },
+              scrollTrigger: {
+                trigger: strip,
+                start: "top 90%",
+                toggleActions: "play none none none",
+              },
             },
           );
           return () => {

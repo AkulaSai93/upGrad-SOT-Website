@@ -176,7 +176,7 @@ function Growth() {
 const BIG = LOGOS.slice(0, 8);
 function LogoStrip() {
   return (
-    <div aria-hidden className="marquee-mask mt-3 -mx-1">
+    <div aria-hidden className="marquee-mask -mx-1 mt-3 self-stretch">
       <div className="marquee-track">
         {[...BIG, ...BIG].map((l, i) => (
           <span
@@ -239,7 +239,11 @@ function Ring() {
 function Chat() {
   const [ref, seen] = useSeen<HTMLDivElement>();
   return (
-    <div ref={ref} aria-hidden className="mt-3 flex flex-col gap-1.5">
+    <div
+      ref={ref}
+      aria-hidden
+      className="mt-2 flex flex-col gap-1 lg:mt-3 lg:gap-1.5"
+    >
       <span
         className={`w-fit rounded-[8px] rounded-bl-[2px] bg-[#f0f0f2] px-2.5 py-1.5 text-[11px] leading-none text-body transition-all duration-500 ${
           seen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
@@ -248,7 +252,7 @@ function Chat() {
         How do I start?
       </span>
       <span
-        className={`flex w-fit items-center gap-1 self-end rounded-[8px] rounded-br-[2px] bg-accent px-2.5 py-2 transition-all delay-500 duration-500 ${
+        className={`flex w-fit items-center gap-1 self-end rounded-[8px] rounded-br-[2px] bg-accent px-2.5 py-1.5 transition-all delay-500 duration-500 ${
           seen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
         }`}
       >
@@ -410,7 +414,7 @@ function TileViz({ viz }: { viz: Tile["viz"] }) {
 
 function Card({ path }: { path: Path }) {
   return (
-    <article className="relative grid gap-6 border border-ink bg-white p-3 shadow-[0_-14px_30px_-12px_rgba(11,13,18,0.18)] sm:p-4 lg:min-h-[420px] lg:grid-cols-[1.08fr_1fr] lg:gap-10 lg:p-5">
+    <article className="relative grid gap-3 border border-[#cfd1d7] bg-white p-2.5 shadow-[0_-14px_30px_-12px_rgba(11,13,18,0.18)] sm:p-4 lg:min-h-[420px] lg:grid-cols-[1.08fr_1fr] lg:gap-10 lg:p-5">
       {/* the faculty posters' frame: square corners, a thin ink edge and a
           "selection" handle on each corner */}
       <CornerHandles />
@@ -433,18 +437,21 @@ function Card({ path }: { path: Path }) {
       </div>
 
       {/* the content */}
-      <div className="flex flex-col justify-center px-2 pb-3 sm:px-3 lg:px-0 lg:pb-0 lg:pr-4">
-        <h3 className="text-[clamp(1.5rem,2.3vw,2rem)] font-medium leading-[1.2] tracking-[-0.02em] text-ink">
+      <div className="flex flex-col items-center justify-center px-2 pb-3 text-center sm:px-3 lg:items-start lg:px-0 lg:pb-0 lg:pr-4 lg:text-left">
+        <h3 className="text-[22px] font-medium lg:text-[clamp(1.5rem,2.3vw,2rem)] leading-[1.2] tracking-[-0.02em] text-ink">
           {path.title[0]}
           <span className="block text-accent">{path.title[1]}</span>
         </h3>
-        <p className="mt-3 max-w-[460px] text-[15px] leading-[1.6] text-body">
+        <p className="mt-2 max-w-[460px] text-[14px] leading-[1.5] text-body max-lg:mx-auto lg:mt-3 lg:text-[15px] lg:leading-[1.6]">
           {path.body}
         </p>
 
-        <div className="mt-6 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid w-full grid-cols-2 gap-3 lg:mt-6">
           {path.tiles.map((t) => (
-            <div key={t.label} className="rounded-[8px] border border-line p-4">
+            <div
+              key={t.label}
+              className="flex flex-col items-center rounded-[8px] border border-line p-3 lg:items-start lg:p-4"
+            >
               <p className="text-[13px] text-muted">{t.label}</p>
               <p className="mt-1 text-[clamp(1.125rem,1.7vw,1.5rem)] font-semibold leading-tight tracking-[-0.02em] text-ink">
                 <CountUp value={t.value} />
@@ -458,7 +465,7 @@ function Card({ path }: { path: Path }) {
             button's edge (the cta-glow used on the other CTAs) */}
         <Link
           href="#brochure"
-          className="group/cta relative mt-6 inline-flex w-fit overflow-hidden rounded-[4px] bg-accent-hover p-[1.5px]"
+          className="group/cta relative mt-4 inline-flex w-fit lg:mt-6 overflow-hidden rounded-[4px] bg-accent-hover p-[1.5px]"
         >
           <span
             aria-hidden
@@ -479,6 +486,19 @@ function Card({ path }: { path: Path }) {
 
 export function Pathways() {
   const section = useRef<HTMLElement>(null);
+  const head = useRef<HTMLDivElement>(null);
+
+  // the pinned heading's height, for where the cards stop under it
+  useEffect(() => {
+    const el = head.current;
+    const sec = section.current;
+    if (!el || !sec) return;
+    const ro = new ResizeObserver(() =>
+      sec.style.setProperty("--pw-head", `${el.offsetHeight}px`),
+    );
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // when the section reaches the middle of the screen it fades to black in
   // one timed tween (not scrubbed, so there is no muddy grey half-state), and
@@ -527,23 +547,43 @@ export function Pathways() {
     <section
       ref={section}
       id="pathways"
-      className="bg-[var(--pw-bg)] py-16 lg:py-16"
+      className="bg-[var(--pw-bg)] pb-6 pt-8 lg:pb-8 lg:pt-12"
       style={LIGHT as React.CSSProperties}
     >
       <div className="container-page">
-        <SectionHeading
-          title="One Degree,"
-          accent="Three Pathways"
-          intro="A successful tech career, your own startup, or pursue higher education."
-        />
+        {/* the heading stays pinned under the nav while the cards stack
+            below it (on the section's own ground; the cards sit above it, so
+            at the end they slide away over it); its height is measured into
+            --pw-head for where the cards stop */}
+        <div
+          ref={head}
+          className="sticky top-[var(--header-h)] z-0 bg-[var(--pw-bg)] pb-2 pt-1 lg:pb-6 lg:pt-3"
+        >
+          <SectionHeading
+            title="One Degree,"
+            accent="Three Pathways"
+            intro={
+              // pinned with the title from lg; on phones it scrolls away
+              // below (so the pinned heading stays short)
+              <span className="max-lg:hidden">
+                A successful tech career, your own startup, or pursue higher
+                education.
+              </span>
+            }
+          />
+        </div>
+        <p className="mx-auto max-w-[640px] text-center text-[15px] leading-[1.6] text-[var(--heading-muted)] lg:hidden">
+          A successful tech career, your own startup, or pursue higher
+          education.
+        </p>
 
-        {/* the cards stack: each is sticky at the same height, so the next
-            slides up over the last as you scroll */}
-        <div className="mt-12 flex flex-col gap-8 lg:mt-16 lg:gap-[22vh] lg:pb-[6vh]">
+        {/* the cards stack: each is sticky at the same height, just under
+            the pinned heading, so the next slides up over the last */}
+        <div className="mt-6 flex flex-col gap-[10vh] lg:mt-10 lg:gap-[22vh]">
           {PATHS.map((path) => (
             <Reveal
               key={path.key}
-              className="lg:sticky lg:top-[calc(var(--header-h)+40px)]"
+              className="sticky top-[calc(var(--header-h)+var(--pw-head,0px))] z-10"
             >
               <Card path={path} />
             </Reveal>

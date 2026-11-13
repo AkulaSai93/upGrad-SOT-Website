@@ -71,7 +71,7 @@ const CAMPUSES = [
 
 export function Campuses() {
   return (
-    <section id="campuses" className="bg-canvas py-12 lg:py-16">
+    <section id="campuses" className="bg-canvas py-8 lg:py-16">
       <div className="container-page">
         <SectionHeading
           title="Our"
@@ -94,7 +94,7 @@ export function Campuses() {
             <article
               key={c.key}
               data-reveal-item
-              className="group relative flex flex-col border border-ink bg-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1"
+              className="group relative flex flex-col border border-[#cfd1d7] bg-white transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1"
             >
               <CornerHandles />
               <div className="relative aspect-video overflow-hidden bg-ink">

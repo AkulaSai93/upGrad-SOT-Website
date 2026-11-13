@@ -124,7 +124,7 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
         <div
           inert={flipped}
           style={{ background: GROUND }}
-          className="group absolute inset-0 overflow-hidden border border-ink [backface-visibility:hidden]"
+          className="group absolute inset-0 overflow-hidden border border-[#cfd1d7] [backface-visibility:hidden]"
         >
           <div className="flex h-full flex-col">
             <h3 className="shrink-0 px-4 pb-2 pt-5 text-center font-display text-[17px] font-bold leading-[1.2] tracking-[-0.02em] text-ink">
@@ -175,7 +175,7 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
         {/* back: the eligibility criteria */}
         <div
           inert={!flipped}
-          className="absolute inset-0 flex flex-col justify-between border border-ink bg-accent p-6 text-white [backface-visibility:hidden] [transform:rotateY(180deg)]"
+          className="absolute inset-0 flex flex-col justify-between border border-[#cfd1d7] bg-accent p-6 text-white [backface-visibility:hidden] [transform:rotateY(180deg)]"
         >
           <div>
             <p className="text-[12.5px] font-semibold text-white/75">
@@ -273,7 +273,7 @@ export function Scholarships() {
       ref={root}
       id="scholarships"
       style={{ background: YELLOW }}
-      className="relative overflow-hidden py-10 lg:py-16"
+      className="relative overflow-hidden py-8 lg:py-16"
     >
       {/* a soft light across the top left, so the yellow reads rich, not flat */}
       <div

@@ -1,14 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Reveal } from "@/components/motion/Reveal";
+import { lenis } from "@/components/motion/SmoothScroll";
 import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { VideoPlayer, type Video } from "@/components/site/VideoPlayer";
-import { Play } from "lucide-react";
+import { Minus, Play, Plus } from "lucide-react";
 
 gsap.registerPlugin(useGSAP);
 
@@ -273,12 +274,7 @@ const YEARS: Year[] = [
 /** a pillar's column: its number big in red, its title and line */
 function PillarColumn({ pillar, index }: { pillar: Pillar; index: number }) {
   return (
-    <div className="relative border-l border-line pl-5 sm:pl-7 lg:sticky lg:top-[calc(var(--header-h)+32px)] lg:border-0">
-      {/* below lg, a red tick tops the column's own rule */}
-      <span
-        aria-hidden
-        className="absolute -left-px top-0 h-16 w-[2px] bg-accent lg:hidden"
-      />
+    <div className="relative lg:sticky lg:top-[calc(var(--header-h)+32px)] lg:pl-7">
       <p className="font-display text-[clamp(3.5rem,5vw,4.5rem)] font-extrabold leading-none tracking-[-0.05em] text-accent">
         {String(index + 1).padStart(2, "0")}
       </p>
@@ -320,6 +316,7 @@ function YearBody({
   index,
   skillsTone = "ink",
   compact = false,
+  hideTitle = false,
 }: {
   year: Year;
   index: number;
@@ -327,15 +324,23 @@ function YearBody({
   /** the tabbed card: tighter gaps between the blocks, and the title alone
    *  ("Foundations"), since the tab above already names the year */
   compact?: boolean;
+  /** leave the title out (the accordion bar above already shows it) */
+  hideTitle?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const gap = compact ? "mt-6" : "mt-8";
   return (
     <>
-      <h3 className="text-[clamp(1.375rem,2vw,1.75rem)] font-medium leading-[1.25] tracking-[-0.02em] text-ink">
-        {compact ? year.title : `Year ${index + 1} : ${year.title}`}
-      </h3>
-      <p className="mt-2 text-[15px] leading-[1.6] text-body">{year.body}</p>
+      {!hideTitle && (
+        <h3 className="text-[clamp(1.375rem,2vw,1.75rem)] font-medium leading-[1.25] tracking-[-0.02em] text-ink">
+          {compact ? year.title : `Year ${index + 1} : ${year.title}`}
+        </h3>
+      )}
+      <p
+        className={`${hideTitle ? "" : "mt-2"} text-[15px] leading-[1.6] text-body`}
+      >
+        {year.body}
+      </p>
 
       <div className={gap}>
         <ProjectSlider projects={year.projects} />
@@ -652,7 +657,7 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <article
       data-reveal-item
-      className="group flex w-[260px] shrink-0 snap-start flex-col rounded-[4px] border border-black bg-white p-2.5 sm:w-[280px]"
+      className="group relative flex w-[260px] shrink-0 snap-start flex-col border border-[#cfd1d7] bg-white p-2.5 sm:w-[280px]"
     >
       <div className="relative aspect-video shrink-0 overflow-hidden rounded-[2px]">
         <Image
@@ -752,7 +757,7 @@ function ProjectSlider({ projects }: { projects: Project[] }) {
         <div
           ref={track}
           onScroll={sync}
-          className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-1.5 px-1.5 py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {projects.map((pr) => (
             <ProjectCard key={pr.img} project={pr} />
@@ -772,11 +777,28 @@ function ProjectSlider({ projects }: { projects: Project[] }) {
  * below them, that year's content: "Year 1 : Foundations" and its line, the
  * projects slider, the skills (label in red) and the "View Subject List"
  * toggle. Choosing a tab swaps the content in with a short rise. The tabs are
- * a real tablist (arrow keys move between them); below sm they scroll
- * sideways.
+ * a real tablist (arrow keys move between them). Below lg the card becomes an
+ * accordion as on Scaler's phone layout: a bar per year, the open one filled
+ * red, its content under it.
  */
 export function Curriculum() {
   const [active, setActive] = useState(0);
+  // phones: which year's accordion is open (one at a time, or none)
+  const [open, setOpen] = useState<number | null>(0);
+  // the tapped bar and where it was on screen: when another year opens, the
+  // one closing above it would pull it up the page, so the scroll is moved
+  // by the same amount and the bar stays under the finger
+  const pinned = useRef<{ el: HTMLElement; top: number } | null>(null);
+  useLayoutEffect(() => {
+    const p = pinned.current;
+    pinned.current = null;
+    if (!p) return;
+    const shift = p.el.getBoundingClientRect().top - p.top;
+    if (Math.abs(shift) < 1) return;
+    const y = window.scrollY + shift;
+    if (lenis) lenis.scrollTo(y, { immediate: true, force: true });
+    else window.scrollTo(0, y);
+  }, [open]);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const year = YEARS[active];
 
@@ -790,17 +812,91 @@ export function Curriculum() {
   };
 
   return (
-    <section id="curriculum" className="bg-canvas py-12 lg:py-16">
+    <section id="curriculum" className="bg-canvas py-8 lg:py-16">
       <div className="container-page">
         <SectionHeading
           title="Build Industry Preferred Skills Through"
           accent="Practical Learning"
           breakBeforeAccent
+          // phones: two lines, "Build Industry Preferred Skills" /
+          // "Through Practical Learning", sized to fit the screen
+          phoneBreakBefore="Through"
+          titleClassName="max-lg:text-[5.4vw]"
           intro="A structured learning journey designed with input from industry experts."
         />
 
-        <Reveal className="mt-12 lg:mt-16">
-          <div className="relative mx-auto max-w-[1116px] border border-ink bg-white p-5 sm:px-8 sm:py-6">
+        {/* phones and tablets: an accordion, one year per row, as on
+            scaler.com's curriculum: the open year's bar filled red with a
+            minus, the others white with a plus */}
+        <div className="mt-10 flex flex-col gap-3 lg:hidden">
+          {YEARS.map((y, i) => {
+            const on = open === i;
+            return (
+              <div key={y.key} className="border border-[#cfd1d7] bg-white">
+                <button
+                  type="button"
+                  aria-expanded={on}
+                  aria-controls={`curriculum-acc-${y.key}`}
+                  onClick={(e) => {
+                    pinned.current = {
+                      el: e.currentTarget,
+                      top: e.currentTarget.getBoundingClientRect().top,
+                    };
+                    setOpen(on ? null : i);
+                  }}
+                  className={`flex w-full items-center gap-3 px-3 py-3 text-left outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60 ${
+                    on ? "bg-accent text-white" : "bg-white text-ink"
+                  }`}
+                >
+                  <span
+                    className={`grid size-10 shrink-0 place-items-center rounded-[4px] text-[14px] font-bold tabular-nums transition-colors duration-300 ${
+                      on
+                        ? "bg-white/15 text-white"
+                        : "bg-accent-soft text-accent"
+                    }`}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span
+                      className={`block text-[12px] font-semibold uppercase tracking-[0.12em] ${
+                        on ? "text-white/80" : "text-muted"
+                      }`}
+                    >
+                      Year {i + 1}
+                    </span>
+                    <span className="block text-[16px] font-semibold leading-tight">
+                      {y.title}
+                    </span>
+                  </span>
+                  {on ? (
+                    <Minus size={20} strokeWidth={2} aria-hidden />
+                  ) : (
+                    <Plus size={20} strokeWidth={2} aria-hidden />
+                  )}
+                </button>
+                {on && (
+                  <div
+                    id={`curriculum-acc-${y.key}`}
+                    className="animate-rise px-4 pb-5 pt-4"
+                  >
+                    <YearBody
+                      year={y}
+                      index={i}
+                      skillsTone="accent"
+                      compact
+                      hideTitle
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* desktop: the tabbed card */}
+        <Reveal className="mt-12 hidden lg:mt-16 lg:block">
+          <div className="relative mx-auto max-w-[1116px] border border-[#cfd1d7] bg-white p-5 sm:px-8 sm:py-6">
             <CornerHandles />
             {/* the year tabs */}
             <div
@@ -906,11 +1002,13 @@ export function CurriculumJourney() {
   );
 
   return (
-    <section id="curriculum-journey" className="bg-canvas py-12 lg:py-16">
+    <section id="curriculum-journey" className="bg-canvas py-8 lg:py-16">
       <div className="container-page">
         <SectionHeading
           title="What Makes uGSOT"
           accent="Built for the AI Age"
+          // phones: the whole heading on one line, sized to fit
+          titleClassName="max-lg:whitespace-nowrap max-lg:text-[4.6vw]"
           intro="See it for yourself: stories from our campus, students and leaders."
         />
 
@@ -918,11 +1016,11 @@ export function CurriculumJourney() {
           ref={list}
           className="relative mt-12 space-y-16 lg:mt-16 lg:space-y-24"
         >
-          {/* from lg, one rail down the whole list and the red line that
+          {/* one rail down the whole list (phones too) and the red line that
               fills it with the scroll, as on quadcse.com */}
           <span
             aria-hidden
-            className="absolute inset-y-0 left-0 !mt-0 hidden w-[2px] bg-ink/10 lg:block"
+            className="absolute inset-y-0 left-0 !mt-0 w-[2px] bg-ink/10"
           />
           <span
             aria-hidden
@@ -930,12 +1028,12 @@ export function CurriculumJourney() {
             // starts empty via transform, not Tailwind's scale-y-0: that sets
             // the separate CSS scale property, which would stack with GSAP's
             style={{ transform: "scaleY(0)" }}
-            className="absolute inset-y-0 left-0 !mt-0 hidden w-[2px] origin-top bg-accent will-change-transform lg:block"
+            className="absolute inset-y-0 left-0 !mt-0 w-[2px] origin-top bg-accent will-change-transform"
           />
           {PILLARS.map((pillar, i) => (
             <div
               key={pillar.key}
-              className="grid gap-8 lg:grid-cols-[minmax(260px,320px)_1fr] lg:items-start lg:gap-12"
+              className="grid gap-6 pl-5 sm:pl-7 lg:grid-cols-[minmax(260px,320px)_1fr] lg:items-start lg:gap-12 lg:pl-0"
             >
               <PillarColumn pillar={pillar} index={i} />
               <VideoRow pillar={pillar} onOpen={setPlaying} />

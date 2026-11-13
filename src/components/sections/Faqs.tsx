@@ -53,7 +53,10 @@ const ALL_FAQS = "https://sot.upgrad.com/allFAQs";
 export function Faqs({ university }: { university?: string } = {}) {
   const root = useRef<HTMLElement>(null);
   const faqs = university
-    ? FAQS.map((f) => ({ ...f, q: f.q.replace("at partner universities", `at ${university}`) }))
+    ? FAQS.map((f) => ({
+        ...f,
+        q: f.q.replace("at partner universities", `at ${university}`),
+      }))
     : FAQS;
   const [open, setOpen] = useState<number | null>(0);
   const first = useRef(true);

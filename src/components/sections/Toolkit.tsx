@@ -208,9 +208,24 @@ export function Toolkit() {
               toggleActions: "play none none none",
             },
           })
-          .fromTo(q("[data-laptop]"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.2 }, 0)
-          .fromTo(q("[data-glow]"), { opacity: 0 }, { opacity: 1, duration: 1.4 }, 0.2)
-          .fromTo(q("[data-screen-off]"), { opacity: 0.6 }, { opacity: 0, duration: 1.2, ease: "power1.inOut" }, 0.3);
+          .fromTo(
+            q("[data-laptop]"),
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: 1.2 },
+            0,
+          )
+          .fromTo(
+            q("[data-glow]"),
+            { opacity: 0 },
+            { opacity: 1, duration: 1.4 },
+            0.2,
+          )
+          .fromTo(
+            q("[data-screen-off]"),
+            { opacity: 0.6 },
+            { opacity: 0, duration: 1.2, ease: "power1.inOut" },
+            0.3,
+          );
       });
       // reduced motion: shown awake
       mm.add("(prefers-reduced-motion: reduce)", () => {

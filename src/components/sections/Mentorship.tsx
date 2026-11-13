@@ -8,7 +8,12 @@ import { useGSAP } from "@gsap/react";
 import { ArrowLeft, ArrowRight, Play } from "lucide-react";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { VideoPlayer, type Video } from "@/components/site/VideoPlayer";
-import { MENTOR_CLIPS, SPEAKERS, thumb, type ChannelVideo } from "@/components/site/channel";
+import {
+  MENTOR_CLIPS,
+  SPEAKERS,
+  thumb,
+  type ChannelVideo,
+} from "@/components/site/channel";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -84,7 +89,9 @@ export function Mentorship() {
   useGSAP(
     () => {
       if (!width) return;
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
       const small = width < 640;
       const cardW = small ? CARD_W.phone : CARD_W.desktop;
       const gap = small ? 12 : 20;
@@ -92,24 +99,27 @@ export function Mentorship() {
       /** centre of the card `a` steps from the focus, from the middle */
       const xAt = (a: number) => {
         let x = 0;
-        for (let k = 1; k <= a; k++) x += (cardW / 2) * (scaleAt(k - 1) + scaleAt(k)) + gap;
+        for (let k = 1; k <= a; k++)
+          x += (cardW / 2) * (scaleAt(k - 1) + scaleAt(k)) + gap;
         return x;
       };
-      gsap.utils.toArray<HTMLElement>("[data-mcard]", stage.current).forEach((el, i) => {
-        const d = offset(i, active);
-        const a = Math.abs(d);
-        gsap.to(el, {
-          x: Math.sign(d) * xAt(a),
-          y: a * 18,
-          scale: scaleAt(a),
-          autoAlpha: a > 2 ? 0 : 1,
-          filter: `brightness(${a === 0 ? 1 : 0.55})`,
-          zIndex: 10 - a,
-          duration: reduce ? 0 : 0.6,
-          ease: "expo.out",
-          overwrite: true,
+      gsap.utils
+        .toArray<HTMLElement>("[data-mcard]", stage.current)
+        .forEach((el, i) => {
+          const d = offset(i, active);
+          const a = Math.abs(d);
+          gsap.to(el, {
+            x: Math.sign(d) * xAt(a),
+            y: a * 18,
+            scale: scaleAt(a),
+            autoAlpha: a > 2 ? 0 : 1,
+            filter: `brightness(${a === 0 ? 1 : 0.55})`,
+            zIndex: 10 - a,
+            duration: reduce ? 0 : 0.6,
+            ease: "expo.out",
+            overwrite: true,
+          });
         });
-      });
     },
     { scope: root, dependencies: [active, width] },
   );
@@ -118,7 +128,9 @@ export function Mentorship() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let inView = false;
-    const io = new IntersectionObserver(([e]) => (inView = e.isIntersecting), { threshold: 0.3 });
+    const io = new IntersectionObserver(([e]) => (inView = e.isIntersecting), {
+      threshold: 0.3,
+    });
     if (stage.current) io.observe(stage.current);
     const id = window.setInterval(() => {
       if (!inView || playing) return;
@@ -148,7 +160,11 @@ export function Mentorship() {
             duration: 1.1,
             ease: "expo.out",
             stagger: 0.12,
-            scrollTrigger: { trigger: stage.current, start: "top 85%", toggleActions: "play none none none" },
+            scrollTrigger: {
+              trigger: stage.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
           },
         );
       });
@@ -161,7 +177,11 @@ export function Mentorship() {
   const who = current.speaker ? SPEAKERS[current.speaker] : null;
 
   return (
-    <section ref={root} id="mentorship" className="overflow-x-clip bg-[#ffdf8f] py-8 lg:py-20">
+    <section
+      ref={root}
+      id="mentorship"
+      className="overflow-x-clip bg-[#ffdf8f] py-8 lg:py-20"
+    >
       <div className="container-page">
         <SectionHeading
           title="Special"
@@ -184,11 +204,13 @@ export function Mentorship() {
         }}
         onPointerDown={(e) => (drag.current = { x: e.clientX, moved: false })}
         onPointerMove={(e) => {
-          if (drag.current && Math.abs(e.clientX - drag.current.x) > 10) drag.current.moved = true;
+          if (drag.current && Math.abs(e.clientX - drag.current.x) > 10)
+            drag.current.moved = true;
         }}
         onPointerUp={(e) => {
           const d = drag.current;
-          if (d && Math.abs(e.clientX - d.x) > 40) go(active + (e.clientX < d.x ? 1 : -1));
+          if (d && Math.abs(e.clientX - d.x) > 40)
+            go(active + (e.clientX < d.x ? 1 : -1));
         }}
         className="relative mx-auto mt-10 h-[315px] max-w-[1440px] touch-pan-y select-none outline-none focus-visible:ring-2 focus-visible:ring-accent sm:h-[415px] lg:mt-14"
       >
@@ -232,7 +254,12 @@ export function Mentorship() {
                       on ? "scale-100 opacity-100" : "scale-50 opacity-0"
                     }`}
                   >
-                    <Play size={20} fill="currentColor" strokeWidth={0} className="translate-x-[2px]" />
+                    <Play
+                      size={20}
+                      fill="currentColor"
+                      strokeWidth={0}
+                      className="translate-x-[2px]"
+                    />
                   </span>
                   {/* who, on the card in focus (the side cards stay clean) */}
                   {speaker && (
@@ -242,7 +269,9 @@ export function Mentorship() {
                       <span className="block font-display text-[15px] font-bold leading-tight text-white">
                         {speaker.name}
                       </span>
-                      <span className="mt-0.5 block text-[12px] text-white/75">{speaker.role}</span>
+                      <span className="mt-0.5 block text-[12px] text-white/75">
+                        {speaker.role}
+                      </span>
                     </span>
                   )}
                 </button>
@@ -298,7 +327,9 @@ export function Mentorship() {
               >
                 <span
                   className={`block h-[3px] rounded-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    i === active ? "w-8 bg-ink" : "w-3 bg-ink/25 hover:bg-ink/50"
+                    i === active
+                      ? "w-8 bg-ink"
+                      : "w-3 bg-ink/25 hover:bg-ink/50"
                   }`}
                 />
               </button>
@@ -307,7 +338,9 @@ export function Mentorship() {
         </ul>
       </div>
 
-      {playing && <VideoPlayer video={playing} onClose={() => setPlaying(null)} />}
+      {playing && (
+        <VideoPlayer video={playing} onClose={() => setPlaying(null)} />
+      )}
     </section>
   );
 }

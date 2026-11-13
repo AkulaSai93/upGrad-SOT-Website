@@ -39,13 +39,22 @@ function Lockup({ onRed = false }: { onRed?: boolean }) {
   return (
     <span className={`flex shrink-0 items-center ${onRed ? "gap-6" : "gap-5"}`}>
       <Image
-        src={onRed ? "/images/spotlight/figuring-out-white.png" : "/images/spotlight/figuring-out-dark.png"}
+        src={
+          onRed
+            ? "/images/spotlight/figuring-out-white.png"
+            : "/images/spotlight/figuring-out-dark.png"
+        }
         alt="Figuring Out with Raj Shamani"
         width={411}
         height={84}
         className={`${h} w-auto`}
       />
-      <X aria-hidden size={onRed ? 16 : 20} strokeWidth={1.75} className={onRed ? "text-white" : "text-body"} />
+      <X
+        aria-hidden
+        size={onRed ? 16 : 20}
+        strokeWidth={1.75}
+        className={onRed ? "text-white" : "text-body"}
+      />
       <Image
         src={onRed ? "/images/spotlight/sot-white.png" : "/images/logo-sot.png"}
         alt="upGrad School of Technology"
@@ -69,7 +78,13 @@ export function IITRace() {
         gsap.fromTo(
           q("[data-track]"),
           { xPercent: 0 },
-          { xPercent: -50, duration: LOOP_SECONDS, ease: "none", repeat: -1, force3D: true },
+          {
+            xPercent: -50,
+            duration: LOOP_SECONDS,
+            ease: "none",
+            repeat: -1,
+            force3D: true,
+          },
         );
         gsap.fromTo(
           q("[data-copy] > *"),
@@ -80,17 +95,30 @@ export function IITRace() {
             duration: 1,
             ease: "expo.out",
             stagger: 0.08,
-            scrollTrigger: { trigger: q("[data-copy]")[0], start: "top 80%", toggleActions: "play none none none" },
+            scrollTrigger: {
+              trigger: q("[data-copy]")[0],
+              start: "top 80%",
+              toggleActions: "play none none none",
+            },
           },
         );
         const tl = gsap.timeline({
-          scrollTrigger: { trigger: q("[data-video]")[0], start: "top 80%", toggleActions: "play none none none" },
+          scrollTrigger: {
+            trigger: q("[data-video]")[0],
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
         });
         tl.fromTo(
           q("[data-video]"),
           { clipPath: "inset(0% 0% 100% 0%)" },
           { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "expo.out" },
-        ).fromTo(q("[data-video-img]"), { scale: 1.15 }, { scale: 1, duration: 1.6, ease: "expo.out" }, 0);
+        ).fromTo(
+          q("[data-video-img]"),
+          { scale: 1.15 },
+          { scale: 1, duration: 1.6, ease: "expo.out" },
+          0,
+        );
       });
       return () => mm.revert();
     },
@@ -98,7 +126,11 @@ export function IITRace() {
   );
 
   return (
-    <section ref={root} id="iit-race" className="bg-canvas pb-8 pt-10 lg:pb-14 lg:pt-20">
+    <section
+      ref={root}
+      id="iit-race"
+      className="bg-canvas pb-8 pt-10 lg:pb-14 lg:pt-20"
+    >
       {/* the two shows in white on a full-width red band, running right to left */}
       <div aria-hidden className="overflow-hidden bg-accent py-3">
         <div data-track className="flex w-max will-change-transform">
@@ -118,12 +150,12 @@ export function IITRace() {
               <Lockup />
             </div>
             <h2 className="mt-10 font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.03em] text-ink">
-              Inside The{" "}
-              <span className="text-accent">IIT Race</span>
+              Inside The <span className="text-accent">IIT Race</span>
             </h2>
             <p className="mt-5 max-w-[520px] text-balance text-[16px] leading-relaxed text-body max-lg:mx-auto">
-              The reality behind the IIT dream, what students are rarely told about placement packages,
-              and why chasing salary numbers often creates the wrong expectations.
+              The reality behind the IIT dream, what students are rarely told
+              about placement packages, and why chasing salary numbers often
+              creates the wrong expectations.
             </p>
           </div>
 
@@ -143,16 +175,26 @@ export function IITRace() {
                 className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
               />
             </span>
-            <span aria-hidden className="absolute inset-0 grid place-items-center">
+            <span
+              aria-hidden
+              className="absolute inset-0 grid place-items-center"
+            >
               <span className="grid size-16 place-items-center rounded-full bg-white text-ink shadow-[0_8px_24px_-8px_rgba(11,13,18,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 sm:size-20">
-                <Play size={24} fill="currentColor" strokeWidth={0} className="translate-x-[2px]" />
+                <Play
+                  size={24}
+                  fill="currentColor"
+                  strokeWidth={0}
+                  className="translate-x-[2px]"
+                />
               </span>
             </span>
           </button>
         </div>
       </div>
 
-      {playing && <VideoPlayer video={EPISODE} onClose={() => setPlaying(false)} />}
+      {playing && (
+        <VideoPlayer video={EPISODE} onClose={() => setPlaying(false)} />
+      )}
     </section>
   );
 }

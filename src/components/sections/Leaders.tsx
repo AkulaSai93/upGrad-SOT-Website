@@ -78,7 +78,9 @@ export function Leaders() {
   useEffect(() => {
     const section = root.current;
     if (!section) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     let dark: boolean | null = null;
     const check = () => {
       const r = section.getBoundingClientRect();
@@ -114,20 +116,34 @@ export function Leaders() {
           {
             xPercent: -3,
             ease: "none",
-            scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true },
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
           },
         );
 
         const tl = gsap.timeline({
           defaults: { ease: "expo.out" },
-          scrollTrigger: { trigger: q("[data-photo]")[0], start: "top 80%", toggleActions: "play none none none" },
+          scrollTrigger: {
+            trigger: q("[data-photo]")[0],
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
         });
         tl.fromTo(
           q("[data-photo]"),
           { clipPath: "inset(100% 0% 0% 0%)" },
           { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4 },
         )
-          .fromTo(q("[data-photo-img]"), { scale: 1.15 }, { scale: 1, duration: 1.8 }, 0)
+          .fromTo(
+            q("[data-photo-img]"),
+            { scale: 1.15 },
+            { scale: 1, duration: 1.8 },
+            0,
+          )
           .fromTo(
             q("[data-title-line]"),
             { yPercent: 110 },
@@ -140,7 +156,12 @@ export function Leaders() {
             { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut" },
             0.8,
           )
-          .fromTo(q("[data-quote]"), { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.9 }, 0.9);
+          .fromTo(
+            q("[data-quote]"),
+            { y: 16, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.9 },
+            0.9,
+          );
 
         gsap.fromTo(
           q("[data-col]"),
@@ -151,7 +172,11 @@ export function Leaders() {
             duration: 1,
             ease: "expo.out",
             stagger: 0.12,
-            scrollTrigger: { trigger: q("[data-cols]")[0], start: "top 85%", toggleActions: "play none none none" },
+            scrollTrigger: {
+              trigger: q("[data-cols]")[0],
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
           },
         );
       });
@@ -182,7 +207,10 @@ export function Leaders() {
       <div className="container-page mt-12 lg:mt-16">
         {/* photo + title beside it, overlapping the photo's right edge */}
         <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:items-center">
-          <div data-photo className="relative aspect-[3/2] overflow-hidden rounded-[6px] bg-[#1b1b1e]">
+          <div
+            data-photo
+            className="relative aspect-[3/2] overflow-hidden rounded-[6px] bg-[#1b1b1e]"
+          >
             <div data-photo-img className="absolute inset-0">
               <Image
                 src="/images/leaders/group-placeholder.jpg"
@@ -243,12 +271,13 @@ export function Leaders() {
                 narrower screens so it always fits */}
             <div data-quote className="mt-7">
               <p className="text-[15px] font-medium leading-relaxed text-[color:var(--ld-fg)] lg:whitespace-nowrap lg:text-[clamp(13px,1.1vw,15px)]">
-                <span className="text-accent">&ldquo;</span>Education is not about what you study,
-                it&rsquo;s about who you become<span className="text-accent">&rdquo;</span>
+                <span className="text-accent">&ldquo;</span>Education is not
+                about what you study, it&rsquo;s about who you become
+                <span className="text-accent">&rdquo;</span>
               </p>
               <p className="mt-1.5 text-[13.5px] leading-relaxed text-[color:var(--ld-soft)] lg:whitespace-nowrap lg:text-[clamp(11.5px,0.98vw,13.5px)]">
-                Together, they&rsquo;re inspiring a generation to dream fearlessly and achieve beyond
-                limits.
+                Together, they&rsquo;re inspiring a generation to dream
+                fearlessly and achieve beyond limits.
               </p>
             </div>
           </div>
@@ -265,11 +294,15 @@ export function Leaders() {
               data-col
               className="border-t border-[color:var(--ld-line)] pt-6 md:border-l md:border-t-0 md:px-8 md:pt-0 md:first:border-l-0 md:first:pl-0 md:last:pr-0 lg:px-10"
             >
-              <span className="font-mono text-[12px] text-[color:var(--ld-soft)]">0{i + 1}</span>
+              <span className="font-mono text-[12px] text-[color:var(--ld-soft)]">
+                0{i + 1}
+              </span>
               <h3 className="mt-4 font-display text-[clamp(1.375rem,1.9vw,1.625rem)] font-semibold leading-tight tracking-[-0.02em]">
                 {l.name}
               </h3>
-              <p className="mt-1.5 text-[13.5px] font-medium leading-snug text-accent">{l.role}</p>
+              <p className="mt-1.5 text-[13.5px] font-medium leading-snug text-accent">
+                {l.role}
+              </p>
               <p className="mt-4 max-w-[360px] text-[14.5px] leading-relaxed text-[color:var(--ld-muted)]">
                 {l.bio}
               </p>

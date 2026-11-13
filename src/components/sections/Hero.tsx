@@ -128,114 +128,126 @@ export function Hero() {
       // sideways. The pill is measured afresh on every update (not once per
       // refresh), so the film can't drift off it when the mobile address bar
       // resizes the screen.
-      mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
-        const text = q("h1, .hero-bottom, .hero-logos");
-        const fade = q(".hero-fade")[0];
-        const video = q<HTMLVideoElement>(".hero-video")[0];
-        const ease = gsap.parseEase("power2.inOut");
-        let progress = 0;
-        const render = () => {
-          const b = pillBox();
-          const w = stage.current!.clientWidth;
-          const h = stage.current!.clientHeight;
-          const t = ease(Math.min(progress / 0.7, 1));
-          gsap.set(media.current, {
-            left: b.left * (1 - t),
-            top: b.top * (1 - t),
-            width: b.width + (w - b.width) * t,
-            height: b.height + (h - b.height) * t,
-            borderRadius: (b.height / 2) * (1 - t),
-          });
-          gsap.set(video, { scale: 1.35 - 0.35 * Math.min(progress / 0.7, 1) });
-          gsap.set(text, { opacity: 1 - Math.min(progress / 0.3, 1) });
-          gsap.set(fade, { opacity: Math.min(Math.max((progress - 0.45) / 0.25, 0), 1) });
-        };
-        const st = ScrollTrigger.create({
-          trigger: root.current,
-          start: "top top",
-          end: "bottom bottom",
-          onUpdate: (self) => {
-            progress = self.progress;
-            render();
-            if (progress > 0 && video?.paused) video.play().catch(() => {});
-          },
-        });
-        render();
-        const ro = new ResizeObserver(render);
-        ro.observe(stage.current!);
-        document.fonts?.ready.then(render);
-        return () => {
-          ro.disconnect();
-          st.kill();
-        };
-      });
-
-      mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-        /* ---------------------------------------------- act 2: scroll */
-        const vw = () => window.innerWidth;
-        const tl = gsap.timeline({
-          defaults: { ease: "none" },
-          scrollTrigger: {
+      mm.add(
+        "(max-width: 1023px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          // the moving company logos stay over the film as it opens (the black
+          // fade at its foot keeps them legible); only the copy fades away
+          const text = q("h1, .hero-bottom");
+          const fade = q(".hero-fade")[0];
+          const video = q<HTMLVideoElement>(".hero-video")[0];
+          const ease = gsap.parseEase("power2.inOut");
+          let progress = 0;
+          const render = () => {
+            const b = pillBox();
+            const w = stage.current!.clientWidth;
+            const h = stage.current!.clientHeight;
+            const t = ease(Math.min(progress / 0.7, 1));
+            gsap.set(media.current, {
+              left: b.left * (1 - t),
+              top: b.top * (1 - t),
+              width: b.width + (w - b.width) * t,
+              height: b.height + (h - b.height) * t,
+              borderRadius: (b.height / 2) * (1 - t),
+            });
+            gsap.set(video, {
+              scale: 1.35 - 0.35 * Math.min(progress / 0.7, 1),
+            });
+            gsap.set(text, { opacity: 1 - Math.min(progress / 0.3, 1) });
+            gsap.set(fade, {
+              opacity: Math.min(Math.max((progress - 0.45) / 0.25, 0), 1),
+            });
+          };
+          const st = ScrollTrigger.create({
             trigger: root.current,
             start: "top top",
             end: "bottom bottom",
-            scrub: 0.6,
-            invalidateOnRefresh: true,
-            // Mobile browsers may pause a tiny muted video; make sure the film
-            // is running by the time it fills the screen.
-            onUpdate: () => {
-              const v = q<HTMLVideoElement>(".hero-video")[0];
-              if (v?.paused) v.play().catch(() => {});
+            onUpdate: (self) => {
+              progress = self.progress;
+              render();
+              if (progress > 0 && video?.paused) video.play().catch(() => {});
             },
-          },
-        });
+          });
+          render();
+          const ro = new ResizeObserver(render);
+          ro.observe(stage.current!);
+          document.fonts?.ready.then(render);
+          return () => {
+            ro.disconnect();
+            st.kill();
+          };
+        },
+      );
 
-        tl.fromTo(
-          media.current,
-          {
-            left: () => pillBox().left,
-            top: () => pillBox().top,
-            width: () => pillBox().width,
-            height: () => pillBox().height,
-            borderRadius: () => pillBox().height / 2,
-          },
-          {
-            left: 0,
-            top: 0,
-            width: () => stage.current!.clientWidth,
-            height: () => stage.current!.clientHeight,
-            borderRadius: 0,
-            duration: 0.55,
-            ease: "power2.inOut",
-          },
-          0,
-        )
-          .to(
-            q(".hero-line-1"),
-            { x: () => -vw() * 0.18, opacity: 0, duration: 0.4 },
+      mm.add(
+        "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          /* ---------------------------------------------- act 2: scroll */
+          const vw = () => window.innerWidth;
+          const tl = gsap.timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 0.6,
+              invalidateOnRefresh: true,
+              // Mobile browsers may pause a tiny muted video; make sure the film
+              // is running by the time it fills the screen.
+              onUpdate: () => {
+                const v = q<HTMLVideoElement>(".hero-video")[0];
+                if (v?.paused) v.play().catch(() => {});
+              },
+            },
+          });
+
+          tl.fromTo(
+            media.current,
+            {
+              left: () => pillBox().left,
+              top: () => pillBox().top,
+              width: () => pillBox().width,
+              height: () => pillBox().height,
+              borderRadius: () => pillBox().height / 2,
+            },
+            {
+              left: 0,
+              top: 0,
+              width: () => stage.current!.clientWidth,
+              height: () => stage.current!.clientHeight,
+              borderRadius: 0,
+              duration: 0.55,
+              ease: "power2.inOut",
+            },
             0,
           )
-          .to(
-            q(".hero-line-3"),
-            { x: () => vw() * 0.18, opacity: 0, duration: 0.4 },
-            0,
-          )
-          .to(q(".hero-line-2-text"), { opacity: 0, duration: 0.25 }, 0)
-          .to(q(".hero-bottom"), { y: 40, opacity: 0, duration: 0.25 }, 0)
-          .to(
-            q(".hero-bg-wrap"),
-            { scale: 1.1, yPercent: -3, duration: 0.55 },
-            0,
-          )
-          .fromTo(
-            q(".hero-video"),
-            { scale: 1.35 },
-            { scale: 1, duration: 0.7 },
-            0,
-          )
-          .to(q(".hero-fade"), { opacity: 1, duration: 0.25 }, 0.3)
-          .to({}, { duration: 0.25 }); // hold the full-bleed film before the stage scrolls away
-      });
+            .to(
+              q(".hero-line-1"),
+              { x: () => -vw() * 0.18, opacity: 0, duration: 0.4 },
+              0,
+            )
+            .to(
+              q(".hero-line-3"),
+              { x: () => vw() * 0.18, opacity: 0, duration: 0.4 },
+              0,
+            )
+            .to(q(".hero-line-2-text"), { opacity: 0, duration: 0.25 }, 0)
+            .to(q(".hero-bottom"), { y: 40, opacity: 0, duration: 0.25 }, 0)
+            .to(
+              q(".hero-bg-wrap"),
+              { scale: 1.1, yPercent: -3, duration: 0.55 },
+              0,
+            )
+            .fromTo(
+              q(".hero-video"),
+              { scale: 1.35 },
+              { scale: 1, duration: 0.7 },
+              0,
+            )
+            .to(q(".hero-fade"), { opacity: 1, duration: 0.25 }, 0.3)
+            .to({}, { duration: 0.25 }); // hold the full-bleed film before the stage scrolls away
+        },
+      );
 
       return () => mm.revert();
     },
@@ -305,7 +317,11 @@ export function Hero() {
             poster={VIDEO.poster}
             className="hero-video absolute inset-0 size-full object-cover"
           >
-            <source media="(max-width: 1023px)" src={VIDEO.phone} type="video/mp4" />
+            <source
+              media="(max-width: 1023px)"
+              src={VIDEO.phone}
+              type="video/mp4"
+            />
             <source src={VIDEO.desktop} type="video/mp4" />
           </video>
           {/* Bottom fade into the page canvas below, so the full-bleed film
@@ -333,10 +349,7 @@ export function Hero() {
               <span className="hero-line-2 flex items-center gap-[0.18em] max-lg:justify-center">
                 <span className="hero-line-2-text inline-block whitespace-nowrap">
                   <MaskWord attr="hero">B.Tech</MaskWord>{" "}
-                  <MaskWord
-                    attr="hero"
-                    className="text-ink/55"
-                  >
+                  <MaskWord attr="hero" className="text-ink/55">
                     in
                   </MaskWord>
                 </span>
@@ -349,10 +362,7 @@ export function Hero() {
               </span>{" "}
               <span className="hero-line-3 block whitespace-nowrap">
                 <MaskWord attr="hero">Computer</MaskWord>{" "}
-                <MaskWord
-                  attr="hero"
-                  className="text-accent"
-                >
+                <MaskWord attr="hero" className="text-accent">
                   Science
                 </MaskWord>
               </span>

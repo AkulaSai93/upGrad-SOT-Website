@@ -27,7 +27,8 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * others, nudges its word right, and a preview card carrying that domain's
  * illustration (public/images/specializations/v9) follows the cursor,
  * crossfading between domains as you move down the list. Touch screens get
- * the illustration as a small thumbnail on the label line instead.
+ * the illustration as a thumbnail at the row's right, centred on the row, and
+ * as on TKS the giant word darkens from light grey as it rises.
  */
 const SPECIALIZATIONS = [
   {
@@ -96,9 +97,15 @@ export function Specializations() {
             .fromTo(row, { "--rule": 0 }, { "--rule": 1, duration: 1.4 }, 0)
             .fromTo(
               r("[data-word]"),
-              { yPercent: 120, rotate: 5 },
-              { yPercent: 0, rotate: 0, duration: 1.3 },
+              { yPercent: 120, rotate: 5, color: "#c4c6cc" },
+              { yPercent: 0, rotate: 0, color: "#0b0d12", duration: 1.3 },
               0,
+            )
+            .fromTo(
+              r("[data-thumb]"),
+              { scale: 0.85, autoAlpha: 0 },
+              { scale: 1, autoAlpha: 1, duration: 0.9 },
+              0.2,
             )
             .fromTo(
               r("[data-fade]"),
@@ -122,8 +129,14 @@ export function Specializations() {
       const card = preview.current;
       if (!card) return;
       gsap.set(card, { xPercent: -50, yPercent: -50, scale: 0, autoAlpha: 0 });
-      moveX.current = gsap.quickTo(card, "x", { duration: 0.6, ease: "power3.out" });
-      moveY.current = gsap.quickTo(card, "y", { duration: 0.6, ease: "power3.out" });
+      moveX.current = gsap.quickTo(card, "x", {
+        duration: 0.6,
+        ease: "power3.out",
+      });
+      moveY.current = gsap.quickTo(card, "y", {
+        duration: 0.6,
+        ease: "power3.out",
+      });
       return () => gsap.killTweensOf(card);
     },
     { scope: root },
@@ -148,20 +161,32 @@ export function Specializations() {
     const { x, y } = local(e);
     moveX.current?.(x, x);
     moveY.current?.(y, y);
-    gsap.to(preview.current, { scale: 1, autoAlpha: 1, duration: 0.5, ease: "expo.out", overwrite: "auto" });
+    gsap.to(preview.current, {
+      scale: 1,
+      autoAlpha: 1,
+      duration: 0.5,
+      ease: "expo.out",
+      overwrite: "auto",
+    });
   };
 
   const onLeave = () => {
     setHovered(null);
     if (!preview.current) return;
-    gsap.to(preview.current, { scale: 0, autoAlpha: 0, duration: 0.35, ease: "power3.in", overwrite: "auto" });
+    gsap.to(preview.current, {
+      scale: 0,
+      autoAlpha: 0,
+      duration: 0.35,
+      ease: "power3.in",
+      overwrite: "auto",
+    });
   };
 
   return (
     <section
       ref={root}
       id="specializations"
-      className="relative bg-canvas py-16 lg:py-16"
+      className="relative bg-canvas pb-6 pt-10 lg:pb-8 lg:pt-16"
     >
       <div className="container-page relative">
         <SectionHeading
@@ -169,10 +194,16 @@ export function Specializations() {
           accent="Specializations"
           intro={
             <>
-              Explore future-focused domains shaping the next decade of
-              technology
-              <br className="hidden sm:block" /> AI / ML, Cloud, Blockchain and
-              many more
+              {/* phones: a shorter line that fits in two lines */}
+              <span className="sm:hidden">
+                Future-focused domains shaping the next decade: AI / ML, Cloud,
+                Blockchain and more.
+              </span>
+              <span className="max-sm:hidden">
+                Explore future-focused domains shaping the next decade of
+                technology
+                <br /> AI / ML, Cloud, Blockchain and many more
+              </span>
             </>
           }
         />
@@ -182,7 +213,7 @@ export function Specializations() {
           onPointerEnter={onEnter}
           onPointerMove={onMove}
           onPointerLeave={onLeave}
-          className="relative mt-14 lg:mt-24"
+          className="relative mt-6 lg:mt-24"
         >
           {SPECIALIZATIONS.map((spec, i) => {
             const n = String(i + 1).padStart(2, "0");
@@ -192,20 +223,40 @@ export function Specializations() {
                 key={spec.key}
                 data-row
                 aria-label={spec.title}
-                onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(i)}
-                className={`relative grid grid-cols-1 gap-y-3 py-6 transition-opacity duration-500 lg:grid-cols-[3fr_7fr_2fr] lg:items-end lg:gap-x-[18px] lg:py-6 ${
+                onPointerEnter={(e) =>
+                  e.pointerType === "mouse" && setHovered(i)
+                }
+                className={`relative grid grid-cols-1 gap-y-3 py-6 pr-20 transition-opacity duration-500 lg:grid-cols-[3fr_7fr_2fr] lg:items-end lg:gap-x-[18px] lg:py-6 lg:pr-0 ${
                   dim ? "lg:opacity-30" : ""
                 }`}
               >
-                {/* hairline that draws in from the left */}
+                {/* phones and tablets: the art as a thumbnail at the row's
+                    right, centred on the whole row */}
                 <span
-                  aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-[var(--rule,1)] bg-line-strong"
-                />
+                  data-thumb
+                  className="absolute right-0 top-1/2 size-16 -translate-y-1/2 overflow-hidden rounded-[4px] bg-ink lg:hidden"
+                >
+                  <Image
+                    src={`/images/specializations/v9/${spec.key}.webp`}
+                    alt=""
+                    fill
+                    sizes="64px"
+                    className="object-cover"
+                  />
+                </span>
+
+                {/* hairline that draws in from the left (between rows only, none
+                    under the last) */}
+                {i < SPECIALIZATIONS.length - 1 && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-[var(--rule,1)] bg-line-strong"
+                  />
+                )}
 
                 <div
                   data-fade
-                  className="flex items-center justify-between gap-4 lg:pb-[0.35rem]"
+                  className="flex items-center gap-4 lg:pb-[0.35rem]"
                 >
                   <p className="flex items-baseline gap-3 text-[15px] font-semibold text-ink">
                     <span
@@ -217,16 +268,6 @@ export function Specializations() {
                     </span>
                     {spec.label}
                   </p>
-                  {/* touch / small screens: the art as a thumbnail */}
-                  <span className="relative size-14 shrink-0 overflow-hidden rounded-[6px] bg-ink lg:hidden">
-                    <Image
-                      src={`/images/specializations/v9/${spec.key}.webp`}
-                      alt=""
-                      fill
-                      sizes="56px"
-                      className="object-cover"
-                    />
-                  </span>
                 </div>
 
                 {/* the giant word, in a mask so it can rise into view */}
@@ -260,7 +301,7 @@ export function Specializations() {
           <div
             ref={preview}
             aria-hidden
-            className="pointer-events-none invisible absolute left-0 top-0 z-20 hidden aspect-[4/3] w-[clamp(260px,24vw,360px)] overflow-hidden rounded-[8px] bg-ink shadow-[var(--shadow-lg)] lg:block"
+            className="pointer-events-none invisible absolute left-0 top-0 z-20 hidden aspect-[4/3] w-[clamp(260px,24vw,360px)] overflow-hidden rounded-[4px] bg-ink shadow-[var(--shadow-lg)] lg:block"
           >
             {SPECIALIZATIONS.map((spec, i) => (
               <Image
@@ -271,7 +312,9 @@ export function Specializations() {
                 quality={90}
                 sizes="360px"
                 className={`object-cover transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  hovered === i ? "scale-100 opacity-100" : "scale-110 opacity-0"
+                  hovered === i
+                    ? "scale-100 opacity-100"
+                    : "scale-110 opacity-0"
                 }`}
               />
             ))}
@@ -281,4 +324,3 @@ export function Specializations() {
     </section>
   );
 }
-

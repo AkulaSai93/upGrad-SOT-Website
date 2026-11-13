@@ -241,7 +241,7 @@ export function Testimonials() {
                 onClick={() => setActive(i)}
                 className={`relative border p-7 transition-colors duration-500 [grid-area:1/1] ${
                   i === active
-                    ? "border-ink bg-accent text-white"
+                    ? "border-[#cfd1d7] bg-accent text-white"
                     : "cursor-pointer border-ink/10 bg-white text-ink"
                 }`}
               >

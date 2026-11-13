@@ -8,7 +8,12 @@ import { useGSAP } from "@gsap/react";
 import { Play } from "lucide-react";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { VideoPlayer, type Video } from "@/components/site/VideoPlayer";
-import { CAMPUS_CLIPS, MENTOR_CLIPS, thumb, type ChannelVideo } from "@/components/site/channel";
+import {
+  CAMPUS_CLIPS,
+  MENTOR_CLIPS,
+  thumb,
+  type ChannelVideo,
+} from "@/components/site/channel";
 import { INSTAGRAM, YOUTUBE } from "@/components/site/socials";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -43,15 +48,45 @@ const m = (i: number): Tile => ({ clip: MENTOR_CLIPS[i] });
 
 /** each row's tiles, the way it drifts and how long one pass takes */
 const ROWS: { tiles: Tile[]; left: boolean; seconds: number }[] = [
-  { tiles: [c(0), c(1), c(2), { channel: INSTAGRAM }, c(3), c(4), c(5), c(6)], left: true, seconds: 36 },
-  { tiles: [m(0), m(1), m(2), m(3), m(4), { channel: YOUTUBE }, m(5), m(6), m(7)], left: false, seconds: 44 },
-  { tiles: [c(3), m(5), c(6), m(1), c(0), m(7), c(4), m(2)], left: true, seconds: 40 },
+  {
+    tiles: [c(0), c(1), c(2), { channel: INSTAGRAM }, c(3), c(4), c(5), c(6)],
+    left: true,
+    seconds: 36,
+  },
+  {
+    tiles: [
+      m(0),
+      m(1),
+      m(2),
+      m(3),
+      m(4),
+      { channel: YOUTUBE },
+      m(5),
+      m(6),
+      m(7),
+    ],
+    left: false,
+    seconds: 44,
+  },
+  {
+    tiles: [c(3), m(5), c(6), m(1), c(0), m(7), c(4), m(2)],
+    left: true,
+    seconds: 40,
+  },
 ];
 
 const TILE =
   "relative block size-[88px] overflow-hidden rounded-[6px] outline-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-accent sm:size-[120px]";
 
-function TileItem({ t, copy, onPlay }: { t: Tile; copy: boolean; onPlay: (v: ChannelVideo) => void }) {
+function TileItem({
+  t,
+  copy,
+  onPlay,
+}: {
+  t: Tile;
+  copy: boolean;
+  onPlay: (v: ChannelVideo) => void;
+}) {
   return (
     <li aria-hidden={copy || undefined} className="mr-3 shrink-0 sm:mr-5">
       {"clip" in t ? (
@@ -75,7 +110,12 @@ function TileItem({ t, copy, onPlay }: { t: Tile; copy: boolean; onPlay: (v: Cha
             className="absolute inset-0 grid place-items-center bg-black/0 transition-colors duration-300 group-hover:bg-black/25 group-focus-visible:bg-black/25"
           >
             <span className="grid size-9 scale-75 place-items-center rounded-full bg-white text-ink opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100">
-              <Play size={13} fill="currentColor" strokeWidth={0} className="translate-x-[1px]" />
+              <Play
+                size={13}
+                fill="currentColor"
+                strokeWidth={0}
+                className="translate-x-[1px]"
+              />
             </span>
           </span>
         </button>
@@ -93,7 +133,12 @@ function TileItem({ t, copy, onPlay }: { t: Tile; copy: boolean; onPlay: (v: Cha
               : "bg-[linear-gradient(45deg,#f9a825,#e1306c_45%,#833ab4)]"
           }`}
         >
-          <svg viewBox="0 0 24 24" aria-hidden className="size-[40%]" fill="currentColor">
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden
+            className="size-[40%]"
+            fill="currentColor"
+          >
             <path d={t.channel.path} />
           </svg>
         </a>
@@ -131,15 +176,29 @@ export function Social() {
           const loop = gsap.fromTo(
             row.querySelector("[data-track]"),
             { xPercent: left ? 0 : -50 },
-            { xPercent: left ? -50 : 0, duration: seconds, ease: "none", repeat: -1, force3D: true },
+            {
+              xPercent: left ? -50 : 0,
+              duration: seconds,
+              ease: "none",
+              repeat: -1,
+              force3D: true,
+            },
           );
           // ease to a stop under the mouse or keyboard focus, so a clip can be picked
           let hovered = false;
           let focused = false;
           const ease = () =>
-            gsap.to(loop, { timeScale: hovered || focused ? 0 : 1, duration: 0.7, ease: "power2.out" });
+            gsap.to(loop, {
+              timeScale: hovered || focused ? 0 : 1,
+              duration: 0.7,
+              ease: "power2.out",
+            });
           const events = [
-            ["pointerenter", (e: Event) => (hovered = (e as PointerEvent).pointerType === "mouse")],
+            [
+              "pointerenter",
+              (e: Event) =>
+                (hovered = (e as PointerEvent).pointerType === "mouse"),
+            ],
             ["pointerleave", () => (hovered = false)],
             ["focusin", () => (focused = tabbing)],
             ["focusout", () => (focused = false)],
@@ -164,7 +223,11 @@ export function Social() {
             duration: 1.2,
             ease: "expo.out",
             stagger: 0.15,
-            scrollTrigger: { trigger: root.current, start: "top 70%", toggleActions: "play none none none" },
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top 70%",
+              toggleActions: "play none none none",
+            },
           },
         );
         return () => {
@@ -179,7 +242,11 @@ export function Social() {
   );
 
   return (
-    <section ref={root} id="social" className="overflow-x-clip bg-canvas py-10 lg:py-16">
+    <section
+      ref={root}
+      id="social"
+      className="overflow-x-clip bg-canvas py-8 lg:py-16"
+    >
       <div className="container-page">
         <SectionHeading
           title="Follow Our Journey on"
@@ -190,10 +257,17 @@ export function Social() {
 
         {/* the two channels, as Scaler shows them: each handle with its
             brand icon, in an outlined button */}
-        <div data-rise className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <div
+          data-rise
+          className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4"
+        >
           {(
             [
-              [INSTAGRAM, "@upgrad_schooloftech", "bg-[linear-gradient(45deg,#f9a825,#e1306c_45%,#833ab4)]"],
+              [
+                INSTAGRAM,
+                "@upgrad_schooloftech",
+                "bg-[linear-gradient(45deg,#f9a825,#e1306c_45%,#833ab4)]",
+              ],
               [YOUTUBE, "@upGradSchoolofTechnology", "bg-[#ff0000]"],
             ] as const
           ).map(([s, handle, tint]) => (
@@ -205,8 +279,15 @@ export function Social() {
               aria-label={`${handle} on ${s.label}`}
               className="inline-flex items-center justify-center gap-3 rounded-[6px] border border-ink/15 bg-white px-5 py-3.5 text-[15px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white sm:px-6 sm:text-[16px]"
             >
-              <span aria-hidden className={`grid size-8 shrink-0 place-items-center rounded-[6px] text-white ${tint}`}>
-                <svg viewBox="0 0 24 24" className="size-[18px]" fill="currentColor">
+              <span
+                aria-hidden
+                className={`grid size-8 shrink-0 place-items-center rounded-[6px] text-white ${tint}`}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className="size-[18px]"
+                  fill="currentColor"
+                >
                   <path d={s.path} />
                 </svg>
               </span>
@@ -225,14 +306,21 @@ export function Social() {
           <div key={r} data-row>
             <ul data-track className="flex w-max will-change-transform">
               {[...row.tiles, ...row.tiles].map((t, i) => (
-                <TileItem key={i} t={t} copy={i >= row.tiles.length} onPlay={play} />
+                <TileItem
+                  key={i}
+                  t={t}
+                  copy={i >= row.tiles.length}
+                  onPlay={play}
+                />
               ))}
             </ul>
           </div>
         ))}
       </div>
 
-      {playing && <VideoPlayer video={playing} onClose={() => setPlaying(null)} />}
+      {playing && (
+        <VideoPlayer video={playing} onClose={() => setPlaying(null)} />
+      )}
     </section>
   );
 }
