@@ -94,7 +94,7 @@ const PARTNERS: Partner[] = [
   },
 ];
 
-const AUTOPLAY_MS = 4500;
+const AUTOPLAY_MS = 2800;
 
 /** a length in the card, given at the design's 440-wide size */
 const at = (px: number) => `calc(var(--cw) * ${(px / 440).toFixed(4)})`;
@@ -187,7 +187,7 @@ export function Partners() {
         <span
           key={p.key}
           aria-hidden
-          className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+          className="absolute inset-0 transition-opacity duration-700 ease-in-out"
           style={{ background: p.bg, opacity: i === active ? 1 : 0 }}
         />
       ))}
@@ -241,7 +241,7 @@ export function Partners() {
                   transform: `translateX(calc(-50% + ${d} * var(--cw) * 1.0)) scale(${mid ? 1 : 0.9})`,
                   zIndex: mid ? 2 : 1,
                 }}
-                className={`absolute left-1/2 top-0 block h-full w-[var(--cw)] text-left transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.32,0,0.2,1)] ${
+                className={`absolute left-1/2 top-0 block h-full w-[var(--cw)] text-left transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.32,0,0.2,1)] ${
                   mid
                     ? "shadow-[0_24px_60px_-20px_rgba(0,0,0,0.55)]"
                     : "cursor-pointer"

@@ -291,9 +291,9 @@ export function Scholarships() {
             </span>
             <span
               data-rise
-              className="mt-1 flex flex-wrap items-end gap-x-5 max-lg:justify-center"
+              className="mt-3 flex flex-wrap items-end gap-x-5 gap-y-4 max-lg:justify-center lg:mt-1"
             >
-              <span className="text-[clamp(6rem,17vw,14rem)] font-bold leading-[0.82] tracking-[-0.05em] tabular-nums">
+              <span className="text-[clamp(5.5rem,17vw,14rem)] font-bold leading-[0.9] lg:leading-[0.82] tracking-[-0.05em] tabular-nums">
                 <span ref={count}>100</span>
                 <span className="text-accent">%</span>
               </span>

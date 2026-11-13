@@ -487,16 +487,25 @@ function Card({ path }: { path: Path }) {
 export function Pathways() {
   const section = useRef<HTMLElement>(null);
   const head = useRef<HTMLDivElement>(null);
+  const stack = useRef<HTMLDivElement>(null);
 
-  // the pinned heading's height, for where the cards stop under it
+  // the pinned heading's height, for where the cards stop under it, and the
+  // tallest card's, so a card too tall for the space under the heading (on
+  // phones) stops lower instead, with its foot on the screen's bottom edge
   useEffect(() => {
     const el = head.current;
     const sec = section.current;
-    if (!el || !sec) return;
-    const ro = new ResizeObserver(() =>
-      sec.style.setProperty("--pw-head", `${el.offsetHeight}px`),
-    );
+    const cards = stack.current;
+    if (!el || !sec || !cards) return;
+    const ro = new ResizeObserver(() => {
+      sec.style.setProperty("--pw-head", `${el.offsetHeight}px`);
+      const tallest = Math.max(
+        ...[...cards.children].map((c) => (c as HTMLElement).offsetHeight),
+      );
+      sec.style.setProperty("--pw-card", `${tallest}px`);
+    });
     ro.observe(el);
+    for (const c of cards.children) ro.observe(c);
     return () => ro.disconnect();
   }, []);
 
@@ -578,12 +587,17 @@ export function Pathways() {
         </p>
 
         {/* the cards stack: each is sticky at the same height, just under
-            the pinned heading, so the next slides up over the last */}
-        <div className="mt-6 flex flex-col gap-[10vh] lg:mt-10 lg:gap-[22vh]">
+            the pinned heading (or lower, if it would not fit under it, so
+            the whole card, description and all, is seen), and the next
+            slides up over the last */}
+        <div
+          ref={stack}
+          className="mt-6 flex flex-col gap-[10vh] lg:mt-10 lg:gap-[22vh]"
+        >
           {PATHS.map((path) => (
             <Reveal
               key={path.key}
-              className="sticky top-[calc(var(--header-h)+var(--pw-head,0px))] z-10"
+              className="sticky top-[min(calc(var(--header-h)+var(--pw-head,0px)),calc(100svh-var(--pw-card,0px)-12px))] z-10"
             >
               <Card path={path} />
             </Reveal>

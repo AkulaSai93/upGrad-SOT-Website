@@ -20,7 +20,6 @@ const DARK_SECTIONS = [
   "partners",
   "faculty",
   "leaders",
-  "toolkit",
   "campus-hero",
 ];
 
