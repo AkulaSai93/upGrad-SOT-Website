@@ -419,7 +419,10 @@ function Card({ path }: { path: Path }) {
           "selection" handle on each corner */}
       <CornerHandles />
       {/* the photo, with the pathway name big over it */}
-      <div className="relative min-h-[260px] overflow-hidden rounded-[6px] bg-ink sm:min-h-[320px] lg:min-h-0">
+      <div
+        data-photo
+        className="relative h-[clamp(100px,calc(100svh-var(--header-h)-var(--pw-head,0px)-var(--pw-rest,360px)-16px),260px)] overflow-hidden rounded-[6px] bg-ink sm:h-[clamp(100px,calc(100svh-var(--header-h)-var(--pw-head,0px)-var(--pw-rest,360px)-16px),320px)] lg:h-auto lg:min-h-0"
+      >
         <Image
           src={`/images/pathways/${path.key}.webp`}
           alt=""
@@ -499,10 +502,19 @@ export function Pathways() {
     if (!el || !sec || !cards) return;
     const ro = new ResizeObserver(() => {
       sec.style.setProperty("--pw-head", `${el.offsetHeight}px`);
-      const tallest = Math.max(
-        ...[...cards.children].map((c) => (c as HTMLElement).offsetHeight),
-      );
+      const kids = [...cards.children] as HTMLElement[];
+      const tallest = Math.max(...kids.map((c) => c.offsetHeight));
       sec.style.setProperty("--pw-card", `${tallest}px`);
+      // everything in a card but its photo: on phones the photo takes
+      // whatever height is left on screen under the heading (between 100
+      // and 260px), so the whole card fits without covering the heading
+      const rest = Math.max(
+        ...kids.map((c) => {
+          const photo = c.querySelector<HTMLElement>("[data-photo]");
+          return c.offsetHeight - (photo?.offsetHeight ?? 0);
+        }),
+      );
+      sec.style.setProperty("--pw-rest", `${rest}px`);
     });
     ro.observe(el);
     for (const c of cards.children) ro.observe(c);
