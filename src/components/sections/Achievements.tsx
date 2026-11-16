@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
-import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
 
 /**
@@ -13,10 +12,9 @@ import { SectionHeading } from "@/components/site/SectionHeading";
  * right, a tall card that runs the full height. On phones, as Scaler lays
  * its "Stellar Career Prospects" out: the wide card with its photo under the
  * copy, the two small cards side by side, then the tall card turned on its
- * side (portraits left, copy right). Every card has the faculty
- * posters' frame (square corners, a thin ink edge, a handle on each corner)
- * and its programme's colour instead of the brand red:
- * ICPC's blue (from its logo) on the ICPC cards, the brand red on the
+ * side (portraits left, copy right). Every card has a light
+ * frame (slightly rounded corners and the site's grey border)
+ * and the brand red for its accents, on the ICPC cards as on the
  * ambassadors card. The two small cards fill with that colour on hover;
  * the tall one stays still. Kept clean: short lines,
  * one red phrase per card. As newtonschool.co marks its ICPC card, the
@@ -34,15 +32,16 @@ const AMBASSADORS = [
   { name: "Preetam G", img: "gsa-preetam-v2" },
 ];
 
-// the faculty posters' frame: square corners, a thin ink edge, and a
-// "selection" handle on each corner (CornerHandles, inside each card)
-const card = "relative border border-black/[0.08] bg-white";
+// each card: slightly rounded corners and the site's grey border; it clips
+// its photo to the rounded corners
+const card =
+  "relative overflow-hidden rounded-[6px] border border-black/[0.08] bg-white";
 // each card takes its programme's colour (--tint for its text, --tint-fill on
-// hover, --on-tint for the text over the fill): ICPC's blue, from the ICPC
-// Foundation logo, and the brand red for the Google Student Ambassadors
+// hover, --on-tint for the text over the fill): the brand red on every
+// card, ICPC and the Google Student Ambassadors alike
 const ICPC = {
-  "--tint": "#4c82c3",
-  "--tint-fill": "#4c82c3",
+  "--tint": "var(--accent)",
+  "--tint-fill": "var(--accent)",
   "--on-tint": "#ffffff",
   "--on-tint-soft": "rgba(255,255,255,0.85)",
 } as React.CSSProperties;
@@ -76,7 +75,6 @@ export function Achievements() {
             className={`${card} col-span-2 flex flex-col sm:min-h-[260px] sm:flex-row`}
             style={ICPC}
           >
-            <CornerHandles />
             <div className="relative z-[1] flex flex-col justify-center p-5 sm:max-w-[50%] sm:p-6 lg:px-8 lg:py-6">
               <Image
                 src="/images/achievements/icpc-foundation.webp"
@@ -141,7 +139,6 @@ export function Achievements() {
             className={`${card} order-last col-span-2 flex flex-row lg:order-none lg:col-span-1 lg:row-span-2 lg:flex-col`}
             style={BRAND}
           >
-            <CornerHandles />
             {/* the two portraits fill the card down to its copy and, as the
                 ICPC photo does on its left, fade out at their foot into the
                 card's white, each name set on the fade */}
@@ -205,7 +202,6 @@ export function Achievements() {
               className={`${card} ${hoverFill} col-span-1 flex flex-col justify-center px-4 py-4 sm:px-6 sm:py-5 lg:px-7 lg:py-6`}
               style={ICPC}
             >
-              <CornerHandles />
               <p className="text-[clamp(1.5rem,3vw,2.75rem)] font-semibold leading-none tracking-[-0.03em] text-[var(--tint)] transition-colors duration-300 group-hover:text-[var(--on-tint)]">
                 {s.value}
               </p>
