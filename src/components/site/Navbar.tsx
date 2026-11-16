@@ -5,7 +5,22 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, ArrowUpRight, Phone, X } from "lucide-react";
+import Image from "next/image";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  CircleHelp,
+  ClipboardCheck,
+  FilePen,
+  GraduationCap,
+  House,
+  Megaphone,
+  MessageCircle,
+  Newspaper,
+  Phone,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { lenis } from "@/components/motion/SmoothScroll";
 import { GlowButton } from "./GlowButton";
 import { Logo } from "./Logo";
@@ -34,62 +49,88 @@ const NAV_LINKS = [
 
 const SOT = "https://sot.upgrad.com";
 
-type MenuLink = { label: string; href: string; note?: string; tag?: string };
-/** a row of the menu: a page of its own, or a group that opens to its links */
-type MenuRow = { label: string; href?: string; links?: MenuLink[] };
+type MenuLink = { label: string; href: string };
 
 /**
- * Everything the Menu lists, as on sot.upgrad.com's menu: its top-level links
- * (Home, Admissions, FAQs, IAIB, Catalyst), its two campuses, and the
- * Resource and Help and Support lists under its More. The menu is drawn from
- * this alone. Each row is either a link (`href`) or a group (`links`) that
- * opens under its name to show them — add a link to a group, or a new row,
- * and it takes its place. Admissions and FAQs go to this page's own sections.
+ * Everything the Menu lists, as on sot.upgrad.com's menu (read 16 Nov 2026):
+ * its top-level pages, its two campuses, and the Events, Resource and Help
+ * and Support lists under its More. The menu is drawn from these alone: the
+ * pages as a list (icon, name, a short line); beside them the campuses as picture cards,
+ * the featured event as a red card and the resources as icon chips; help and
+ * support as small links at the foot. (Ignite AI Buildathon, listed under
+ * Resources on sot.upgrad.com too, is the featured event here.)
+ * Admissions and FAQs go to this site's own sections.
  */
-const MENU: MenuRow[] = [
-  { label: "Home", href: "/" },
+const PAGES = [
+  { label: "Home", line: "AI-First B.Tech in CSE", href: "/", Icon: House },
   {
-    label: "Campuses",
-    links: [
-      {
-        label: "Sri Siddhartha Academy of Higher Education",
-        href: "/university/ssahe",
-        note: "Tumkuru (Outer Bangalore), Karnataka",
-        tag: "NAAC A+",
-      },
-      {
-        label: "Ajeenkya DY Patil University",
-        href: `${SOT}/university/adypu`,
-        note: "Pune, Maharashtra",
-        tag: "NAAC A",
-      },
-    ],
-  },
-  { label: "Admissions", href: "/#admission" },
-  { label: "FAQs", href: "/#faqs" },
-  { label: "IAIB", href: `${SOT}/events/iaib` },
-  { label: "Catalyst", href: `${SOT}/catalyst` },
-  {
-    label: "Resources",
-    links: [
-      { label: "AI Playground", href: `${SOT}/Playground` },
-      { label: "Ignite AI Buildathon", href: `${SOT}/events/iaib` },
-      { label: "uGNET", href: `${SOT}/uGNET` },
-      { label: "EDP", href: `${SOT}/edp` },
-      { label: "Blogs", href: `${SOT}/blogs` },
-    ],
+    label: "Admissions",
+    line: "Apply through uGNET",
+    href: "/#admission",
+    Icon: FilePen,
   },
   {
-    label: "Help and Support",
-    links: [
-      { label: "Contact Us", href: `${SOT}/contactus` },
-      { label: "Privacy Policy", href: `${SOT}/privacy-policy` },
-      { label: "Terms & Conditions", href: `${SOT}/terms-and-conditions` },
-      {
-        label: "Admission Policy",
-        href: `${SOT}/terms-and-conditions/admission-policy`,
-      },
-    ],
+    label: "FAQs",
+    line: "Answers to common questions",
+    href: "/#faqs",
+    Icon: CircleHelp,
+  },
+  {
+    label: "Catalyst",
+    line: "Campus ambassador programme",
+    href: `${SOT}/catalyst`,
+    Icon: Megaphone,
+  },
+  {
+    label: "Get in Touch",
+    line: "Talk to our admissions team",
+    href: `${SOT}/contactus`,
+    Icon: MessageCircle,
+  },
+];
+
+/** the campuses, as picture cards */
+const CAMPUSES = [
+  {
+    name: "Sri Siddhartha Academy",
+    href: "/university/ssahe",
+    place: "Tumkuru, Karnataka",
+    tag: "NAAC A+",
+    img: "/images/campuses/ssahe.webp",
+  },
+  {
+    name: "Ajeenkya DY Patil University",
+    href: `${SOT}/university/adypu`,
+    place: "Pune, Maharashtra",
+    tag: "NAAC A",
+    img: "/images/campuses/adypu.webp",
+  },
+];
+
+/** the featured event, as on sot.upgrad.com's Events list */
+const EVENT = {
+  name: "IAIB",
+  full: "Ignite AI Buildathon",
+  line: "Join India's biggest AI talent discovery event.",
+  href: `${SOT}/events/iaib`,
+};
+
+/** the resources, as small chips with an icon each */
+const RESOURCES = [
+  { label: "AI Playground", href: `${SOT}/Playground`, Icon: Sparkles },
+  { label: "uGNET", href: "/ugnet", Icon: ClipboardCheck },
+  { label: "EDP", href: `${SOT}/edp`, Icon: GraduationCap },
+  { label: "Blogs", href: `${SOT}/blogs`, Icon: Newspaper },
+];
+
+/** help and support: small links at the panel's foot */
+const HELP: MenuLink[] = [
+  { label: "Contact Us", href: `${SOT}/contactus` },
+  { label: "Privacy Policy", href: `${SOT}/privacy-policy` },
+  { label: "Terms & Conditions", href: `${SOT}/terms-and-conditions` },
+  {
+    label: "Admission Policy",
+    href: `${SOT}/terms-and-conditions/admission-policy`,
   },
 ];
 
@@ -108,9 +149,10 @@ const MENU: MenuRow[] = [
  * links, white tab and Menu button), as makro.framer.website does.
  * Menu opens a side panel, after quadcse.com and lusion.co: a white panel
  * the screen's full height slides in from the right edge while the page dims
- * and blurs behind it. In it the MENU rows, large, numbered, between hairlines — each
- * label rolls up to a fresh copy on hover — and a group (Campuses,
- * Resources…) opens under its name in place. At its foot the programme line,
+ * and blurs behind it. In it, on two columns from tablets up, the PAGES as
+ * a list (an icon, the name and a short line each), and beside them the campuses as picture cards, the featured event
+ * and the resources as tiles, all shown at once; on phones they follow the
+ * pages. Help and support sit as small links at the foot. At its foot the programme line,
  * Apply Now, the admissions number and the school's social links. The panel
  * scrolls if the list grows past the screen; on phones it leaves a strip of
  * the dimmed page showing at the left. The panel has its own header (logo
@@ -125,8 +167,6 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
   const tl = useRef<gsap.core.Timeline | null>(null);
 
   const [open, setOpen] = useState(false);
-  /** the menu group opened to show its links (index in MENU), if any */
-  const [group, setGroup] = useState<number | null>(null);
   const [solid, setSolid] = useState(false);
   const [dark, setDark] = useState(false);
   const [tab, setTab] = useState({ left: 0, width: 0, index: 0 });
@@ -250,46 +290,12 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       setOpen(false);
-      setGroup(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const close = () => {
-    setOpen(false);
-    setGroup(null);
-  };
-
-  /** a link inside an opened group: a quiet row, its note and tag under it */
-  const subLink = (link: MenuLink) => (
-    <Link
-      href={link.href}
-      onClick={close}
-      className="group/sub flex items-start justify-between gap-3 rounded-[6px] px-3 py-2.5 transition-colors duration-300 hover:bg-sunken"
-    >
-      <span className="min-w-0">
-        <span className="block text-[15px] font-semibold leading-snug text-ink transition-colors duration-300 group-hover/sub:text-accent">
-          {link.label}
-        </span>
-        {link.note && (
-          <span className="mt-0.5 block text-[12.5px] text-body">
-            {link.note}
-          </span>
-        )}
-        {link.tag && (
-          <span className="mt-1.5 inline-block rounded-[4px] bg-accent px-1.5 py-0.5 text-[10px] font-medium text-white">
-            {link.tag}
-          </span>
-        )}
-      </span>
-      <ArrowUpRight
-        size={15}
-        aria-hidden
-        className="mt-0.5 shrink-0 text-ink/30 transition-all duration-300 group-hover/sub:rotate-45 group-hover/sub:text-accent"
-      />
-    </Link>
-  );
+  const close = () => setOpen(false);
 
   return (
     <header ref={root}>
@@ -420,7 +426,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
 
         <div
           data-lenis-prevent
-          className="menu-panel absolute inset-y-0 right-0 flex w-[min(420px,86vw)] flex-col overflow-y-auto rounded-l-[6px] bg-white shadow-[var(--shadow-lg)]"
+          className="menu-panel absolute inset-y-0 right-0 flex w-[min(420px,88vw)] flex-col md:w-[min(820px,92vw)] overflow-y-auto rounded-l-[6px] bg-white shadow-[var(--shadow-lg)]"
         >
           {/* the panel's own header: the logo, and Close level with the
               panel's padding (the bar fades away while the panel is open) */}
@@ -441,91 +447,136 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
               />
             </button>
           </div>
-          <nav aria-label="Site" className="px-6 sm:px-8">
-            <ul className="border-t border-black/[0.08]">
-              {MENU.map((row, i) => {
-                const active = group === i;
-                const head = (
-                  <>
-                    <span className="w-6 shrink-0 font-mono text-[11px] text-accent">
-                      {String(i + 1).padStart(2, "0")}
+          <nav
+            aria-label="Site"
+            className="grid gap-8 px-6 sm:px-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:gap-10"
+          >
+            {/* the pages: an icon, the name and a short line each */}
+            <ul className="grid content-start gap-1.5 self-start">
+              {PAGES.map(({ label, line, href, Icon }) => (
+                <li key={label} className="menu-link">
+                  <Link
+                    href={href}
+                    onClick={close}
+                    className="group flex items-center gap-3.5 rounded-[6px] px-2.5 py-2.5 transition-colors duration-300 hover:bg-sunken"
+                  >
+                    <span className="grid size-10 shrink-0 place-items-center rounded-[6px] border border-black/[0.08] bg-white text-ink transition-colors duration-300 group-hover:border-accent group-hover:bg-accent group-hover:text-white">
+                      <Icon size={17} aria-hidden />
                     </span>
-                    {/* the label rolls up to a fresh copy on hover */}
-                    <span className="relative block h-[1.3em] overflow-hidden font-display text-[20px] font-medium leading-[1.3] tracking-[-0.02em] sm:text-[22px] tracking-[-0.03em]">
-                      <span
-                        className={`block transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2 ${
-                          active ? "text-accent" : "text-ink"
-                        }`}
-                      >
-                        <span className="block">{row.label}</span>
-                        <span aria-hidden className="block text-accent">
-                          {row.label}
-                        </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-display text-[17px] font-medium leading-tight tracking-[-0.02em] text-ink">
+                        {label}
+                      </span>
+                      <span className="mt-0.5 block truncate text-[12.5px] text-body">
+                        {line}
                       </span>
                     </span>
-                    {row.links ? (
-                      <ArrowRight
-                        aria-hidden
-                        className={`ml-auto size-4 shrink-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                          active
-                            ? "-rotate-90 text-accent"
-                            : "rotate-90 text-ink/30 group-hover:text-accent"
-                        }`}
-                      />
-                    ) : (
-                      <ArrowUpRight
-                        aria-hidden
-                        className="ml-auto size-4 shrink-0 text-ink/30 transition-all duration-500 group-hover:rotate-45 group-hover:text-accent"
-                      />
-                    )}
-                  </>
-                );
-                const rowClass =
-                  "group flex w-full items-center gap-4 py-3 text-left";
-                return (
-                  <li
-                    key={row.label}
-                    className="menu-link border-b border-black/[0.08]"
-                  >
-                    {row.links ? (
-                      <button
-                        type="button"
-                        aria-expanded={active}
-                        onClick={() => setGroup(active ? null : i)}
-                        className={rowClass}
-                      >
-                        {head}
-                      </button>
-                    ) : (
-                      <Link
-                        href={row.href ?? "/"}
-                        onClick={close}
-                        className={rowClass}
-                      >
-                        {head}
-                      </Link>
-                    )}
-
-                    {/* the group's links, opened under its name */}
-                    {row.links && (
-                      <div
-                        className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                          active ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                        }`}
-                      >
-                        <div className="overflow-hidden" inert={!active}>
-                          <ul className="-mx-3 pb-4 pl-10">
-                            {row.links.map((link) => (
-                              <li key={link.href}>{subLink(link)}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
+                    <ArrowUpRight
+                      aria-hidden
+                      className="size-4 shrink-0 text-ink/25 transition-all duration-300 group-hover:rotate-45 group-hover:text-accent"
+                    />
+                  </Link>
+                </li>
+              ))}
             </ul>
+
+            {/* beside the pages: the campuses, the featured event and the
+                resources, as pictures and tiles */}
+            <div className="grid content-start gap-6">
+              <div className="menu-link">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+                  Campuses
+                </p>
+                <ul className="mt-3 grid grid-cols-2 gap-3">
+                  {CAMPUSES.map((c) => (
+                    <li key={c.name}>
+                      <Link
+                        href={c.href}
+                        onClick={close}
+                        className="group/c relative block aspect-[4/3] overflow-hidden rounded-[6px] bg-ink"
+                      >
+                        <Image
+                          src={c.img}
+                          alt=""
+                          fill
+                          sizes="(min-width: 768px) 220px, 40vw"
+                          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/c:scale-[1.06]"
+                        />
+                        <span
+                          aria-hidden
+                          className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.25)_55%,rgba(0,0,0,0)_100%)]"
+                        />
+                        <span className="absolute left-2.5 top-2.5 rounded-[3px] bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                          {c.tag}
+                        </span>
+                        <span className="absolute inset-x-2.5 bottom-2.5 text-white">
+                          <span className="block text-[13px] font-semibold leading-tight sm:text-[14px]">
+                            {c.name}
+                          </span>
+                          <span className="mt-0.5 block text-[11.5px] text-white/75">
+                            {c.place}
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="menu-link grid gap-3 sm:grid-cols-2">
+                {/* the featured event */}
+                <Link
+                  href={EVENT.href}
+                  onClick={close}
+                  className="group/e relative flex flex-col justify-between overflow-hidden rounded-[6px] bg-accent p-4 text-white"
+                >
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80">
+                    Featured event
+                  </span>
+                  <span className="mt-6">
+                    <span className="block font-display text-[22px] font-medium leading-none tracking-[-0.03em]">
+                      {EVENT.name}
+                    </span>
+                    <span className="mt-1 block text-[13px] font-semibold">
+                      {EVENT.full}
+                    </span>
+                    <span className="mt-1.5 block text-[12px] leading-snug text-white/80">
+                      {EVENT.line}
+                    </span>
+                  </span>
+                  <ArrowUpRight
+                    size={16}
+                    aria-hidden
+                    className="absolute right-3.5 top-3.5 transition-transform duration-300 group-hover/e:rotate-45"
+                  />
+                </Link>
+
+                {/* the resources */}
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+                    Resources
+                  </p>
+                  <ul className="mt-2 grid gap-1.5">
+                    {RESOURCES.map(({ label, href, Icon }) => (
+                      <li key={label}>
+                        <Link
+                          href={href}
+                          onClick={close}
+                          className="group/r flex h-11 items-center gap-2.5 rounded-[6px] border border-black/[0.08] pl-2 pr-2.5 transition-colors duration-300 hover:border-accent hover:bg-accent-soft"
+                        >
+                          <span className="grid size-7 shrink-0 place-items-center rounded-[4px] bg-accent-soft text-accent transition-colors duration-300 group-hover/r:bg-accent group-hover/r:text-white">
+                            <Icon size={14} aria-hidden />
+                          </span>
+                          <span className="min-w-0 flex-1 truncate whitespace-nowrap text-[12.5px] font-semibold text-ink">
+                            {label}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
           </nav>
 
           {/* the foot: the programme, Apply Now and the admissions line,
@@ -558,6 +609,20 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
                 </a>
               </div>
             </div>
+            {/* help and support, small */}
+            <ul className="menu-fade mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-[12.5px] text-body">
+              {HELP.map((h) => (
+                <li key={h.label}>
+                  <Link
+                    href={h.href}
+                    onClick={close}
+                    className="transition-colors hover:text-ink"
+                  >
+                    {h.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
             <ul className="menu-fade mt-5 flex items-center gap-2">
               {SOCIAL.map((s) => (
                 <li key={s.label}>

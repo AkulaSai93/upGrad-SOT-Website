@@ -14,7 +14,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * "Admission Process"
  *
  * Copy is sot.upgrad.com's, verbatim: the heading and line, the five steps,
- * the "Check Eligibility" link (to the uGNET page, as there) and the
+ * the "Check Eligibility" link (to the uGNET page) and the
  * scholarship note with "Resume Application".
  *
  * Layout after a reference the client supplied: the centred heading, then on
@@ -29,11 +29,17 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * the steps rise in one after another and the card rises in. The button
  * glow sweeps round the button all the time, as on the hero's.
  */
-const UGNET = "https://sot.upgrad.com/uGNET";
+const UGNET = "/ugnet";
 /** where "Resume Application" goes; the uGNET page until a direct link is supplied */
 const RESUME_HREF = UGNET;
 
-const STEPS = [
+type Step = {
+  title: string;
+  body: string;
+  link?: { label: string; href: string };
+};
+
+const STEPS: Step[] = [
   {
     title: "Apply for the uGNET Exam",
     body: "Submit your application to secure a chance to appear for the entrance assessment.",
@@ -55,9 +61,24 @@ const STEPS = [
     title: "Block Your Seat",
     body: "Confirm your admission and reserve your spot in the program to kickstart your tech journey.",
   },
-] as const;
+];
 
-export function Admission() {
+/** the heading, line and steps can be swapped (the uGNET page uses this
+ *  section for "How do I apply for uGNET?"); left out, they are the home
+ *  page's admission process */
+export function Admission({
+  id = "admission",
+  title = "Admission",
+  accent = "Process",
+  intro = "A simple, transparent journey from application to admission.",
+  steps = STEPS,
+}: {
+  id?: string;
+  title?: string;
+  accent?: string;
+  intro?: string;
+  steps?: Step[];
+} = {}) {
   const root = useRef<HTMLElement>(null);
   const track = useRef<HTMLSpanElement>(null);
 
@@ -148,13 +169,9 @@ export function Admission() {
   );
 
   return (
-    <section ref={root} id="admission" className="bg-canvas py-8 lg:py-16">
+    <section ref={root} id={id} className="bg-canvas py-8 lg:py-16">
       <div className="container-page">
-        <SectionHeading
-          title="Admission"
-          accent="Process"
-          intro="A simple, transparent journey from application to admission."
-        />
+        <SectionHeading title={title} accent={accent} intro={intro} />
 
         <div className="mt-14 grid gap-14 lg:mt-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-20">
           {/* left: the steps down a timeline */}
@@ -171,7 +188,7 @@ export function Admission() {
               />
             </span>
 
-            {STEPS.map((step, i) => (
+            {steps.map((step, i) => (
               <li key={step.title} data-step className="relative pl-14">
                 {/* a dot with a soft halo; both turn red once reached */}
                 <span
@@ -190,11 +207,9 @@ export function Admission() {
                 <p className="mt-2 max-w-[520px] text-[14.5px] leading-relaxed text-body">
                   {step.body}
                 </p>
-                {"link" in step && (
+                {step.link && (
                   <a
                     href={step.link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="group/link mt-3 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-accent"
                   >
                     <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat pb-0.5 transition-[background-size] duration-500 group-hover/link:bg-[length:100%_1px]">
