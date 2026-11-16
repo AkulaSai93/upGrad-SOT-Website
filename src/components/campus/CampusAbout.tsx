@@ -61,7 +61,8 @@ const LINKS = [
  * stacked on the right, each titled in white over a dark foot. With a mouse
  * its line rises in under the title on hover; on touch screens the line is
  * always shown. On phones
- * the tabs sit two by two and the photos become a swipeable row.
+ * the tabs stay on one line (scrolling sideways if they must) and the
+ * photos become a swipeable row.
  *
  * Motion (GSAP): on a switch the photos wipe in from the right, one after
  * another, settling from a slight zoom, and the captions rise after them. The
@@ -217,12 +218,13 @@ export function CampusAbout({ campus }: { campus: Campus }) {
           Campus <span className="text-accent">Facilities</span>
         </h3>
 
-        {/* one tab per group */}
+        {/* one tab per group, on one line (it scrolls sideways on a narrow
+            phone) */}
         <div className="mt-6 flex justify-center lg:mt-8">
           <div
             role="tablist"
             aria-label="Campus facilities"
-            className="grid w-full grid-cols-2 gap-1 rounded-[6px] border border-[var(--ab-line)] bg-[var(--ab-chip)] p-1 sm:flex sm:w-auto"
+            className="flex max-w-full gap-1 overflow-x-auto rounded-[4px] border border-[var(--ab-line)] bg-[var(--ab-chip)] p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {campus.facilities.map((g, i) => (
               <button
@@ -231,13 +233,15 @@ export function CampusAbout({ campus }: { campus: Campus }) {
                 role="tab"
                 aria-selected={i === group}
                 onClick={() => setGroup(i)}
-                className={`shrink-0 rounded-[5px] px-3 py-1.5 text-[13.5px] font-semibold transition-colors duration-300 sm:px-3.5 ${
+                className={`shrink-0 whitespace-nowrap rounded-[3px] px-2 py-1.5 text-[12.5px] font-semibold transition-colors duration-300 sm:px-3.5 sm:text-[13.5px] ${
                   i === group
                     ? "bg-[var(--ab-fg)] text-[var(--ab-bg)]"
                     : "text-[var(--ab-body)] hover:text-[var(--ab-fg)]"
                 }`}
               >
-                {g.group}
+                {/* on phones just the first word before "&", so all four fit */}
+                <span className="sm:hidden">{g.group.split(" & ")[0]}</span>
+                <span className="max-sm:hidden">{g.group}</span>
               </button>
             ))}
           </div>
@@ -338,7 +342,7 @@ function MainFilm({
         })
       }
       aria-label={`Play: ${v.title}`}
-      className="group relative block aspect-[4/3] w-full overflow-hidden rounded-[12px] bg-ink outline-none [container-type:size] focus-visible:ring-2 focus-visible:ring-accent lg:aspect-[8/7]"
+      className="group relative block aspect-[4/3] w-full overflow-hidden rounded-[8px] bg-ink outline-none [container-type:size] focus-visible:ring-2 focus-visible:ring-accent lg:aspect-[8/7]"
     >
       {/* the campus still until the film starts (the film's own thumbnail
           has its title across it, which this frame would crop) */}

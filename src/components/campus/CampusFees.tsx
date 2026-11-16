@@ -169,19 +169,19 @@ export function CampusFees({ campus }: { campus: Campus }) {
                   type="button"
                   aria-expanded={isOpen}
                   onClick={() => setOpenSem(isOpen ? null : i)}
-                  className={`flex w-full items-center justify-between gap-3 px-4 py-4 text-left ${isOpen ? "bg-[#f6f7f9]" : "bg-white"}`}
+                  className={`flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition-colors duration-300 ${isOpen ? "bg-accent text-white" : "bg-white text-ink"}`}
                 >
-                  <span className="font-display text-[16px] font-medium text-ink">
+                  <span className="font-display text-[16px] font-medium">
                     Semester {s.sem}
                   </span>
                   <span className="flex items-center gap-3">
-                    <span className="text-[14px] font-semibold text-ink">
+                    <span className="text-[14px] font-semibold">
                       {s.total}
                     </span>
                     <ChevronDown
                       size={18}
                       aria-hidden
-                      className={`text-ink transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                      className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                     />
                   </span>
                 </button>
