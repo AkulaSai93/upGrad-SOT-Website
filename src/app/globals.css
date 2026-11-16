@@ -160,6 +160,16 @@ html {
   animation: light-pass 6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
 }
 
+/* A slow bob for the floating cards in the uGNET hero; each card sets its
+   own delay so they move out of step. */
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-bob {
+  animation: bob 4.5s ease-in-out infinite;
+}
+
 /* On-enter reveal for scroll-revealed cards (see Specializations). Cards start
    lowered and transparent; the observer adds .is-in once they scroll into view. */
 .reveal-card {
@@ -206,5 +216,6 @@ html {
   .cta-glow { animation: none; }
   .light-pass { animation: none; opacity: 0; }
   .marquee-track { animation: none; }
+  .animate-bob { animation: none; }
   html { scroll-behavior: auto; }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -16,6 +17,18 @@ export let lenis: Lenis | null = null;
  * Skipped entirely under prefers-reduced-motion.
  */
 export function SmoothScroll() {
+  const pathname = usePathname();
+
+  // a new page starts at its top: Lenis keeps its own scroll position, so
+  // after a client-side navigation (home to a campus page, say) it would
+  // otherwise hold the old page's offset and land near the footer. A link to
+  // a #section on the new page still scrolls there, after this.
+  useEffect(() => {
+    if (window.location.hash) return;
+    if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
+    else window.scrollTo(0, 0);
+  }, [pathname]);
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 

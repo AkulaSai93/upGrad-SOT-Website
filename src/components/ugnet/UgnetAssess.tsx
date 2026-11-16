@@ -9,15 +9,14 @@ import { SectionHeading } from "@/components/site/SectionHeading";
  *
  * Copy is sot.upgrad.com/uGNET's own (read 16 Nov 2026): the lead-in, the
  * three areas with their lines and topics, and each area's questions, marks
- * and minutes from its exam pattern (90 questions, 160 marks, 120 minutes in
- * all).
+ * and minutes from its exam pattern (160 marks in all).
  *
  * Layout: the heading and lead-in centred, then the three areas as a tab
  * bar like the campus facilities' (an icon and the name each), the chosen
  * one filled ink; under them
- * the chosen area in one panel: its line and topics as a checklist on the
- * left, its questions, marks and minutes and a bar showing its share of the
- * 160 marks on the right. On phones the chips scroll sideways on one line
+ * the chosen area in one panel: its line and its topics as a checklist on
+ * the left; on the right a ring showing its share of the 160 marks, with its
+ * questions, marks and minutes in a row under it. On phones the chips scroll sideways on one line
  * and the panel stacks.
  */
 const TOTAL_MARKS = 160;
@@ -100,7 +99,7 @@ export function UgnetAssess() {
                   aria-selected={on}
                   aria-controls="assess-panel"
                   onClick={() => setActive(i)}
-                  className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-[3px] px-3.5 py-2 text-[14px] font-semibold transition-colors duration-300 ${
+                  className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[3px] px-2.5 py-2 text-[13px] font-semibold sm:gap-2 sm:px-3.5 sm:text-[14px] transition-colors duration-300 ${
                     on ? "bg-ink text-white" : "text-body hover:text-ink"
                   }`}
                 >
@@ -109,7 +108,9 @@ export function UgnetAssess() {
                     aria-hidden
                     className={on ? "text-white" : "text-accent"}
                   />
-                  {ar.name}
+                  {/* on phones the first word, so all three fit */}
+                  <span className="sm:hidden">{ar.name.split(" ")[0]}</span>
+                  <span className="max-sm:hidden">{ar.name}</span>
                 </button>
               );
             })}
@@ -126,11 +127,11 @@ export function UgnetAssess() {
           >
             <div
               key={a.name}
-              className="animate-rise grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-8"
+              className="animate-rise grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-center lg:gap-10"
             >
               <div>
                 <div className="flex items-center gap-3">
-                  <span className="grid size-10 place-items-center rounded-[8px] bg-accent-soft text-accent">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-[8px] bg-accent-soft text-accent">
                     <a.Icon size={19} aria-hidden />
                   </span>
                   <div>
@@ -160,39 +161,40 @@ export function UgnetAssess() {
                 </ul>
               </div>
 
-              <div className="flex flex-col justify-between gap-4 rounded-[8px] bg-[#f6f7f9] p-4 lg:p-5">
-                <dl className="grid grid-cols-3 gap-2 lg:grid-cols-1 lg:gap-3">
+              {/* its weight: a ring for its share of the marks, its figures
+                  under it */}
+              <div className="flex flex-col items-center justify-center gap-5 rounded-[8px] bg-[linear-gradient(160deg,#fff7f8_0%,#ffe9ec_100%)] p-5">
+                <div
+                  className="relative grid size-36 place-items-center rounded-full"
+                  style={{
+                    background: `conic-gradient(var(--accent) ${(a.marks / TOTAL_MARKS) * 360}deg, rgba(228,0,43,0.12) 0deg)`,
+                  }}
+                >
+                  <div className="grid size-[112px] place-items-center rounded-full bg-white text-center">
+                    <span>
+                      <span className="block font-display text-[28px] font-medium leading-none text-ink">
+                        {Math.round((a.marks / TOTAL_MARKS) * 100)}%
+                      </span>
+                      <span className="mt-1 block text-[11.5px] text-muted">
+                        of {TOTAL_MARKS} marks
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <dl className="grid w-full grid-cols-3 divide-x divide-black/[0.08] rounded-[6px] bg-white py-3 text-center">
                   {[
                     { k: "Questions", v: a.questions },
-                    { k: "Max marks", v: a.marks },
-                    { k: "Duration", v: `${a.minutes} min` },
+                    { k: "Marks", v: a.marks },
+                    { k: "Minutes", v: a.minutes },
                   ].map((st) => (
-                    <div
-                      key={st.k}
-                      className="rounded-[6px] bg-white px-3 py-2.5 lg:flex lg:items-baseline lg:justify-between"
-                    >
-                      <dt className="text-[12px] text-muted">{st.k}</dt>
-                      <dd className="mt-0.5 font-display text-[18px] font-medium text-ink lg:mt-0">
+                    <div key={st.k} className="flex flex-col-reverse">
+                      <dt className="text-[11.5px] text-muted">{st.k}</dt>
+                      <dd className="font-display text-[20px] font-medium leading-tight text-ink">
                         {st.v}
                       </dd>
                     </div>
                   ))}
                 </dl>
-                {/* its share of the marks */}
-                <div>
-                  <div className="flex items-center justify-between text-[12.5px] text-body">
-                    <span>Share of the {TOTAL_MARKS} marks</span>
-                    <span className="font-semibold text-ink">
-                      {Math.round((a.marks / TOTAL_MARKS) * 100)}%
-                    </span>
-                  </div>
-                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-white">
-                    <div
-                      className="h-full rounded-full bg-accent transition-[width] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                      style={{ width: `${(a.marks / TOTAL_MARKS) * 100}%` }}
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>

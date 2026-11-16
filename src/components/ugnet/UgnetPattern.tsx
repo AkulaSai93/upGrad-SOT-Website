@@ -8,6 +8,7 @@ import {
   Trophy,
   Workflow,
 } from "lucide-react";
+import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
 
 /**
@@ -19,9 +20,11 @@ import { SectionHeading } from "@/components/site/SectionHeading";
  * the totals (90 questions, 160 marks, 120 minutes).
  *
  * Layout, as the source page sets it: the heading centred, the three totals
- * as red stat cards, then the table in the fee table's plain style (a cool
+ * as red stat cards, then the table (all square, with the site's corner
+ * handles) in the fee table's plain style (a cool
  * grey header, hairlines, the totals row in bold). On phones each section becomes
- * a card with its figures in a small grid.
+ * a card: its questions, marks and minutes in a plain row between hairlines,
+ * and its easy, medium and difficult split as one line.
  */
 const ROWS = [
   {
@@ -93,8 +96,9 @@ export function UgnetPattern() {
           ].map(({ k, v, Icon }) => (
             <li
               key={k}
-              className="flex flex-col items-start gap-3 rounded-[4px] bg-accent p-3 text-white sm:flex-row sm:items-center sm:p-4"
+              className="relative flex flex-col items-start gap-3 bg-accent p-3 text-white sm:flex-row sm:items-center sm:p-4"
             >
+              <CornerHandles />
               <span className="grid size-10 shrink-0 place-items-center rounded-[6px] bg-white text-accent">
                 <Icon size={19} aria-hidden />
               </span>
@@ -111,7 +115,8 @@ export function UgnetPattern() {
         </ul>
 
         {/* tablet and up: the table */}
-        <div className="mx-auto mt-4 hidden max-w-[1040px] overflow-hidden rounded-[8px] border border-black/[0.08] md:block">
+        <div className="relative mx-auto mt-4 hidden max-w-[1040px] border border-black/[0.08] md:block">
+          <CornerHandles />
           <table className="w-full text-[14px]">
             <thead>
               <tr className="bg-[#f6f7f9] text-left">
@@ -183,8 +188,9 @@ export function UgnetPattern() {
           {ROWS.map((r) => (
             <li
               key={r.name}
-              className="rounded-[8px] border border-black/[0.08] bg-white p-4"
+              className="relative border border-black/[0.08] bg-white p-4"
             >
+              <CornerHandles />
               <div className="flex items-center gap-3">
                 <span className="grid size-9 shrink-0 place-items-center rounded-[6px] bg-accent-soft text-accent">
                   <r.Icon size={16} aria-hidden />
@@ -196,22 +202,31 @@ export function UgnetPattern() {
                   {r.sub && <p className="text-[12px] text-muted">{r.sub}</p>}
                 </div>
               </div>
-              <dl className="mt-3 grid grid-cols-3 gap-2">
-                {COLS.map((c) => (
-                  <div
-                    key={c.key}
-                    className="rounded-[6px] bg-[#f6f7f9] px-2.5 py-2"
-                  >
-                    <dt className="text-[11px] leading-tight text-muted">
-                      {c.label}
-                      {"note" in c && ` (${c.note})`}
-                    </dt>
-                    <dd className="mt-0.5 font-display text-[15px] font-medium text-ink">
-                      {cell(r, c.key)}
+              {/* the three figures that matter, plain, then the
+                  difficulty split as one quiet line */}
+              <dl className="mt-4 grid grid-cols-3 divide-x divide-black/[0.08] border-y border-black/[0.08] py-3 text-center">
+                {(
+                  [
+                    { k: "Questions", v: r.questions },
+                    { k: "Marks", v: r.marks },
+                    { k: "Minutes", v: r.minutes },
+                  ] as const
+                ).map((st) => (
+                  <div key={st.k} className="flex flex-col-reverse">
+                    <dt className="text-[11.5px] text-muted">{st.k}</dt>
+                    <dd className="font-display text-[20px] font-medium leading-tight text-ink">
+                      {st.v}
                     </dd>
                   </div>
                 ))}
               </dl>
+              <p className="mt-3 text-[12.5px] text-body">
+                <span className="font-semibold text-ink">{r.easy}</span> easy ·{" "}
+                <span className="font-semibold text-ink">{r.medium}</span>{" "}
+                medium ·{" "}
+                <span className="font-semibold text-ink">{r.hard}</span>{" "}
+                difficult
+              </p>
             </li>
           ))}
         </ul>

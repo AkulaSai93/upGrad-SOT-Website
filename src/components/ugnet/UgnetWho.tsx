@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
+import { CornerHandles } from "@/components/site/CornerHandles";
 import { GlowButton } from "@/components/site/GlowButton";
 import { SectionHeading } from "@/components/site/SectionHeading";
 
@@ -17,9 +18,10 @@ import { SectionHeading } from "@/components/site/SectionHeading";
  * (two by two on tablets, stacked on phones), after a client reference: each
  * card's illustration full bleed at the top (solid 3D icon tiles, objects
  * and avatars on a pastel gradient, no glass, generated with Figma AI in the SOT Website
- * file), fading into the white card, and the title and the page's line on
+ * file), fading into the white card (square corners with the site's corner
+ * handles), and the title and the page's line on
  * its white foot. Under them Apply. The cards rise in one after another; on
- * hover a card lifts and its illustration zooms gently.
+ * hover only the illustration zooms gently (the card stays put).
  */
 const WHO = [
   {
@@ -62,7 +64,8 @@ export function UgnetWho() {
         >
           {WHO.map(({ title, line, img }) => (
             <div key={title} data-reveal-item>
-              <article className="group relative flex h-full flex-col overflow-hidden rounded-[6px] border border-black/[0.08] bg-white transition-[translate,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:shadow-[0_24px_48px_-28px_rgba(11,13,18,0.3)]">
+              <article className="group relative flex h-full flex-col border border-black/[0.08] bg-white">
+                <CornerHandles />
                 {/* the illustration, full bleed, fading into the card */}
                 <div className="relative aspect-[3/2] overflow-hidden">
                   <Image

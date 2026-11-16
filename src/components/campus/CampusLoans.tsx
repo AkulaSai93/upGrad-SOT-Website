@@ -15,10 +15,12 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * Third Party Credit Facility Providers — the education-loan lenders and
  * their terms, as sot.upgrad.com's university pages give them (see loans.ts).
  *
- * Layout: the heading and its line, centred. Then the lenders as an
- * accordion, a row each with its logo, name and a chevron; a click opens that
- * lender's terms under it (one open at a time) in the fee table's plain
- * style: a cool grey header (Loan Type and its loan types), a row per term, a
+ * Layout: the heading and its line, centred. From tablets up the lenders
+ * as one bar of tabs (logo and name, the chosen one outlined in ink) with
+ * that lender's terms in a table under it; on phones the lenders as an
+ * accordion, a row each with its logo, name and a chevron, a click opening
+ * that lender's terms under it (one open at a time). The terms are in the fee
+ * table's plain style: a cool grey header (Loan Type and its loan types), a row per term, a
  * value spanning the columns where one holds for every type. On phones the
  * terms stack, each value under its loan type. Then the five notes, small, in
  * a numbered list.
@@ -30,6 +32,9 @@ export function CampusLoans() {
   const root = useRef<HTMLElement>(null);
   // the open lender, if any
   const [open, setOpen] = useState<number | null>(null);
+  // desktop: the chosen lender's tab
+  const [active, setActive] = useState(0);
+  const lender = LOANS.lenders[active];
 
   useGSAP(
     () => {
@@ -66,8 +71,65 @@ export function CampusLoans() {
           intro={LOANS.intro}
         />
 
-        {/* the lenders, one row each; a click opens its terms */}
-        <ul data-loan-bar className="mt-8 space-y-3 lg:mt-12">
+        {/* tablet and desktop: the lenders as one bar of tabs, the chosen
+            one's terms in a table under it */}
+        <div className="hidden md:block">
+          <div
+            data-loan-bar
+            data-loan-rise
+            role="tablist"
+            aria-label="Our Financial Partners"
+            className="mt-12 grid grid-cols-4 gap-3"
+          >
+            {LOANS.lenders.map((l, i) => {
+              const on = i === active;
+              return (
+                <button
+                  key={l.name}
+                  type="button"
+                  role="tab"
+                  aria-selected={on}
+                  aria-controls="loan-terms"
+                  onClick={() => setActive(i)}
+                  className={`flex items-center gap-3 rounded-[6px] border bg-white px-4 py-3.5 text-left transition-colors duration-300 ${
+                    on
+                      ? "border-ink ring-1 ring-ink"
+                      : "border-black/[0.08] hover:border-ink/30"
+                  }`}
+                >
+                  <span className="relative h-8 w-10 shrink-0">
+                    <Image
+                      src={l.logo}
+                      alt=""
+                      fill
+                      sizes="40px"
+                      className="object-contain"
+                    />
+                  </span>
+                  <span
+                    className={`text-[14px] font-semibold ${on ? "text-ink" : "text-body"}`}
+                  >
+                    {l.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <div
+            id="loan-terms"
+            role="tabpanel"
+            aria-label={lender.name}
+            data-loan-rise
+            className="mt-5"
+          >
+            <div key={lender.name} className="animate-rise">
+              <Terms lender={lender} />
+            </div>
+          </div>
+        </div>
+
+        {/* phones: the lenders, one row each; a click opens its terms */}
+        <ul className="mt-8 space-y-3 md:hidden">
           {LOANS.lenders.map((l, i) => {
             const on = open === i;
             return (

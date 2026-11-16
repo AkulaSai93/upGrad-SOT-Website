@@ -1,22 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import {
-  ArrowRight,
-  Bell,
-  CalendarClock,
-  Check,
-  Clock,
-  FileText,
-  LayoutDashboard,
-  Monitor,
-  Phone,
-  Search,
-  Trophy,
-  Wallet,
-} from "lucide-react";
+import { ArrowRight, Check, Monitor, Phone } from "lucide-react";
 import { GlowButton } from "@/components/site/GlowButton";
 
 gsap.registerPlugin(useGSAP);
@@ -32,47 +20,16 @@ gsap.registerPlugin(useGSAP);
  * one screen tall on desktop, centred on a soft tinted ground, a small label, the headline, the line
  * under it and two calls to action (apply, call admissions), with the
  * eligibility as two small checks. Under it, rising into the section's foot
- * and cut off by it (taking whatever height the copy leaves), a preview of a uGNET candidate dashboard built in the
- * page (not a screenshot): a sidebar, a greeting, the exam's facts as four
- * stat cards and the four steps to a result, the third (attempt the exam)
- * the one to do next. It is an illustration of the process, not a real
- * account. Phones drop the sidebar and show two stat cards a row.
+ * (taking whatever height the copy leaves), after a client reference: a
+ * student with a laptop on a cloud (generated with Figma AI in the SOT
+ * Website file), its edges fading into the ground, with dark cards floating
+ * around it: the 2-hour online test, the score within 2 days, and the
+ * scholarships (₹7 Cr+, up to 100% of tuition). Phones show the image
+ * alone.
  *
  * Motion (GSAP): the copy rises in line by line, then the preview lifts in
  * from below. Reduced motion: shown as they are.
  */
-const FACTS = [
-  { label: "Exam mode", value: "Online", Icon: Monitor },
-  { label: "Duration", value: "2 hours", Icon: Clock },
-  { label: "Result", value: "In 2 days", Icon: Trophy },
-  { label: "Application fee", value: "₹1,000", Icon: Wallet },
-];
-
-const STEPS = [
-  {
-    title: "Create your account",
-    note: "WhatsApp number and basic details",
-    done: true,
-  },
-  {
-    title: "Register for uGNET",
-    note: "Pay the ₹1,000 application fee",
-    done: true,
-  },
-  {
-    title: "Attempt the exam",
-    note: "Pick a slot for the 2-hour online test",
-    next: true,
-  },
-  { title: "Result declaration", note: "Your score within 2 days" },
-];
-
-const SIDEBAR = [
-  { label: "Dashboard", Icon: LayoutDashboard, on: true },
-  { label: "My test", Icon: FileText },
-  { label: "Book a slot", Icon: CalendarClock },
-  { label: "Results", Icon: Trophy },
-];
 
 export function UgnetHero() {
   const root = useRef<HTMLElement>(null);
@@ -115,21 +72,21 @@ export function UgnetHero() {
       <div className="container-page relative flex min-h-0 flex-1 flex-col text-center">
         <p
           data-hero-line
-          className="text-[12px] font-semibold uppercase tracking-[0.16em] text-accent"
+          className="relative z-10 text-[12px] font-semibold uppercase tracking-[0.16em] text-accent"
         >
           National Entrance Test · uGNET 2026
         </p>
         <h1
           id="ugnet-title"
           data-hero-line
-          className="mx-auto mt-3 max-w-[860px] text-balance font-display text-[clamp(2.25rem,4.4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink"
+          className="relative z-10 mx-auto mt-3 max-w-[860px] text-balance font-display text-[clamp(2.25rem,4.4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink"
         >
           One test to your <span className="text-accent">AI-First B.Tech</span>{" "}
           in Computer Science
         </h1>
         <p
           data-hero-line
-          className="mx-auto mt-4 max-w-[620px] text-balance text-[15.5px] leading-[1.6] text-body lg:text-[16px]"
+          className="relative z-10 mx-auto mt-4 max-w-[620px] text-balance text-[15.5px] leading-[1.6] text-body lg:text-[16px]"
         >
           uGNET evaluates your technical reasoning, problem-solving ability,
           computational thinking and readiness for a rigorous computer science
@@ -138,7 +95,7 @@ export function UgnetHero() {
 
         <div
           data-hero-line
-          className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          className="relative z-10 mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
           <GlowButton href="#apply" streak="#0b0d12">
             Apply for uGNET
@@ -155,7 +112,7 @@ export function UgnetHero() {
 
         <ul
           data-hero-line
-          className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13.5px] text-body"
+          className="relative z-10 mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13.5px] text-body"
         >
           {["Minimum 50% in PCM", "Below 20 years as of July 2026"].map((t) => (
             <li key={t} className="inline-flex items-center gap-1.5">
@@ -167,129 +124,77 @@ export function UgnetHero() {
           ))}
         </ul>
 
-        {/* the preview: a uGNET candidate dashboard, cut off by the section's foot */}
+        {/* the visual: a student on a cloud (Figma AI), its edges fading into
+            the ground, with floating cards about the test around it */}
         <div
           data-hero-preview
-          aria-hidden
-          className="relative mx-auto mt-10 w-full max-w-[1040px] lg:mt-10 lg:min-h-[260px] lg:flex-1"
+          className="relative mx-auto mt-6 w-full max-w-[1120px] max-lg:h-[340px] sm:max-lg:h-[440px] lg:mt-4 lg:min-h-[300px] lg:flex-1"
         >
-          <div className="h-[380px] overflow-hidden rounded-t-[12px] border border-b-0 border-black/[0.08] bg-white p-2 text-left shadow-[0_-20px_60px_-30px_rgba(228,0,43,0.35)] sm:h-[440px] lg:h-full">
-            <div className="flex h-full overflow-hidden rounded-[8px] border border-black/[0.06]">
-              {/* sidebar */}
-              <div className="hidden w-[200px] shrink-0 border-r border-black/[0.06] bg-[#fafafa] p-4 md:block">
-                <div className="flex items-center gap-2">
-                  <span className="grid size-7 place-items-center rounded-[6px] bg-accent font-display text-[12px] font-semibold text-white">
-                    uG
-                  </span>
-                  <span className="font-display text-[15px] font-medium text-ink">
-                    uGNET
-                  </span>
-                </div>
-                <p className="mt-6 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-muted">
-                  Main
-                </p>
-                <ul className="mt-2 space-y-1">
-                  {SIDEBAR.map(({ label, Icon, on }) => (
-                    <li
-                      key={label}
-                      className={`flex items-center gap-2 rounded-[6px] px-2.5 py-2 text-[12.5px] ${
-                        on
-                          ? "border border-accent/30 bg-white font-semibold text-ink"
-                          : "text-body"
-                      }`}
-                    >
-                      <Icon size={14} className={on ? "text-accent" : ""} />
-                      {label}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <Image
+            src="/images/ugnet/hero-cloud.webp"
+            alt="A student with a laptop, sitting on a cloud"
+            fill
+            priority
+            sizes="(min-width: 1024px) 1120px, 100vw"
+            className="pointer-events-none origin-bottom scale-[1.3] object-contain object-bottom [mask-image:radial-gradient(ellipse_45%_70%_at_50%_62%,#000_60%,transparent_100%)] lg:scale-[1.25]"
+          />
 
-              {/* main */}
-              <div className="min-w-0 flex-1 p-4 sm:p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="font-display text-[15px] font-medium text-ink">
-                      Welcome to uGNET 2026
-                    </p>
-                    <p className="text-[12px] text-muted">
-                      Your path to the AI-First B.Tech
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="hidden items-center gap-2 rounded-[6px] border border-black/[0.08] px-3 py-1.5 text-[12px] text-muted sm:flex">
-                      <Search size={13} />
-                      Search
-                    </span>
-                    <span className="grid size-8 place-items-center rounded-full border border-black/[0.08] text-ink">
-                      <Bell size={13} />
-                    </span>
-                    <span className="whitespace-nowrap rounded-[6px] bg-accent px-3 py-1.5 text-[12px] font-semibold text-white">
-                      Book a slot
-                    </span>
-                  </div>
-                </div>
+          {/* left: the test itself */}
+          <div className="animate-bob absolute left-0 top-[12%] hidden w-[230px] items-center gap-3 rounded-[12px] bg-ink p-3 text-left text-white shadow-[0_20px_40px_-20px_rgba(11,13,18,0.5)] md:flex lg:left-[4%]">
+            <span className="grid size-10 shrink-0 place-items-center rounded-[8px] bg-accent">
+              <Monitor size={18} aria-hidden />
+            </span>
+            <span className="text-[13.5px] leading-snug">
+              2-hour online test,
+              <span className="block text-white/60">
+                pick a slot that suits you
+              </span>
+            </span>
+          </div>
 
-                <p className="mt-5 text-[13px] font-semibold text-ink">
-                  Your exam
-                </p>
-                <ul className="mt-2.5 grid grid-cols-2 gap-2.5 lg:grid-cols-4">
-                  {FACTS.map(({ label, value, Icon }) => (
-                    <li
-                      key={label}
-                      className="flex items-center gap-2.5 rounded-[8px] border border-black/[0.08] p-3"
-                    >
-                      <span className="grid size-8 shrink-0 place-items-center rounded-[6px] bg-accent-soft text-accent">
-                        <Icon size={15} />
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-[11px] text-muted">
-                          {label}
-                        </span>
-                        <span className="block font-display text-[15px] font-medium text-ink">
-                          {value}
-                        </span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+          <div
+            className="animate-bob absolute bottom-[14%] left-0 hidden w-[230px] rounded-[12px] bg-ink p-3.5 text-left text-white shadow-[0_20px_40px_-20px_rgba(11,13,18,0.5)] md:block lg:left-[6%]"
+            style={{ animationDelay: "-1.4s" }}
+          >
+            <p className="text-[13.5px]">Your uGNET score</p>
+            <p className="text-[11.5px] text-white/55">Result declaration</p>
+            <div className="mt-3 flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-[12.5px]">
+                <span className="grid size-5 place-items-center rounded-full bg-accent">
+                  <Check size={11} strokeWidth={3} aria-hidden />
+                </span>
+                Within 2 days
+              </span>
+              <span className="font-display text-[15px] font-medium text-[#ffb3be]">
+                160 marks
+              </span>
+            </div>
+          </div>
 
-                <p className="mt-5 text-[13px] font-semibold text-ink">
-                  Your steps to a result
-                </p>
-                <ol className="mt-2.5 grid gap-2.5 sm:grid-cols-2">
-                  {STEPS.map((s, i) => (
-                    <li
-                      key={s.title}
-                      className={`flex items-start gap-3 rounded-[8px] border p-3 ${
-                        s.next
-                          ? "border-accent/40 bg-accent-soft"
-                          : "border-black/[0.08]"
-                      }`}
-                    >
-                      <span
-                        className={`grid size-7 shrink-0 place-items-center rounded-full text-[12px] font-semibold ${
-                          s.done
-                            ? "bg-ink text-white"
-                            : s.next
-                              ? "bg-accent text-white"
-                              : "border border-black/[0.08] text-muted"
-                        }`}
-                      >
-                        {s.done ? <Check size={13} strokeWidth={3} /> : i + 1}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-[13px] font-semibold text-ink">
-                          {s.title}
-                        </span>
-                        <span className="mt-0.5 block text-[11.5px] leading-snug text-body">
-                          {s.note}
-                        </span>
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+          {/* right: the scholarships */}
+          <div
+            className="animate-bob absolute right-0 top-[4%] hidden w-[250px] rounded-[14px] bg-ink p-4 text-left text-white shadow-[0_24px_48px_-20px_rgba(11,13,18,0.55)] md:block lg:right-[4%]"
+            style={{ animationDelay: "-2.6s" }}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-[13.5px]">Scholarships</span>
+              <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold">
+                Up to 100%
+              </span>
+            </div>
+            <p className="mt-3 font-display text-[26px] font-medium leading-none">
+              ₹7 Cr+
+              <span className="ml-1 text-[12px] font-normal text-white/60">
+                set aside
+              </span>
+            </p>
+            <div className="mt-3 rounded-[10px] bg-[linear-gradient(135deg,#e4002b_0%,#ff6b7f_100%)] p-3">
+              <p className="text-[11px] text-white/80">
+                Eligible students can have
+              </p>
+              <p className="mt-0.5 text-[13px] font-semibold">
+                up to 100% of tuition covered
+              </p>
             </div>
           </div>
         </div>
