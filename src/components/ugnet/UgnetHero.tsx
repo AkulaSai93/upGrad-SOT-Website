@@ -3,11 +3,12 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, Check, Monitor, Phone } from "lucide-react";
+import { ArrowRight, Check, Phone } from "lucide-react";
 import { GlowButton } from "@/components/site/GlowButton";
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
  * The uGNET page's hero.
@@ -16,19 +17,20 @@ gsap.registerPlugin(useGSAP);
  * it evaluates, the eligibility, the mode, the 2-hour test, the ₹1,000 fee
  * and the result within 2 days.
  *
- * Layout after the client's reference (an AI exam tool's landing page):
- * one screen tall on desktop, centred on a soft tinted ground, a small label, the headline, the line
- * under it and two calls to action (apply, call admissions), with the
- * eligibility as two small checks. Under it, rising into the section's foot
- * (taking whatever height the copy leaves), after a client reference: a
- * student with a laptop on a cloud (generated with Figma AI in the SOT
- * Website file), its edges fading into the ground, with dark cards floating
- * around it: the 2-hour online test, the score within 2 days, and the
- * scholarships (₹7 Cr+, up to 100% of tuition). Phones show the image
- * alone.
+ * Layout from the Figma design (SOT Website, node 209:11056): one screen
+ * tall on desktop on a sky-blue gradient, centred, a small label, the
+ * headline, the line under it and two calls to action (apply, call
+ * admissions), with the eligibility as two small checks; at the foot a
+ * cut-out of a student with a laptop on a cloud, running just past the
+ * section's edge.
  *
- * Motion (GSAP): the copy rises in line by line, then the preview lifts in
- * from below. Reduced motion: shown as they are.
+ * A soft white overlay at the foot fades the sky into the page, so there is
+ * no hard edge where the next section starts.
+ *
+ * Motion (GSAP): the copy rises in line by line, then the student lifts in
+ * from below. On scroll (scrubbed) the copy drifts up and fades, the sky
+ * slides slower than the page and the student grows and rises, as if
+ * coming towards you. Reduced motion: shown as they are, no scroll effect.
  */
 
 export function UgnetHero() {
@@ -51,6 +53,21 @@ export function UgnetHero() {
             { y: 0, autoAlpha: 1, duration: 1.3 },
             0.35,
           );
+
+        // the scroll effect, tied to the hero leaving the screen
+        gsap
+          .timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top top",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          })
+          .to("[data-hero-copy]", { yPercent: -35, autoAlpha: 0 }, 0)
+          .to("[data-hero-sky]", { yPercent: 18 }, 0)
+          .to("[data-hero-cloud]", { scale: 1.18, yPercent: -12 }, 0);
       });
       return () => mm.revert();
     },
@@ -63,142 +80,106 @@ export function UgnetHero() {
       aria-labelledby="ugnet-title"
       className="relative flex flex-col overflow-hidden bg-canvas pt-28 lg:h-[max(100svh,720px)] lg:pt-28"
     >
-      {/* the soft tinted ground behind the copy and the preview, full width */}
+      {/* the sky behind it all, full width (Figma 209:11105) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_0%,#ffffff_0%,rgba(255,255,255,0)_70%),linear-gradient(180deg,#fff7f8_0%,#ffe9ec_55%,#ffd3da_100%)]"
+        data-hero-sky
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,#8dcaec_0%,#b4dff5_55%,#eaf7fd_100%)]"
       />
 
       <div className="container-page relative flex min-h-0 flex-1 flex-col text-center">
-        <p
-          data-hero-line
-          className="relative z-10 text-[12px] font-semibold uppercase tracking-[0.16em] text-accent"
-        >
-          National Entrance Test · uGNET 2026
-        </p>
-        <h1
-          id="ugnet-title"
-          data-hero-line
-          className="relative z-10 mx-auto mt-3 max-w-[860px] text-balance font-display text-[clamp(2.25rem,4.4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink"
-        >
-          One test to your <span className="text-accent">AI-First B.Tech</span>{" "}
-          in Computer Science
-        </h1>
-        <p
-          data-hero-line
-          className="relative z-10 mx-auto mt-4 max-w-[620px] text-balance text-[15.5px] leading-[1.6] text-body lg:text-[16px]"
-        >
-          uGNET evaluates your technical reasoning, problem-solving ability,
-          computational thinking and readiness for a rigorous computer science
-          engineering curriculum.
-        </p>
-
-        <div
-          data-hero-line
-          className="relative z-10 mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row"
-        >
-          <GlowButton href="#apply" streak="#0b0d12">
-            Apply for uGNET
-            <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
-          </GlowButton>
-          <a
-            href="tel:18002108080"
-            className="inline-flex items-center gap-2 rounded-[6px] border border-black/[0.08] bg-white px-5 py-[13px] text-[15px] font-semibold text-ink transition-colors hover:border-ink"
+        <div data-hero-copy className="relative z-10 flex flex-col">
+          <p
+            data-hero-line
+            className="relative z-10 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#294454]"
           >
-            <Phone size={15} aria-hidden />
-            1800 210 8080
-          </a>
+            National Entrance Test · <span className="lowercase">u</span>GNET
+            2026
+          </p>
+          <h1
+            id="ugnet-title"
+            data-hero-line
+            className="relative z-10 mx-auto mt-3 max-w-[860px] text-balance font-display text-[clamp(2.25rem,4.4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink"
+          >
+            One test to your{" "}
+            <span className="text-accent">AI-First B.Tech</span> in Computer
+            Science
+          </h1>
+          <p
+            data-hero-line
+            className="relative z-10 mx-auto mt-4 max-w-[620px] text-balance text-[15.5px] leading-[1.6] text-[#294454] lg:text-[16px]"
+          >
+            uGNET evaluates your technical reasoning, problem-solving ability,
+            computational thinking and readiness for a rigorous computer science
+            engineering curriculum.
+          </p>
+
+          <div
+            data-hero-line
+            className="relative z-10 mt-7 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+          >
+            <GlowButton
+              href="#apply"
+              streak="#0b0d12"
+              className="max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center max-sm:[&>span:last-child]:py-4 max-sm:[&>span:last-child]:text-[16px]"
+            >
+              Apply for uGNET
+              <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
+            </GlowButton>
+            <a
+              href="tel:18002108080"
+              className="inline-flex items-center justify-center gap-2 rounded-[6px] border border-black/[0.08] bg-white px-5 py-[13px] text-[15px] font-semibold text-ink transition-colors hover:border-ink max-sm:w-full max-sm:py-[17.5px] max-sm:text-[16px]"
+            >
+              <Phone size={15} aria-hidden />
+              1800 210 8080
+            </a>
+          </div>
+
+          <ul
+            data-hero-line
+            className="relative z-10 mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13.5px] text-[#294454]"
+          >
+            {["Minimum 50% in PCM", "Below 20 years as of July 2026"].map(
+              (t) => (
+                <li key={t} className="inline-flex items-center gap-1.5">
+                  <span className="grid size-4 place-items-center rounded-full bg-accent text-white">
+                    <Check size={10} strokeWidth={3} aria-hidden />
+                  </span>
+                  {t}
+                </li>
+              ),
+            )}
+          </ul>
         </div>
 
-        <ul
-          data-hero-line
-          className="relative z-10 mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13.5px] text-body"
-        >
-          {["Minimum 50% in PCM", "Below 20 years as of July 2026"].map((t) => (
-            <li key={t} className="inline-flex items-center gap-1.5">
-              <span className="grid size-4 place-items-center rounded-full bg-accent text-white">
-                <Check size={10} strokeWidth={3} aria-hidden />
-              </span>
-              {t}
-            </li>
-          ))}
-        </ul>
-
-        {/* the visual: a student on a cloud (Figma AI), its edges fading into
-            the ground, with floating cards about the test around it */}
+        {/* the student on a cloud, centred at the foot and running just past
+            it; the frame crops the cut-out as the Figma frame does */}
         <div
           data-hero-preview
-          className="relative mx-auto mt-6 w-full max-w-[1120px] max-lg:h-[340px] sm:max-lg:h-[440px] lg:mt-4 lg:min-h-[300px] lg:flex-1"
+          className="relative mx-auto mt-8 aspect-[485/390] w-[min(485px,88vw)] translate-y-4 lg:mt-auto"
         >
-          <Image
-            src="/images/ugnet/hero-cloud.webp"
-            alt="A student with a laptop, sitting on a cloud"
-            fill
-            priority
-            sizes="(min-width: 1024px) 1120px, 100vw"
-            className="pointer-events-none origin-bottom scale-[1.3] object-contain object-bottom [mask-image:radial-gradient(ellipse_45%_70%_at_50%_62%,#000_60%,transparent_100%)] lg:scale-[1.25]"
-          />
-
-          {/* left: the test itself */}
-          <div className="animate-bob absolute left-0 top-[12%] hidden w-[230px] items-center gap-3 rounded-[12px] bg-ink p-3 text-left text-white shadow-[0_20px_40px_-20px_rgba(11,13,18,0.5)] md:flex lg:left-[4%]">
-            <span className="grid size-10 shrink-0 place-items-center rounded-[8px] bg-accent">
-              <Monitor size={18} aria-hidden />
-            </span>
-            <span className="text-[13.5px] leading-snug">
-              2-hour online test,
-              <span className="block text-white/60">
-                pick a slot that suits you
-              </span>
-            </span>
-          </div>
-
           <div
-            className="animate-bob absolute bottom-[14%] left-0 hidden w-[230px] rounded-[12px] bg-ink p-3.5 text-left text-white shadow-[0_20px_40px_-20px_rgba(11,13,18,0.5)] md:block lg:left-[6%]"
-            style={{ animationDelay: "-1.4s" }}
+            data-hero-cloud
+            className="pointer-events-none absolute inset-0 origin-bottom overflow-hidden"
           >
-            <p className="text-[13.5px]">Your uGNET score</p>
-            <p className="text-[11.5px] text-white/55">Result declaration</p>
-            <div className="mt-3 flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-[12.5px]">
-                <span className="grid size-5 place-items-center rounded-full bg-accent">
-                  <Check size={11} strokeWidth={3} aria-hidden />
-                </span>
-                Within 2 days
-              </span>
-              <span className="font-display text-[15px] font-medium text-[#ffb3be]">
-                160 marks
-              </span>
-            </div>
-          </div>
-
-          {/* right: the scholarships */}
-          <div
-            className="animate-bob absolute right-0 top-[4%] hidden w-[250px] rounded-[14px] bg-ink p-4 text-left text-white shadow-[0_24px_48px_-20px_rgba(11,13,18,0.55)] md:block lg:right-[4%]"
-            style={{ animationDelay: "-2.6s" }}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[13.5px]">Scholarships</span>
-              <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold">
-                Up to 100%
-              </span>
-            </div>
-            <p className="mt-3 font-display text-[26px] font-medium leading-none">
-              ₹7 Cr+
-              <span className="ml-1 text-[12px] font-normal text-white/60">
-                set aside
-              </span>
-            </p>
-            <div className="mt-3 rounded-[10px] bg-[linear-gradient(135deg,#e4002b_0%,#ff6b7f_100%)] p-3">
-              <p className="text-[11px] text-white/80">
-                Eligible students can have
-              </p>
-              <p className="mt-0.5 text-[13px] font-semibold">
-                up to 100% of tuition covered
-              </p>
-            </div>
+            <Image
+              src="/images/ugnet/hero-student-cloud.webp"
+              alt="A student with a laptop, sitting on a cloud"
+              width={1600}
+              height={1067}
+              priority
+              sizes="(min-width: 640px) 680px, 124vw"
+              className="absolute left-[-27.68%] top-[-16.04%] h-[116.03%] w-[139.9%] max-w-none"
+            />
           </div>
         </div>
       </div>
+
+      {/* the overlay: the sky fades into the page's white at the foot */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-28 bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.7)_55%,#fff_100%)] lg:h-44"
+      />
     </section>
   );
 }
