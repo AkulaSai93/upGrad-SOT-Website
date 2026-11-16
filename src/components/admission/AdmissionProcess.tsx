@@ -19,7 +19,7 @@ gsap.registerPlugin(useGSAP);
  *
  * Layout, after a client reference (lusion.co, "Bold Ideas, Brought to
  * Life"): an editorial run. A big headline on the left with the lead-in and
- * Apply on the right; then the six steps, each a warm flat illustration (Figma AI, SOT Website file) beside its text, swapping sides step by step (stacked on
+ * Apply on the right; then the six steps, each a warm golden-hour photo among greenery (Figma AI, SOT Website file) beside its text, swapping sides step by step (stacked on
  * phones). Through it all one thick red
  * ribbon draws itself as you scroll, as on lusion.co:
  * it enters from beyond the left edge level with the headline, sweeps down
@@ -327,7 +327,7 @@ export function AdmissionProcess() {
                 stroke="#e4002b"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="[stroke-width:22px] lg:[stroke-width:36px]"
+                className="[stroke-width:16px] lg:[stroke-width:26px]"
               />
             )}
           </svg>
@@ -372,10 +372,10 @@ export function AdmissionProcess() {
                 >
                   <div
                     data-visual
-                    className={`relative aspect-[16/10] w-full translate-y-8 lg:max-w-[460px] overflow-hidden rounded-[10px] bg-[#f3ede6] opacity-0 transition-[opacity,transform] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[on]:translate-y-0 group-data-[on]:opacity-100 max-lg:order-2 ${flip ? "lg:order-2 lg:justify-self-end" : ""}`}
+                    className={`relative aspect-[16/10] w-full translate-y-8 lg:max-w-[460px] overflow-hidden rounded-[10px] bg-[#eef0e6] opacity-0 transition-[opacity,transform] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[on]:translate-y-0 group-data-[on]:opacity-100 max-lg:order-2 ${flip ? "lg:order-2 lg:justify-self-end" : ""}`}
                   >
                     <Image
-                      src={`/images/admission/step-v4-${i + 1}.webp`}
+                      src={`/images/admission/step-v6-${i + 1}.webp`}
                       alt=""
                       fill
                       sizes="(min-width: 1024px) 540px, 100vw"
