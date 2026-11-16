@@ -39,7 +39,7 @@ const CONTACT = "/contact";
 const QUICK_LINKS = [
   { label: "Admissions", href: "/admission" },
   { label: "Scholarships", href: "https://sot.upgrad.com/#scholarships" },
-  { label: "FAQs", href: "https://sot.upgrad.com/allFAQs" },
+  { label: "FAQs", href: "/faqs" },
   { label: "Contacts", href: CONTACT },
 ];
 

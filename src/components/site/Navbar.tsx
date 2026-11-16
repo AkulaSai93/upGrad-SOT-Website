@@ -72,7 +72,7 @@ const PAGES = [
   {
     label: "FAQs",
     line: "Answers to common questions",
-    href: "/#faqs",
+    href: "/faqs",
     Icon: CircleHelp,
   },
   {
