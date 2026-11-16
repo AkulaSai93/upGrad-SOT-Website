@@ -84,7 +84,7 @@ const PAGES = [
   {
     label: "Get in Touch",
     line: "Talk to our admissions team",
-    href: `${SOT}/contactus`,
+    href: "/contact",
     Icon: MessageCircle,
   },
 ];

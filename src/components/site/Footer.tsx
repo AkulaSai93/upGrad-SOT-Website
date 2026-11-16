@@ -34,7 +34,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * illustration settles from a slight zoom and brightens, and the words rise
  * in.
  */
-const CONTACT = "https://sot.upgrad.com/contactus";
+const CONTACT = "/contact";
 
 const QUICK_LINKS = [
   { label: "Admissions", href: "/admission" },
@@ -185,8 +185,6 @@ export function Footer() {
               {/* with the hero CTA's glow: a dark sliver sweeping round the edge */}
               <a
                 href={CONTACT}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="group/cta relative inline-flex overflow-hidden rounded-[4px] p-[1.5px]"
               >
                 <span
