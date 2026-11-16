@@ -1,37 +1,36 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowUpRight, Check } from "lucide-react";
-import { CornerHandles } from "@/components/site/CornerHandles";
-import { SectionHeading } from "@/components/site/SectionHeading";
+import { ArrowRight, Check } from "lucide-react";
+import { GlowButton } from "@/components/site/GlowButton";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(useGSAP);
 
 /**
  * "Admission Process"
  *
  * Copy is sot.upgrad.com/admission's own (read 16 Nov 2026): the lead-in, the
- * six steps with their short names and titles, and every line under each
- * (the test slots, the reattempt policy, the interview's areas and length,
- * the result times, the seat block fee, what the admission letter holds).
+ * six steps and every line under each (the test slots, the reattempt
+ * policy, the interview's areas and length, the result times, the seat
+ * block fee, what the admission letter holds).
  *
- * Layout, after Newton School of Technology's admission page: on desktop a
- * card on the left that stays in view (a short line and Apply Now, red with
- * a white button, as the home page's scholarship card) and the
- * six steps down the right as a timeline, every step open (no accordion), a
- * numbered node on the line beside each card (on phones, as the home page's
- * process: plain steps by small dots, no boxes, the red card after them), and, as on Scaler's process,
- * a real photo only where it helps (the test, the interview, the letter;
- * Figma AI, SOT Website file) in a small frame beside the step's text (under it on phones). On phones the facts card comes
- * first, then the timeline.
+ * Layout, after a client reference (lusion.co, "Bold Ideas, Brought to
+ * Life"): an editorial run. A big headline on the left with the lead-in and
+ * Apply on the right; then the six steps, each a warm flat illustration (Figma AI, SOT Website file) beside its text, swapping sides step by step (stacked on
+ * phones). Through it all one thick red
+ * ribbon draws itself as you scroll, as on lusion.co:
+ * it enters from beyond the left edge level with the headline, sweeps down
+ * behind the headline and the lead-in, drops behind each step's render,
+ * loops round its bottom corner and sweeps on behind the text to the next,
+ * and leaves through the last render, off the right edge; on phones the same, across the narrow
+ * screen.
  *
- * Motion (GSAP): the line fills red as you scroll through the steps, and
- * each step's node turns red as it reaches the middle of the screen.
- * Reduced motion: the line is shown full.
+ * Motion: the ribbon is drawn down to a line two-thirds down the screen;
+ * each step rises in as it comes into view. Light throughout. Reduced
+ * motion: the ribbon is shown whole and every step in place.
  */
 type Step = {
   short: string;
@@ -41,8 +40,6 @@ type Step = {
   items?: string[];
   slots?: string[];
   note?: { k: string; v: string };
-  /** a real photo of the step, only where it helps */
-  photo?: { src: string; alt: string };
 };
 
 const STEPS: Step[] = [
@@ -59,11 +56,7 @@ const STEPS: Step[] = [
     ],
   },
   {
-    short: "uGSOT Test",
-    photo: {
-      src: "/images/admission/photo-test.webp",
-      alt: "A student taking the online uGNET test on a laptop at home",
-    },
+    short: "uGNET",
     title: "Appear for the uGSOT Entrance Test (uGNET)",
     items: [
       "This is an online, proctored entrance assessment",
@@ -77,10 +70,6 @@ const STEPS: Step[] = [
   },
   {
     short: "Interview",
-    photo: {
-      src: "/images/admission/photo-interview.webp",
-      alt: "A student in a one-on-one video interview",
-    },
     title: "Attend the Personal Interview",
     intro:
       "Once you clear uGNET, you can schedule your 1-on-1 Personal Interview directly from the dashboard.",
@@ -113,10 +102,6 @@ const STEPS: Step[] = [
   },
   {
     short: "Admission Letter",
-    photo: {
-      src: "/images/admission/photo-letter.webp",
-      alt: "A student and her parents reading her admission letter",
-    },
     title: "Official Admission Letter",
     intro:
       "Once you block your seat, you will receive the official uGSOT Admission Letter, which includes:",
@@ -129,218 +114,354 @@ const STEPS: Step[] = [
   },
 ];
 
+/** the section's colours (light) */
+const LIGHT = {
+  "--ap-bg": "#ffffff",
+  "--ap-fg": "#0b0d12",
+  "--ap-body": "#3d4452",
+  "--ap-muted": "#6b7280",
+  "--ap-line": "rgba(0,0,0,0.08)",
+  "--ap-chip": "#f6f7f9",
+  "--ap-tick": "#fde8ec",
+  "--ap-num": "rgba(0,0,0,0.14)",
+};
+
+/** a smooth curve through points (Catmull-Rom as cubic Béziers) */
+function smooth(pts: { x: number; y: number }[]) {
+  if (pts.length < 2) return "";
+  let d = `M ${pts[0].x} ${pts[0].y}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] ?? pts[i];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[i + 2] ?? p2;
+    const c1x = p1.x + (p2.x - p0.x) / 6;
+    const c1y = p1.y + (p2.y - p0.y) / 6;
+    const c2x = p2.x - (p3.x - p1.x) / 6;
+    const c2y = p2.y - (p3.y - p1.y) / 6;
+    d += ` C ${c1x} ${c1y} ${c2x} ${c2y} ${p2.x} ${p2.y}`;
+  }
+  return d;
+}
+
 export function AdmissionProcess() {
   const root = useRef<HTMLElement>(null);
+  const run = useRef<HTMLDivElement>(null);
+  // the ribbon, laid out from where the renders and the card actually sit
+  const [d, setD] = useState("");
 
+  useLayoutEffect(() => {
+    const box = run.current;
+    if (!box) return;
+    const draw = () => {
+      const o = box.getBoundingClientRect();
+      const W = o.width;
+      const wide = window.matchMedia("(min-width: 1024px)").matches;
+      const rect = (el: Element) => {
+        const r = el.getBoundingClientRect();
+        return {
+          l: r.left - o.left,
+          r: r.right - o.left,
+          t: r.top - o.top,
+          b: r.bottom - o.top,
+          cx: r.left - o.left + r.width / 2,
+        };
+      };
+      const imgs = [...box.querySelectorAll("[data-visual]")].map(rect);
+      const rows = [...box.querySelectorAll("[data-wstep]")].map(rect);
+
+      if (!imgs.length) return;
+      const pts: { x: number; y: number }[] = [];
+      const head = box.querySelector("[data-head]");
+      const h = head ? rect(head) : { l: 0, r: W, t: 0, b: 0, cx: W / 2 };
+      // as on lusion.co: in from beyond the left edge, level with the
+      // headline, sweeping down and right behind the headline and the
+      // lead-in towards the first render
+      // (starting off the screen's left edge, not just the column's)
+      const off = -o.left - 60;
+      pts.push({ x: off, y: h.t + (h.b - h.t) * 0.22 });
+      pts.push({ x: W * (wide ? 0.2 : 0.42), y: h.t + (h.b - h.t) * 0.5 });
+      pts.push({ x: W * (wide ? 0.3 : 0.6), y: h.b + (wide ? 50 : 24) });
+      imgs.forEach((im, i) => {
+        const w = im.r - im.l;
+        // which bottom corner it loops round: the outer one on desktop,
+        // left and right in turn on phones
+        const left = wide ? im.cx < W / 2 : i % 2 === 0;
+        const R = Math.min(wide ? 150 : 78, w * 0.3);
+        const s = left ? 1 : -1;
+        const edge = left ? im.l : im.r;
+        // drop in behind the render from the top
+        pts.push({ x: im.cx - s * w * 0.15, y: im.t + 24 });
+        if (i === imgs.length - 1) {
+          // the last one: through it and away off the right edge, the way
+          // it first came in from the left
+          const h2 = im.b - im.t;
+          pts.push({ x: im.cx - w * 0.05, y: im.b - h2 * 0.3 });
+          if (wide) {
+            // out under it, then a long sweep off the right edge
+            // (kept inside the section's own bottom space)
+            const floor = o.height + 8;
+            pts.push({ x: im.cx + w * 0.15, y: Math.min(im.b + 40, floor) });
+            pts.push({ x: im.r + 40, y: Math.min(im.b + 24, floor - 10) });
+            pts.push({ x: W + o.left + 90, y: im.b - h2 * 0.2 });
+          } else {
+            // phones: the picture is the section's last thing, so leave
+            // from behind it, off the right edge, never into the next
+            // section
+            pts.push({ x: W + o.left + 90, y: im.b - h2 * 0.45 });
+          }
+          return;
+        }
+        // out under it near the corner, a wide swing round the corner and
+        // up its outer side, then back in behind it
+        pts.push({ x: edge + s * w * 0.22, y: im.b + R * 0.55 });
+        pts.push({ x: edge - s * R * 0.45, y: im.b + R * 0.35 });
+        pts.push({ x: edge - s * R * 0.8, y: im.b - R * 0.6 });
+        pts.push({ x: edge - s * R * 0.2, y: im.b - R * 1.35 });
+        pts.push({ x: edge + s * R * 0.7, y: im.b - R * 1.1 });
+        // then out under the far side, sweeping on to the next render
+        // (behind the text, as on lusion.co)
+        const next = rows[i + 1];
+        if (wide) {
+          pts.push({ x: im.cx + s * w * 0.3, y: im.b + R * 0.9 });
+          if (next) {
+            pts.push({
+              x: W * (left ? 0.62 : 0.38),
+              y: (rows[i].b + next.t) / 2 + 20,
+            });
+          }
+        } else if (next) {
+          // phones: one clean point below the picture, on the far side
+          // (two close points here curled the ribbon into a knot)
+          pts.push({ x: W * (left ? 0.72 : 0.28), y: im.b + R * 1.1 });
+        }
+      });
+      setD(smooth(pts));
+    };
+    draw();
+    const ro = new ResizeObserver(draw);
+    ro.observe(box);
+    return () => ro.disconnect();
+  }, []);
+
+  // the ribbon draws and the steps wake, measured live on every scroll
+  // (the sections above shift as their images load, so fixed trigger
+  // points would go stale)
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.fromTo(
-          "[data-process-fill]",
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: "[data-process-steps]",
-              start: "top 55%",
-              end: "bottom 55%",
-              scrub: 0.4,
-            },
-          },
-        );
-        gsap.utils.toArray<HTMLElement>("[data-process-step]").forEach((el) => {
-          ScrollTrigger.create({
-            trigger: el,
-            start: "top 55%",
-            onEnter: () => el.setAttribute("data-on", ""),
-            onLeaveBack: () => el.removeAttribute("data-on"),
-          });
+        const path =
+          root.current?.querySelector<SVGPathElement>("[data-ribbon]");
+        if (!path || !d) return;
+        const len = path.getTotalLength();
+        path.style.strokeDasharray = `${len}`;
+        gsap.set(path, { strokeDashoffset: len });
+        const setDraw = gsap.quickTo(path, "strokeDashoffset", {
+          duration: 0.6,
+          ease: "power2.out",
         });
+        // how far down the ribbon has reached at points along its length
+        // (the running lowest point, as it curls back up in places)
+        const N = 500;
+        const ys: number[] = [];
+        let low = -Infinity;
+        for (let k = 0; k <= N; k++) {
+          low = Math.max(low, path.getPointAtLength((len * k) / N).y);
+          ys.push(low);
+        }
+        const steps = gsap.utils.toArray<HTMLElement>("[data-wstep]");
+        const update = () => {
+          const box = run.current?.getBoundingClientRect();
+          if (!box) return;
+          const line = window.innerHeight * 0.66;
+          const y = line - box.top;
+          let k = 0;
+          while (k < N && ys[k + 1] <= y) k++;
+          setDraw(len * (1 - k / N));
+          steps.forEach((el) =>
+            el.toggleAttribute(
+              "data-on",
+              el.getBoundingClientRect().top < window.innerHeight * 0.96,
+            ),
+          );
+        };
+        update();
+        window.addEventListener("scroll", update, { passive: true });
+        window.addEventListener("resize", update);
+        return () => {
+          window.removeEventListener("scroll", update);
+          window.removeEventListener("resize", update);
+        };
       });
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set("[data-process-fill]", { scaleY: 1 });
         gsap.utils
-          .toArray<HTMLElement>("[data-process-step]")
+          .toArray<HTMLElement>("[data-wstep]")
           .forEach((el) => el.setAttribute("data-on", ""));
       });
       return () => mm.revert();
     },
-    { scope: root },
+    { scope: root, dependencies: [d], revertOnUpdate: true },
   );
 
   return (
-    <section ref={root} id="process" className="bg-canvas py-10 lg:py-16">
+    <section
+      ref={root}
+      id="process"
+      aria-labelledby="process-title"
+      className="overflow-x-clip bg-[var(--ap-bg)] py-10 lg:py-16"
+      style={LIGHT as React.CSSProperties}
+    >
       <div className="container-page">
-        <SectionHeading
-          title="Admission"
-          accent="Process"
-          intro="A simple, transparent journey from application to admission."
-        />
-
-        <div className="mx-auto mt-8 grid max-w-[1120px] gap-6 lg:mt-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:items-start lg:gap-12">
-          {/* the red card, in view while the steps scroll by */}
-          <aside className="relative border border-black/[0.08] bg-accent p-6 text-white max-lg:order-last sm:p-7 lg:sticky lg:top-28">
-            <CornerHandles />
-            <h3 className="font-display text-[clamp(1.375rem,2vw,1.75rem)] font-medium leading-[1.15] tracking-[-0.02em]">
-              Six steps to your seat
-            </h3>
-            <p className="mt-3 text-[14.5px] leading-relaxed text-white/85">
-              Apply online, take uGNET, clear the interview and receive your
-              admission letter, all in six simple steps.
-            </p>
-            {/* white, with the hero CTA's dark sliver sweeping round the
-                edge, as on the home page's scholarship card */}
-            <a
-              href="https://sot.upgrad.com/admission"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group/cta relative mt-8 flex w-full overflow-hidden rounded-[6px] p-[2px]"
-            >
-              <span
-                aria-hidden
-                style={{
-                  backgroundImage:
-                    "conic-gradient(transparent 200deg, #0b0d12)",
-                }}
-                className="cta-glow absolute left-1/2 top-1/2 aspect-square w-[160%]"
-              />
-              <span className="relative z-[2] flex w-full items-center justify-center gap-2 rounded-[4px] bg-white px-6 py-3.5 text-[15.5px] font-semibold text-ink transition-colors duration-200 group-hover/cta:bg-white/90">
-                Apply Now
-                <ArrowUpRight
-                  size={18}
-                  strokeWidth={2}
-                  aria-hidden
-                  className="transition-transform duration-300 group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5"
-                />
-              </span>
-            </a>
-            <a
-              href="tel:18002108080"
-              className="mt-3 block whitespace-nowrap text-center text-[12.5px] text-white/80 hover:text-white"
-            >
-              For admissions please contact{" "}
-              <span className="font-semibold text-white">1800 210 8080</span>
-            </a>
-          </aside>
-
-          {/* the six steps on a line */}
-          <ol
-            data-process-steps
-            className="relative grid gap-10 md:gap-4 lg:gap-5"
+        <div ref={run} className="relative mx-auto max-w-[1120px]">
+          {/* the ribbon, behind everything */}
+          <svg
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
           >
-            {/* the line, and its red fill */}
-            <span
-              aria-hidden
-              className="absolute bottom-6 left-[15.5px] top-4 w-px bg-black/[0.08] md:left-[17px] md:top-6 lg:left-[19px]"
-            />
-            <span
-              aria-hidden
-              data-process-fill
-              className="absolute bottom-6 left-[15.5px] top-4 w-px origin-top bg-accent md:left-[17px] md:top-6 lg:left-[19px]"
-            />
+            {d && (
+              <path
+                data-ribbon
+                d={d}
+                fill="none"
+                stroke="#e4002b"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="[stroke-width:22px] lg:[stroke-width:36px]"
+              />
+            )}
+          </svg>
 
-            {STEPS.map((s, i) => (
-              <li
-                key={s.title}
-                data-process-step
-                className="group relative grid grid-cols-[32px_minmax(0,1fr)] gap-6 md:grid-cols-[36px_minmax(0,1fr)] md:gap-3 lg:grid-cols-[40px_minmax(0,1fr)] lg:gap-5"
+          {/* the headline, and the lead-in with Apply */}
+          <div
+            data-head
+            className="relative grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-end lg:gap-16"
+          >
+            <h2
+              id="process-title"
+              className="font-display text-[clamp(2.5rem,7vw,5.5rem)] font-medium leading-[0.98] tracking-[-0.045em] text-[var(--ap-fg)]"
+            >
+              Admission
+              <br />
+              Process
+            </h2>
+            <div className="lg:pb-3">
+              <p className="max-w-[440px] text-[15.5px] leading-[1.65] text-[var(--ap-body)] lg:text-[16px]">
+                A simple, transparent journey from application to admission.
+              </p>
+              <GlowButton
+                href="https://sot.upgrad.com/admission"
+                streak="#0b0d12"
+                className="mt-6 max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center"
               >
-                {/* the node */}
-                {/* on phones a dot with a soft halo, as on the home page's
-                    process; from tablets up the step's number */}
-                <span className="relative z-[1] grid size-8 place-items-center rounded-full bg-[#eeeff1] transition-colors duration-500 group-data-[on]:bg-[#fbd9df] md:mt-4 md:size-9 md:border md:border-black/[0.08] md:bg-white md:font-display md:text-[13px] md:font-medium md:text-ink md:group-data-[on]:border-accent md:group-data-[on]:bg-accent md:group-data-[on]:text-white lg:size-10 lg:text-[14px]">
-                  <span className="size-3.5 rounded-full bg-ink/25 transition-colors duration-500 group-data-[on]:bg-accent md:hidden" />
-                  <span className="max-md:hidden">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </span>
+                Apply Now
+                <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
+              </GlowButton>
+            </div>
+          </div>
 
-                <article
-                  className={`group/card relative max-md:[&>span]:hidden md:border md:border-black/[0.08] md:bg-white md:p-4 lg:p-5 ${s.photo ? "md:grid md:grid-cols-[minmax(0,1fr)_220px] md:items-start md:gap-x-6 md:gap-y-0 lg:grid-cols-[minmax(0,1fr)_230px]" : ""}`}
+          {/* the steps, a render beside the text, sides swapping */}
+          <ol className="relative mt-12 grid gap-14 lg:mt-16 lg:gap-20">
+            {STEPS.map((s, i) => {
+              const flip = i % 2 === 1;
+              return (
+                <li
+                  key={s.title}
+                  data-wstep
+                  className="group grid items-center gap-6 lg:grid-cols-2 lg:gap-16"
                 >
-                  <CornerHandles />
-                  <div className="min-w-0">
-                    <p className="text-[11.5px] font-semibold uppercase tracking-[0.12em] text-accent">
-                      Step {i + 1} · {s.short}
-                    </p>
-                    <h3 className="mt-1.5 font-display text-[17px] font-medium leading-snug tracking-[-0.02em] text-ink lg:text-[19px]">
+                  <div
+                    data-visual
+                    className={`relative aspect-[16/10] w-full translate-y-8 lg:max-w-[460px] overflow-hidden rounded-[10px] bg-[#f3ede6] opacity-0 transition-[opacity,transform] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[on]:translate-y-0 group-data-[on]:opacity-100 max-lg:order-2 ${flip ? "lg:order-2 lg:justify-self-end" : ""}`}
+                  >
+                    <Image
+                      src={`/images/admission/step-v4-${i + 1}.webp`}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 540px, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+
+                  <div
+                    data-text
+                    className={`max-lg:order-1 translate-y-8 opacity-0 transition-[opacity,transform] delay-150 duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[on]:translate-y-0 group-data-[on]:opacity-100 ${flip ? "lg:order-1" : ""}`}
+                  >
+                    <div className="flex items-baseline gap-4">
+                      <span className="font-display text-[clamp(3rem,6vw,5rem)] font-medium leading-none tracking-[-0.05em] text-[var(--ap-num)]">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-[12px] font-semibold uppercase tracking-[0.16em] text-accent">
+                        Step {i + 1} of {STEPS.length}
+                      </span>
+                    </div>
+                    <h3 className="mt-4 max-w-[480px] font-display text-[clamp(1.375rem,2.4vw,2rem)] font-medium leading-[1.15] tracking-[-0.025em] text-[var(--ap-fg)]">
                       {s.title}
                     </h3>
-                    {s.intro && (
-                      <p className="mt-2 text-[14px] leading-[1.6] text-body">
-                        {s.intro}
-                      </p>
-                    )}
-                    {s.label && (
-                      <p className="mt-3 text-[13px] font-semibold text-ink">
-                        {s.label}
-                      </p>
-                    )}
-                    {s.items && (
-                      <ul className={`grid gap-2 ${s.label ? "mt-2" : "mt-3"}`}>
-                        {s.items.map((t) => (
-                          <li
-                            key={t}
-                            className="flex items-start gap-2.5 text-[14px] leading-snug text-body"
-                          >
-                            <span className="mt-0.5 grid size-[18px] shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
-                              <Check size={11} strokeWidth={3} aria-hidden />
-                            </span>
-                            {t}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {s.slots && (
-                      <div className="mt-4">
-                        <p className="text-[13px] font-semibold text-ink">
-                          There are two available slots:
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          {s.slots.map((t) => (
-                            <span
-                              key={t}
-                              className="rounded-[4px] border border-black/[0.08] bg-[#f6f7f9] px-3 py-1.5 text-[13px] font-medium tabular-nums text-ink"
-                            >
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                    <StepBody s={s} />
                   </div>
-                  {/* the step's photo, where it helps: a small frame on the
-                      right from tablets up, under the text on phones;
-                      only the photo zooms on hover */}
-                  {s.photo && (
-                    <div className="relative mt-4 aspect-[16/9] overflow-hidden rounded-[4px] bg-[#eef1f4] md:mt-0 md:aspect-[4/3]">
-                      <Image
-                        src={s.photo.src}
-                        alt={s.photo.alt}
-                        fill
-                        sizes="(min-width: 768px) 240px, 100vw"
-                        className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:scale-[1.04]"
-                      />
-                    </div>
-                  )}
-                  {/* the note runs the card's full width (beside the photo
-                      too), so it fits on one line on desktop */}
-                  {s.note && (
-                    <p className="mt-4 border-t border-black/[0.08] pt-3 text-[13px] md:mt-3 leading-[1.55] text-body md:col-span-2">
-                      <span className="font-semibold text-ink">
-                        {s.note.k}:
-                      </span>{" "}
-                      {s.note.v}
-                    </p>
-                  )}
-                </article>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ol>
         </div>
       </div>
     </section>
+  );
+}
+
+/** a step's lines: intro, list, test slots and note */
+function StepBody({ s }: { s: Step }) {
+  return (
+    <div className="max-w-[500px]">
+      {s.intro && (
+        <p className="mt-4 text-[15px] leading-[1.65] text-[var(--ap-body)]">
+          {s.intro}
+        </p>
+      )}
+      {s.label && (
+        <p className="mt-4 text-[13.5px] font-semibold text-[var(--ap-fg)]">
+          {s.label}
+        </p>
+      )}
+      {s.items && (
+        <ul className={`grid gap-2.5 ${s.label ? "mt-2.5" : "mt-5"}`}>
+          {s.items.map((t) => (
+            <li
+              key={t}
+              className="flex items-start gap-3 text-[14.5px] leading-snug text-[var(--ap-body)]"
+            >
+              <span className="mt-0.5 grid size-[18px] shrink-0 place-items-center rounded-full bg-[var(--ap-tick)] text-accent">
+                <Check size={11} strokeWidth={3} aria-hidden />
+              </span>
+              {t}
+            </li>
+          ))}
+        </ul>
+      )}
+      {s.slots && (
+        <div className="mt-5">
+          <p className="text-[13.5px] font-semibold text-[var(--ap-fg)]">
+            There are two available slots:
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {s.slots.map((t) => (
+              <span
+                key={t}
+                className="rounded-[4px] border border-[var(--ap-line)] bg-[var(--ap-chip)] px-3 py-1.5 text-[13px] font-medium tabular-nums text-[var(--ap-fg)]"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      {s.note && (
+        <p className="mt-5 border-t border-[var(--ap-line)] pt-4 text-[13.5px] leading-[1.55] text-[var(--ap-body)]">
+          <span className="font-semibold text-[var(--ap-fg)]">{s.note.k}:</span>{" "}
+          {s.note.v}
+        </p>
+      )}
+    </div>
   );
 }
