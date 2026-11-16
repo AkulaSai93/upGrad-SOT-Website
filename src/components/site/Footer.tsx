@@ -37,7 +37,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const CONTACT = "https://sot.upgrad.com/contactus";
 
 const QUICK_LINKS = [
-  { label: "Admissions", href: "https://sot.upgrad.com/admission" },
+  { label: "Admissions", href: "/admission" },
   { label: "Scholarships", href: "https://sot.upgrad.com/#scholarships" },
   { label: "FAQs", href: "https://sot.upgrad.com/allFAQs" },
   { label: "Contacts", href: CONTACT },
@@ -172,10 +172,7 @@ export function Footer() {
               data-rise
               className="font-display text-[clamp(2.25rem,4.6vw,4rem)] font-medium leading-[1.02] tracking-[-0.03em]"
             >
-              Let&rsquo;s{" "}
-              <span className="text-accent">
-                Connect
-              </span>
+              Let&rsquo;s <span className="text-accent">Connect</span>
             </h2>
             <p
               data-rise
@@ -249,8 +246,10 @@ export function Footer() {
                 <a
                   key={l.label}
                   href={l.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  // this site's own pages open in place
+                  {...(l.href.startsWith("/")
+                    ? {}
+                    : { target: "_blank", rel: "noopener noreferrer" })}
                   className="text-[14px] font-medium text-ink/80 transition-colors hover:text-accent"
                 >
                   {l.label}

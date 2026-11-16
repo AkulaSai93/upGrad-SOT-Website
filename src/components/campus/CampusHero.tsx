@@ -163,14 +163,14 @@ export function CampusHero({ campus }: { campus: Campus }) {
               >
                 <GlowButton
                   href="#apply"
-                  className="max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center max-sm:[&>span:last-child]:py-4"
+                  className="[&>span:last-child]:py-[10.5px] max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center max-sm:[&>span:last-child]:py-3"
                 >
                   Apply Now
                   <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
                 </GlowButton>
                 <Link
                   href="#brochure"
-                  className="inline-flex items-center justify-center gap-2.5 rounded-[6px] border border-white/30 bg-white/10 px-6 py-[14.5px] text-[15px] font-semibold text-white backdrop-blur-md transition-colors hover:border-white hover:bg-white hover:text-ink max-sm:w-full max-sm:py-[17.5px]"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-[6px] border border-white/30 bg-white/10 px-6 py-[11px] text-[15px] font-semibold text-white backdrop-blur-md transition-colors hover:border-white hover:bg-white hover:text-ink max-sm:w-full max-sm:py-[12.5px]"
                 >
                   <Download size={16} strokeWidth={2} aria-hidden />
                   Download Brochure

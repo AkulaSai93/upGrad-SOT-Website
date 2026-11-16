@@ -121,14 +121,14 @@ export function UgnetHero() {
             <GlowButton
               href="#apply"
               streak="#0b0d12"
-              className="max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center max-sm:[&>span:last-child]:py-4 max-sm:[&>span:last-child]:text-[16px]"
+              className="[&>span:last-child]:py-[10.5px] max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center max-sm:[&>span:last-child]:py-3 max-sm:[&>span:last-child]:text-[16px]"
             >
               Apply for uGNET
               <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
             </GlowButton>
             <a
               href="tel:18002108080"
-              className="inline-flex items-center justify-center gap-2 rounded-[6px] border border-black/[0.08] bg-white px-5 py-[13px] text-[15px] font-semibold text-ink transition-colors hover:border-ink max-sm:w-full max-sm:py-[17.5px] max-sm:text-[16px]"
+              className="inline-flex items-center justify-center gap-2 rounded-[6px] border border-black/[0.08] bg-white px-5 py-[11px] text-[15px] font-semibold text-ink transition-colors hover:border-ink max-sm:w-full max-sm:py-[12.5px] max-sm:text-[16px]"
             >
               <Phone size={15} aria-hidden />
               1800 210 8080

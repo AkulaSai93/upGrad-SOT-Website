@@ -66,7 +66,7 @@ const PAGES = [
   {
     label: "Admissions",
     line: "Apply through uGNET",
-    href: "/#admission",
+    href: "/admission",
     Icon: FilePen,
   },
   {
