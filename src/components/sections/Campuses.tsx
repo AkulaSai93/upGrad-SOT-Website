@@ -47,7 +47,7 @@ const CAMPUSES = [
         text: "AI-First B.Tech in Computer Science, 4 years / 8 semesters",
       },
     ],
-    href: "https://sot.upgrad.com/university/ssahe",
+    href: "/university/ssahe",
   },
   {
     key: "adypu",
@@ -145,10 +145,13 @@ export function Campuses() {
                 <div className="mt-auto pt-6">
                   {/* the hero's moving line (GlowButton): a black sliver sweeping
                       round the outside of the red button, on the page */}
+                  {/* our own campus pages open here; a campus without one yet
+                      still goes to sot.upgrad.com, in a new tab */}
                   <Link
                     href={c.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    {...(c.href.startsWith("http")
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
                     className="group/cta relative flex w-full overflow-hidden rounded-[6px] p-[1.5px]"
                   >
                     <span
