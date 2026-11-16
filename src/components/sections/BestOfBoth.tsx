@@ -241,7 +241,7 @@ function Panel({
       {/* oversized ghost wordmark, clipped by the card */}
       <span
         aria-hidden
-        className={`pointer-events-none absolute left-7 top-3 -z-10 select-none whitespace-nowrap font-display text-[clamp(3rem,4.4vw,4rem)] font-extrabold leading-[0.8] tracking-[-0.04em] ${
+        className={`pointer-events-none absolute left-7 top-3 -z-10 select-none whitespace-nowrap font-display text-[clamp(3rem,4.4vw,4rem)] font-medium leading-[0.8] tracking-[-0.04em] ${
           dark ? "text-white/[0.14]" : "text-black/[0.07]"
         }`}
       >
@@ -249,7 +249,7 @@ function Panel({
       </span>
 
       <h3
-        className={`font-display text-[clamp(1rem,1.3vw,1.25rem)] font-bold leading-tight tracking-[-0.02em] ${
+        className={`font-display text-[clamp(1rem,1.3vw,1.25rem)] font-medium leading-tight tracking-[-0.02em] ${
           dark ? "text-white" : "text-[#0a0a0b]"
         }`}
       >
@@ -389,7 +389,7 @@ export function BestOfBoth() {
     // Two lines rather than one, so the converged block is far narrower and
     // the type can be much larger: 5.2vw still clears a 48px gutter at 1024,
     // 1280 and 1440.
-    "font-display text-[clamp(1.625rem,2.8vw,2.5rem)] font-bold leading-[1.2] tracking-[-0.03em] text-ink whitespace-nowrap";
+    "font-display text-[clamp(1.625rem,2.8vw,2.5rem)] font-medium leading-[1.2] tracking-[-0.03em] text-ink whitespace-nowrap";
 
   /** red accent words, as in the hero */
   const accentClass = "text-accent";
@@ -536,7 +536,7 @@ export function BestOfBoth() {
         <>
           <div ref={flatRef} className="container-page overflow-x-clip py-8">
             {/* the two lines come in from either side, as the halves do on desktop */}
-            <h2 className="text-center font-display text-[clamp(1.375rem,5.8vw,2.25rem)] font-bold leading-[1.2] tracking-[-0.03em] text-ink">
+            <h2 className="text-center font-display text-[clamp(1.375rem,5.8vw,2.25rem)] font-medium leading-[1.2] tracking-[-0.03em] text-ink">
               <span data-from="left" className="block">
                 Where World-Class University
               </span>

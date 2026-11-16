@@ -195,7 +195,7 @@ function Name({ name }: { name: string }) {
   return (
     <span
       style={{ fontSize: `calc(var(--card-w) * ${size.toFixed(3)})` }}
-      className="block w-full px-2 text-center font-extrabold uppercase leading-[0.95] tracking-[-0.035em] text-white [text-shadow:0_4px_14px_rgba(0,0,0,0.3)]"
+      className="block w-full px-2 text-center font-medium uppercase leading-[0.95] tracking-[-0.035em] text-white [text-shadow:0_4px_14px_rgba(0,0,0,0.3)]"
     >
       {lines.map((l) => (
         <span key={l} className="block whitespace-nowrap">

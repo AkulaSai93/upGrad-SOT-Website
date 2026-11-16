@@ -123,7 +123,7 @@ export function BuiltDifferent() {
                   />
                 </div>
 
-                <h3 className="relative z-10 mb-2 text-center font-display text-base font-bold tracking-[-0.02em] text-ink sm:mb-3 sm:text-lg">
+                <h3 className="relative z-10 mb-2 text-center font-display text-base font-medium tracking-[-0.02em] text-ink sm:mb-3 sm:text-lg">
                   {feature.title}
                 </h3>
 

@@ -127,7 +127,7 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
           className="group absolute inset-0 overflow-hidden border border-black/[0.08] [backface-visibility:hidden]"
         >
           <div className="flex h-full flex-col">
-            <h3 className="shrink-0 px-4 pb-2 pt-5 text-center font-display text-[17px] font-bold leading-[1.2] tracking-[-0.02em] text-ink">
+            <h3 className="shrink-0 px-4 pb-2 pt-5 text-center font-display text-[17px] font-medium leading-[1.2] tracking-[-0.02em] text-ink">
               {s.title}
             </h3>
             {/* the picture, scaled to fit whole (never cropped) on the card's
@@ -181,7 +181,7 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
             <p className="text-[12.5px] font-semibold text-white/75">
               Eligibility Criteria
             </p>
-            <h3 className="mt-2 font-display text-[17px] font-bold leading-snug tracking-[-0.01em]">
+            <h3 className="mt-2 font-display text-[17px] font-medium leading-snug tracking-[-0.01em]">
               {s.title}
             </h3>
             <p className="mt-4 text-[14.5px] leading-relaxed text-white/90">
@@ -285,7 +285,7 @@ export function Scholarships() {
           <h2 className="text-ink max-lg:text-center">
             <span
               data-rise
-              className="block font-display text-[clamp(1.5rem,2.6vw,2.25rem)] font-bold tracking-[-0.025em]"
+              className="block font-display text-[clamp(1.5rem,2.6vw,2.25rem)] font-medium tracking-[-0.025em]"
             >
               Get Upto
             </span>
@@ -293,18 +293,21 @@ export function Scholarships() {
               data-rise
               className="mt-3 flex flex-wrap items-end gap-x-5 gap-y-4 max-lg:justify-center lg:mt-1"
             >
-              <span className="text-[clamp(5.5rem,17vw,14rem)] font-bold leading-[0.9] lg:leading-[0.82] tracking-[-0.05em] tabular-nums">
-                <span
-                  ref={count}
-                  // room for three digits from the start, so the count from
-                  // 0 to 100 never changes the line's width
-                  className="inline-block min-w-[3ch] text-right"
-                >
-                  100
+              <span className="text-[clamp(5.5rem,17vw,14rem)] font-medium leading-[0.9] lg:text-[clamp(6rem,10.5vw,10.5rem)] lg:leading-[0.82] tracking-[-0.05em] tabular-nums">
+                {/* exactly the width of "100" from the start (an invisible
+                    copy holds it), so the count from 0 to 100 never changes
+                    the line's width */}
+                <span className="relative inline-block">
+                  <span aria-hidden className="invisible">
+                    100
+                  </span>
+                  <span ref={count} className="absolute inset-0 text-right">
+                    100
+                  </span>
                 </span>
                 <span className="text-accent">%</span>
               </span>
-              <span className="pb-[0.12em] font-display text-[clamp(1.75rem,3.6vw,3.25rem)] font-bold leading-none tracking-[-0.03em] max-lg:basis-full">
+              <span className="pb-[0.12em] font-display text-[clamp(1.75rem,3.6vw,3.25rem)] font-medium leading-none tracking-[-0.03em] max-lg:basis-full">
                 Scholarship
               </span>
             </span>

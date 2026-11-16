@@ -29,7 +29,7 @@ export function HeroFacts({ className = "" }: { className?: string }) {
           <dt className="whitespace-nowrap text-[11px] font-semibold tracking-[0.12em] text-muted lg:text-[10.5px] lg:tracking-[0.14em]">
             {fact.label}
           </dt>
-          <dd className="mt-1.5 whitespace-nowrap font-display text-[clamp(16px,5vw,19px)] font-bold leading-none text-ink lg:mt-1 lg:text-[16px]">
+          <dd className="mt-1.5 whitespace-nowrap font-display text-[clamp(16px,5vw,19px)] font-medium leading-none text-ink lg:mt-1 lg:text-[16px]">
             {fact.value}
           </dd>
           <p className="mt-1.5 text-[13px] text-muted lg:mt-1 lg:text-[11.5px]">{fact.note}</p>

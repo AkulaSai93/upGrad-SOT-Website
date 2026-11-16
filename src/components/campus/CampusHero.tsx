@@ -43,16 +43,41 @@ export function CampusHero({ campus }: { campus: Campus }) {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         gsap
           .timeline({ defaults: { ease: "expo.out" } })
-          .fromTo(q("[data-film-media]"), { scale: 1.12 }, { scale: 1, duration: 2.2 }, 0)
-          .fromTo(q("[data-fade]"), { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1, stagger: 0.07 }, 0.4)
-          .fromTo(q("[data-panel]"), { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.1 }, 0.6)
-          .fromTo(q("[data-facts] > *"), { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1, stagger: 0.08 }, 0.8);
+          .fromTo(
+            q("[data-film-media]"),
+            { scale: 1.12 },
+            { scale: 1, duration: 2.2 },
+            0,
+          )
+          .fromTo(
+            q("[data-fade]"),
+            { y: 24, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1, stagger: 0.07 },
+            0.4,
+          )
+          .fromTo(
+            q("[data-panel]"),
+            { y: 40, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1.1 },
+            0.6,
+          )
+          .fromTo(
+            q("[data-facts] > *"),
+            { y: 30, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1, stagger: 0.08 },
+            0.8,
+          );
 
         // the film drifts a little slower than the page as it scrolls away
         gsap.to(q("[data-film-drift]"), {
           yPercent: 12,
           ease: "none",
-          scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
         });
       });
       return () => mm.revert();
@@ -63,13 +88,30 @@ export function CampusHero({ campus }: { campus: Campus }) {
   const src = `https://player.vimeo.com/video/${campus.vimeo}?background=1&autoplay=1&loop=1&muted=1&dnt=1`;
 
   return (
-    <section ref={root} aria-labelledby="campus-title" className="relative bg-canvas pb-8 lg:pb-14">
+    <section
+      ref={root}
+      aria-labelledby="campus-title"
+      className="relative bg-canvas pb-8 lg:pb-14"
+    >
       {/* the first screen: the campus film behind the copy */}
-      <div id="campus-hero" className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-ink">
-        <div aria-hidden className="absolute inset-0 -z-10 [container-type:size]">
+      <div
+        id="campus-hero"
+        className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-ink"
+      >
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 [container-type:size]"
+        >
           <div data-film-drift className="absolute inset-0">
             <div data-film-media className="absolute inset-0">
-              <Image src={campus.poster} alt="" fill preload sizes="100vw" className="object-cover" />
+              <Image
+                src={campus.poster}
+                alt=""
+                fill
+                preload
+                sizes="100vw"
+                className="object-cover"
+              />
               {/* the 16:9 film, sized to cover the screen whatever its shape */}
               <iframe
                 src={src}
@@ -99,22 +141,26 @@ export function CampusHero({ campus }: { campus: Campus }) {
               <h1
                 id="campus-title"
                 data-fade
-                className="max-w-[760px] font-display text-[clamp(2rem,3.6vw,3.5rem)] font-bold leading-[1.08] tracking-[-0.035em] max-lg:mx-auto"
+                className="max-w-[760px] font-display text-[clamp(2rem,3.6vw,3.5rem)] font-medium leading-[1.08] tracking-[-0.035em] max-lg:mx-auto"
               >
                 {campus.programme.lead}{" "}
-                <span className="text-accent">
-                  {campus.programme.accent}
-                </span>
+                <span className="text-accent">{campus.programme.accent}</span>
                 {campus.programme.tail && <> {campus.programme.tail}</>}
               </h1>
 
-              <p data-fade className="mt-4 text-[16px] leading-relaxed text-white/85 lg:text-[17px]">
+              <p
+                data-fade
+                className="mt-4 text-[16px] leading-relaxed text-white/85 lg:text-[17px]"
+              >
                 With {campus.name}, {campus.location.split(" (")[0]}
                 <span className="text-white/40"> · </span>
                 {campus.tracks.join(" | ")}
               </p>
 
-              <div data-fade className="mt-7 flex flex-wrap items-center gap-3 max-lg:justify-center">
+              <div
+                data-fade
+                className="mt-7 flex flex-wrap items-center gap-3 max-lg:justify-center"
+              >
                 <GlowButton
                   href="#apply"
                   className="max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center max-sm:[&>span:last-child]:py-4"
@@ -132,10 +178,18 @@ export function CampusHero({ campus }: { campus: Campus }) {
               </div>
 
               {/* the approvals, as one quiet line under the CTAs */}
-              <ul data-fade className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-[13px] font-medium text-white/80 max-lg:justify-center">
+              <ul
+                data-fade
+                className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-[13px] font-medium text-white/80 max-lg:justify-center"
+              >
                 {campus.approvals.map((a) => (
                   <li key={a} className="inline-flex items-center gap-1.5">
-                    <Check size={14} strokeWidth={2.6} aria-hidden className="text-accent" />
+                    <Check
+                      size={14}
+                      strokeWidth={2.6}
+                      aria-hidden
+                      className="text-accent"
+                    />
                     {a}
                   </li>
                 ))}
@@ -159,16 +213,20 @@ export function CampusHero({ campus }: { campus: Campus }) {
           {campus.facts.map((f, i) => (
             <div
               key={f.label}
-              className={`p-4 sm:p-6 ${i % 2 === 1 ? "border-l border-black/[0.08]" : ""} ${
+              className={`px-4 py-2.5 sm:px-5 sm:py-3 ${i % 2 === 1 ? "border-l border-black/[0.08]" : ""} ${
                 i > 1 ? "max-lg:border-t max-lg:border-black/[0.08]" : ""
               } ${i === 2 ? "lg:border-l lg:border-black/[0.08]" : ""}`}
             >
-              <dt className="text-[12px] font-semibold uppercase tracking-[0.08em] text-muted">{f.label}</dt>
-              <dd className="mt-1.5">
-                <span className="block font-display text-[clamp(1rem,1.8vw,1.5rem)] font-bold leading-tight tracking-[-0.02em] text-ink">
+              <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+                {f.label}
+              </dt>
+              <dd className="mt-0.5">
+                <span className="block font-display text-[clamp(1rem,1.8vw,1.5rem)] font-medium leading-tight tracking-[-0.02em] text-ink">
                   {f.value}
                 </span>
-                <span className="mt-1 block text-[13px] leading-snug text-body">{f.note}</span>
+                <span className="mt-0.5 block text-[12.5px] leading-snug text-body">
+                  {f.note}
+                </span>
               </dd>
             </div>
           ))}

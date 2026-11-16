@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight } from "lucide-react";
+import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import type { Campus } from "./campuses";
 
@@ -17,32 +18,18 @@ const ordinal = (n: number) => {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 };
 
-/** a crosshair at a corner of the frame, centred on the corner point */
-function Cross({ at }: { at: string }) {
-  return (
-    <span
-      data-cross
-      aria-hidden
-      className={`pointer-events-none absolute size-4 -translate-x-1/2 -translate-y-1/2 ${at}`}
-    >
-      <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-ink/40" />
-      <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-ink/40" />
-    </span>
-  );
-}
-
 /**
  * Recognitions & Achievements — the university page's accreditations and
  * rankings, as published there (NAAC, NBA, The Week 2025, Outlook India 2025).
  *
  * Layout: the heading centred, then one ruled panel rather than cards (after
- * quadcse.com's "at a glance" strip): a hairline frame with a crosshair at
- * each corner, and hairlines between the cells. Three across and two down on
+ * quadcse.com's "at a glance" strip): the site's grey frame with a corner
+ * handle at each corner, and hairlines between the cells. Three across and two down on
  * desktop, two across on phones. Each cell: its kind in small spaced capitals,
  * the figure large (a rank's # in red), what it is, and who gave it. The last
  * cell, in the brand red, is the call to apply.
  *
- * Motion (GSAP): the frame's lines draw out from the middle, then the cells
+ * Motion (GSAP): the cells
  * fade up one after another and each rank counts up from zero. Reduced motion:
  * shown as they are.
  */
@@ -60,24 +47,6 @@ export function CampusRecognitions({ campus }: { campus: Campus }) {
         };
         gsap
           .timeline({ scrollTrigger: st, defaults: { ease: "expo.out" } })
-          .fromTo(
-            "[data-rule-x]",
-            { scaleX: 0 },
-            { scaleX: 1, duration: 1.2 },
-            0,
-          )
-          .fromTo(
-            "[data-rule-y]",
-            { scaleY: 0 },
-            { scaleY: 1, duration: 1.2 },
-            0,
-          )
-          .fromTo(
-            "[data-cross]",
-            { autoAlpha: 0 },
-            { autoAlpha: 1, duration: 0.8 },
-            0.3,
-          )
           .fromTo(
             "[data-cell]",
             { y: 24, autoAlpha: 0 },
@@ -107,35 +76,15 @@ export function CampusRecognitions({ campus }: { campus: Campus }) {
       <div className="container-page">
         <SectionHeading title="Recognitions &" accent="Achievements" />
 
-        {/* the panel: a hairline frame, crosshairs at its corners */}
-        <div data-panel className="relative mx-2 mt-10 lg:mx-0 lg:mt-14">
-          <span
-            data-rule-x
-            aria-hidden
-            className="absolute -inset-x-3 top-0 h-px bg-ink/15 lg:-inset-x-5"
-          />
-          <span
-            data-rule-x
-            aria-hidden
-            className="absolute -inset-x-3 bottom-0 h-px bg-ink/15 lg:-inset-x-5"
-          />
-          <span
-            data-rule-y
-            aria-hidden
-            className="absolute -inset-y-3 left-0 w-px bg-ink/15 lg:-inset-y-5"
-          />
-          <span
-            data-rule-y
-            aria-hidden
-            className="absolute -inset-y-3 right-0 w-px bg-ink/15 lg:-inset-y-5"
-          />
-          <Cross at="left-0 top-0" />
-          <Cross at="left-full top-0" />
-          <Cross at="left-0 top-full" />
-          <Cross at="left-full top-full" />
+        {/* the panel: the site's grey frame with a handle on each corner */}
+        <div
+          data-panel
+          className="relative mt-10 border border-black/[0.08] lg:mt-14"
+        >
+          <CornerHandles />
 
           {/* the cells, hairlines between them */}
-          <ul className="grid grid-cols-2 gap-px bg-ink/10 lg:grid-cols-3">
+          <ul className="grid grid-cols-2 gap-px bg-black/[0.08] lg:grid-cols-3">
             {campus.recognitions.map((r) => {
               const rank = typeof r.figure === "number";
               return (
@@ -147,7 +96,7 @@ export function CampusRecognitions({ campus }: { campus: Campus }) {
                   <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted sm:text-[11px]">
                     {r.kind}
                   </span>
-                  <span className="mt-2.5 font-display text-[clamp(1.875rem,3.2vw,2.75rem)] font-bold leading-none tracking-[-0.04em] text-ink">
+                  <span className="mt-2.5 font-display text-[clamp(1.875rem,3.2vw,2.75rem)] font-medium leading-none tracking-[-0.04em] text-ink">
                     {rank ? (
                       <>
                         <span className="text-accent">#</span>
@@ -174,11 +123,9 @@ export function CampusRecognitions({ campus }: { campus: Campus }) {
               data-cell
               className="flex flex-col justify-between gap-4 bg-accent p-4 text-white sm:p-5 lg:px-7 lg:py-6"
             >
-              <p className="font-display text-[clamp(1.125rem,1.8vw,1.5rem)] font-bold leading-[1.1] tracking-[-0.03em]">
+              <p className="font-display text-[clamp(1.125rem,1.8vw,1.5rem)] font-medium leading-[1.1] tracking-[-0.03em]">
                 Your journey
-                <span className="block">
-                  could start here.
-                </span>
+                <span className="block">could start here.</span>
               </p>
               <Link
                 href="#apply"

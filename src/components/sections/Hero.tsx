@@ -344,7 +344,7 @@ export function Hero() {
               the lines under it, the facts and full-width buttons. It sits
               from the top rather than the middle, so the students in the
               picture show between the buttons and the logos. */}
-          <h1 className="font-display text-[min(10.2vw,8.6vh)] font-bold leading-[0.95] tracking-[-0.04em] max-lg:text-center max-lg:leading-[1.08] sm:text-[min(9vw,8.6vh)] lg:text-[min(6vw,9.5vh)]">
+          <h1 className="font-display text-[min(10.2vw,8.6vh)] font-medium leading-[0.95] tracking-[-0.04em] max-lg:text-center max-lg:leading-[1.08] sm:text-[min(9vw,8.6vh)] lg:text-[min(6vw,9.5vh)]">
             <span className="block">
               <span className="hero-line-1 block">
                 <MaskWord attr="hero">AI-First</MaskWord>
@@ -385,7 +385,7 @@ export function Hero() {
 
             <p
               data-reveal="fade"
-              className="mt-[clamp(0.75rem,1.8vh,1rem)] text-[17px] font-bold text-ink lg:text-[14.5px]"
+              className="mt-[clamp(0.75rem,1.8vh,1rem)] text-[17px] font-medium text-ink lg:text-[14.5px]"
             >
               Admission starts with uGNET
             </p>

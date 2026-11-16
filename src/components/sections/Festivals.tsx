@@ -157,7 +157,7 @@ export function Festivals() {
                   </div>
                   <div className="absolute inset-x-[6px] bottom-[6px] p-6 text-white sm:p-8 lg:p-10">
                     <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="rounded-[4px] bg-accent px-2.5 py-1 text-[12px] font-bold uppercase tracking-[0.12em]">
+                      <span className="rounded-[4px] bg-accent px-2.5 py-1 text-[12px] font-medium uppercase tracking-[0.12em]">
                         Event {String(i + 1).padStart(2, "0")} /{" "}
                         {String(FESTIVALS.length).padStart(2, "0")}
                       </span>
@@ -165,7 +165,7 @@ export function Festivals() {
                         {f.campus}
                       </span>
                     </div>
-                    <p className="mt-4 text-balance text-[clamp(2.25rem,5vw,4.5rem)] font-extrabold leading-[0.95] tracking-[-0.035em]">
+                    <p className="mt-4 text-balance text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
                       {f.name}
                     </p>
                   </div>

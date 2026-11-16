@@ -330,7 +330,7 @@ export function Testimonials() {
           className="container-page flex flex-col items-center gap-7 text-center md:flex-row md:items-center md:justify-between md:text-left"
         >
           <div className="max-w-[560px]">
-            <h3 className="font-display text-[clamp(1.375rem,2.2vw,1.875rem)] font-bold leading-[1.2] tracking-[-0.02em] text-white">
+            <h3 className="font-display text-[clamp(1.375rem,2.2vw,1.875rem)] font-medium leading-[1.2] tracking-[-0.02em] text-white">
               Get started on your journey towards your dream tech career
             </h3>
             <p className="mt-3 text-[15px] leading-relaxed text-white/80">

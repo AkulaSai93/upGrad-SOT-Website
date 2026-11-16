@@ -170,7 +170,7 @@ export function Footer() {
           <div>
             <h2
               data-rise
-              className="font-display text-[clamp(2.25rem,4.6vw,4rem)] font-bold leading-[1.02] tracking-[-0.03em]"
+              className="font-display text-[clamp(2.25rem,4.6vw,4rem)] font-medium leading-[1.02] tracking-[-0.03em]"
             >
               Let&rsquo;s{" "}
               <span className="text-accent">

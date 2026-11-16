@@ -434,7 +434,7 @@ function Card({ path }: { path: Path }) {
           aria-hidden
           className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.8)_0%,rgba(0,0,0,0.35)_40%,rgba(0,0,0,0.05)_100%)]"
         />
-        <p className="absolute inset-x-7 bottom-7 text-center text-[clamp(2rem,3.4vw,3rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-white sm:inset-x-10 sm:bottom-10">
+        <p className="absolute inset-x-7 bottom-7 text-center text-[clamp(2rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.03em] text-white sm:inset-x-10 sm:bottom-10">
           {path.tag}
         </p>
       </div>

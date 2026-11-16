@@ -266,7 +266,7 @@ export function Mentorship() {
                     <span
                       className={`absolute inset-x-0 bottom-0 p-4 transition-opacity duration-500 ${on ? "opacity-100" : "opacity-0"}`}
                     >
-                      <span className="block font-display text-[15px] font-bold leading-tight text-white">
+                      <span className="block font-display text-[15px] font-medium leading-tight text-white">
                         {speaker.name}
                       </span>
                       <span className="mt-0.5 block text-[12px] text-white/75">
@@ -299,7 +299,7 @@ export function Mentorship() {
                 {pad(active + 1)} / {pad(N)}
                 {who && <span className="text-ink"> · {who.name}</span>}
               </p>
-              <p className="mt-1.5 line-clamp-2 font-display text-[clamp(1rem,1.6vw,1.25rem)] font-bold leading-snug tracking-[-0.02em] text-ink">
+              <p className="mt-1.5 line-clamp-2 font-display text-[clamp(1rem,1.6vw,1.25rem)] font-medium leading-snug tracking-[-0.02em] text-ink">
                 {current.title}
               </p>
             </div>

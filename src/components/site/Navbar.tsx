@@ -21,6 +21,7 @@ const DARK_SECTIONS = [
   "faculty",
   "leaders",
   "campus-hero",
+  "about",
 ];
 
 const NAV_LINKS = [
@@ -277,7 +278,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
           </span>
         )}
         {link.tag && (
-          <span className="mt-1.5 inline-block rounded-[4px] bg-accent px-1.5 py-0.5 text-[10px] font-bold text-white">
+          <span className="mt-1.5 inline-block rounded-[4px] bg-accent px-1.5 py-0.5 text-[10px] font-medium text-white">
             {link.tag}
           </span>
         )}
@@ -450,7 +451,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     {/* the label rolls up to a fresh copy on hover */}
-                    <span className="relative block h-[1.3em] overflow-hidden font-display text-[20px] font-bold leading-[1.3] tracking-[-0.02em] sm:text-[22px] tracking-[-0.03em]">
+                    <span className="relative block h-[1.3em] overflow-hidden font-display text-[20px] font-medium leading-[1.3] tracking-[-0.02em] sm:text-[22px] tracking-[-0.03em]">
                       <span
                         className={`block transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2 ${
                           active ? "text-accent" : "text-ink"
@@ -531,7 +532,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
               then the school's channels */}
           <div className="mt-auto px-6 pb-6 pt-8 sm:px-8">
             <div className="menu-fade rounded-[6px] bg-sunken p-4">
-              <p className="font-display text-[17px] font-bold leading-tight tracking-[-0.02em] text-ink">
+              <p className="font-display text-[17px] font-medium leading-tight tracking-[-0.02em] text-ink">
                 AI-First B.Tech in{" "}
                 <span className="text-accent">Computer Science</span>
               </p>

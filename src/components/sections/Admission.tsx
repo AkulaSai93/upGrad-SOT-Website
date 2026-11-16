@@ -184,7 +184,7 @@ export function Admission() {
                 <p className="text-[13px] font-semibold text-accent">
                   Step {String(i + 1).padStart(2, "0")}
                 </p>
-                <h3 className="mt-1 font-display text-[18px] font-bold leading-snug tracking-[-0.01em] text-ink">
+                <h3 className="mt-1 font-display text-[18px] font-medium leading-snug tracking-[-0.01em] text-ink">
                   {step.title}
                 </h3>
                 <p className="mt-2 max-w-[520px] text-[14.5px] leading-relaxed text-body">
@@ -220,7 +220,7 @@ export function Admission() {
               className="relative border border-black/[0.08] bg-accent p-7 text-white sm:p-9"
             >
               <CornerHandles />
-              <h3 className="font-display text-[clamp(1.5rem,2.3vw,2rem)] font-bold leading-[1.15] tracking-[-0.02em]">
+              <h3 className="font-display text-[clamp(1.5rem,2.3vw,2rem)] font-medium leading-[1.15] tracking-[-0.02em]">
                 Study Without Limits: Up to 100% Scholarships
               </h3>
               <p className="mt-4 text-[15px] leading-relaxed text-white/85">

@@ -83,7 +83,7 @@ export function Achievements() {
                 height={341}
                 className="h-12 w-auto self-start"
               />
-              <p className="mt-4 text-[12px] font-bold uppercase tracking-[0.16em] text-[var(--tint)]">
+              <p className="mt-4 text-[12px] font-medium uppercase tracking-[0.16em] text-[var(--tint)]">
                 ICPC Asia Regionals 2026
               </p>
               <h3 className="mt-2 text-[clamp(1.5rem,2.3vw,2rem)] font-medium leading-[1.2] tracking-[-0.02em] text-ink">
@@ -172,7 +172,7 @@ export function Achievements() {
               ))}
             </div>
             <div className="flex flex-col justify-center px-4 py-4 sm:px-6 sm:py-5 lg:px-7 lg:py-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--tint)] sm:text-[12px] sm:tracking-[0.16em]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--tint)] sm:text-[12px] sm:tracking-[0.16em]">
                 Google Student Ambassadors
               </p>
               <p className="mt-2 text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-none sm:mt-3 tracking-[-0.03em] text-[var(--tint)]">

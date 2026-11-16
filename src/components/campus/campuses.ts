@@ -23,6 +23,8 @@ export type Campus = {
   facts: { label: string; value: string; note: string }[];
   /** the university page's own "about" copy, a paragraph each */
   about: string[];
+  /** a short version of it, two sentences, for the about section's intro */
+  summary: string;
   /** the university page's films (Vimeo), the first the main one; their
    *  titles are the ones on their thumbnails */
   videos: { title: string; vimeo: string; thumb: string }[];
@@ -98,6 +100,8 @@ export const CAMPUSES: Campus[] = [
       },
       { label: "Age", value: "Below 20 years", note: "As of July 2026" },
     ],
+    summary:
+      "Over four decades of academic excellence on a 70+ acre green campus in Tumkuru, with 85+ institutions, its own incubation centre and an alumni network of 45,000+ engineers.",
     about: [
       "Sri Siddhartha Academy of Higher Education (SSAHE) is a university built on over four decades of academic excellence, nestled on a sprawling 70+ acre green campus in Tumkuru, Karnataka. Since its inception, SSAHE has grown into one of the most comprehensive and respected academic ecosystems in South India, home to 85+ institutions spanning engineering, medicine, dentistry, and management.",
       "The university has a dedicated Entrepreneurship Development Cell and the Siddhartha Incubation Center, where students are actively encouraged to think like founders, take risks, and turn their ideas into reality. A strong record of performance in national-level hackathons further reflects the university's commitment to nurturing students who build technology. SSAHE also boasts a powerful alumni network of over 45,000 engineers, 8,000 doctors, and 2,000 dentists.",

@@ -109,7 +109,7 @@ export function Campuses() {
               </div>
 
               <div className="flex flex-1 flex-col p-5 lg:p-6">
-                <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-accent">
+                <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-accent">
                   {c.eyebrow}
                 </p>
                 <h3 className="mt-2 text-[clamp(1.125rem,1.55vw,1.5rem)] font-medium leading-tight sm:whitespace-nowrap tracking-[-0.02em] text-ink">
@@ -117,7 +117,7 @@ export function Campuses() {
                 </h3>
                 <p className="mt-1.5 text-[14px] text-body">{c.location}</p>
 
-                <p className="mt-5 text-[12px] font-bold uppercase tracking-[0.16em] text-accent">
+                <p className="mt-5 text-[12px] font-medium uppercase tracking-[0.16em] text-accent">
                   Key highlights
                 </p>
                 <ul className="mt-3 space-y-3">

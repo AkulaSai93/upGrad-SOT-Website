@@ -267,7 +267,7 @@ export function AlumniCompanies() {
           />
         </Reveal>
 
-        <p className="mt-6 text-center text-[13px] font-bold uppercase tracking-[0.24em] text-accent sm:text-[14px]">
+        <p className="mt-6 text-center text-[13px] font-medium uppercase tracking-[0.24em] text-accent sm:text-[14px]">
           3000+ hiring partners
         </p>
       </div>

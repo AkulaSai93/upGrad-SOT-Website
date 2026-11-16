@@ -139,14 +139,14 @@ export function CampusFees({ campus }: { campus: Campus }) {
               <tr className="border-t border-black/[0.08] text-ink">
                 <th
                   scope="row"
-                  className="px-5 py-4 text-left font-bold uppercase tracking-[0.04em]"
+                  className="px-5 py-4 text-left font-medium uppercase tracking-[0.04em]"
                 >
                   Total
                 </th>
                 {fees.semesters.map((s) => (
                   <td
                     key={s.sem}
-                    className="border-l border-black/[0.08] px-5 py-4 font-bold tabular-nums"
+                    className="border-l border-black/[0.08] px-5 py-4 font-medium tabular-nums"
                   >
                     {s.total}
                   </td>
@@ -171,7 +171,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
                   onClick={() => setOpenSem(isOpen ? null : i)}
                   className={`flex w-full items-center justify-between gap-3 px-4 py-4 text-left ${isOpen ? "bg-[#f6f7f9]" : "bg-white"}`}
                 >
-                  <span className="font-display text-[16px] font-bold text-ink">
+                  <span className="font-display text-[16px] font-medium text-ink">
                     Semester {s.sem}
                   </span>
                   <span className="flex items-center gap-3">
@@ -196,7 +196,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
                         <dd className="tabular-nums text-body">{it.amount}</dd>
                       </div>
                     ))}
-                    <div className="flex justify-between gap-4 border-t border-black/[0.08] px-4 py-3 font-bold text-ink">
+                    <div className="flex justify-between gap-4 border-t border-black/[0.08] px-4 py-3 font-medium text-ink">
                       <dt className="uppercase tracking-[0.04em]">Total</dt>
                       <dd className="font-display">{s.total}</dd>
                     </div>
@@ -221,7 +221,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
               className="flex w-full items-center justify-between gap-4 px-5 py-3.5 text-left sm:px-6 sm:py-4"
             >
               <span>
-                <span className="block font-display text-[clamp(1rem,1.3vw,1.125rem)] font-bold tracking-[-0.02em] text-white">
+                <span className="block font-display text-[clamp(1rem,1.3vw,1.125rem)] font-medium tracking-[-0.02em] text-white">
                   {hostel.title}
                 </span>
                 <span className="mt-0.5 block text-[12px] text-white/80 sm:text-[13px]">
@@ -284,7 +284,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
                     key={r.occupancy}
                     className="rounded-[6px] border border-black/[0.08] bg-white p-5"
                   >
-                    <p className="font-display text-[17px] font-bold tracking-[-0.02em] text-ink">
+                    <p className="font-display text-[17px] font-medium tracking-[-0.02em] text-ink">
                       {r.occupancy}
                     </p>
                     <dl className="mt-4 grid grid-cols-2 gap-3">
@@ -292,13 +292,13 @@ export function CampusFees({ campus }: { campus: Campus }) {
                         <dt className="text-[12px] text-muted">
                           Non-AC / year
                         </dt>
-                        <dd className="mt-0.5 font-display text-[18px] font-bold text-ink">
+                        <dd className="mt-0.5 font-display text-[18px] font-medium text-ink">
                           {r.nonAc}
                         </dd>
                       </div>
                       <div>
                         <dt className="text-[12px] text-muted">AC / year</dt>
-                        <dd className="mt-0.5 font-display text-[18px] font-bold text-accent">
+                        <dd className="mt-0.5 font-display text-[18px] font-medium text-accent">
                           {r.ac}
                         </dd>
                       </div>
@@ -325,7 +325,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
               <div className="mt-6 grid gap-6 lg:grid-cols-3">
                 <Facts title="Included in the annual fee" items={g.included} />
                 <div>
-                  <h4 className="text-[14px] font-bold text-white">
+                  <h4 className="text-[14px] font-medium text-white">
                     {hostel.laundry.title}
                   </h4>
                   <p className="mt-2 text-[13px] leading-relaxed text-white/85">
@@ -357,7 +357,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
 function Facts({ title, items }: { title: string; items: string[] }) {
   return (
     <div>
-      <h4 className="text-[14px] font-bold text-white">{title}</h4>
+      <h4 className="text-[14px] font-medium text-white">{title}</h4>
       <ul className="mt-2 space-y-1.5">
         {items.map((it) => (
           <li

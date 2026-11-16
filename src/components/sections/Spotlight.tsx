@@ -83,7 +83,7 @@ function Card({ c, onOpen }: { c: Video; onOpen: (v: Video) => void }) {
           sizes="280px"
           className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
         />
-        <span className="absolute left-2 top-2 rounded-[4px] bg-accent px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white">
+        <span className="absolute left-2 top-2 rounded-[4px] bg-accent px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.08em] text-white">
           Podcast
         </span>
       </span>

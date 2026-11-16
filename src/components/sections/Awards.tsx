@@ -87,7 +87,7 @@ function AwardCard({ a, copy }: { a: (typeof AWARDS)[number]; copy: boolean }) {
       <p className="mt-3 text-[13px] text-body sm:mt-4 sm:text-[13.5px]">
         {a.source}
       </p>
-      <h3 className="mt-2 font-display text-[16px] font-bold sm:mt-3 sm:text-[18px] leading-snug tracking-[-0.01em] text-accent">
+      <h3 className="mt-2 font-display text-[16px] font-medium sm:mt-3 sm:text-[18px] leading-snug tracking-[-0.01em] text-accent">
         {a.title}
       </h3>
       <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-ink/80 sm:mt-1.5 sm:line-clamp-3 sm:text-[14px]">

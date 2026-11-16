@@ -275,10 +275,10 @@ const YEARS: Year[] = [
 function PillarColumn({ pillar, index }: { pillar: Pillar; index: number }) {
   return (
     <div className="relative lg:sticky lg:top-[calc(var(--header-h)+32px)] lg:pl-7">
-      <p className="font-display text-[clamp(3.5rem,5vw,4.5rem)] font-extrabold leading-none tracking-[-0.05em] text-accent">
+      <p className="font-display text-[clamp(3.5rem,5vw,4.5rem)] font-medium leading-none tracking-[-0.05em] text-accent">
         {String(index + 1).padStart(2, "0")}
       </p>
-      <h3 className="mt-3 text-[22px] font-bold leading-tight tracking-[-0.02em] text-ink">
+      <h3 className="mt-3 text-[22px] font-medium leading-tight tracking-[-0.02em] text-ink">
         {pillar.title}
       </h3>
       <p className="mt-2 max-w-[280px] text-[14.5px] leading-[1.6] text-body">
@@ -849,7 +849,7 @@ export function Curriculum() {
                   }`}
                 >
                   <span
-                    className={`grid size-10 shrink-0 place-items-center rounded-[4px] text-[14px] font-bold tabular-nums transition-colors duration-300 ${
+                    className={`grid size-10 shrink-0 place-items-center rounded-[4px] text-[14px] font-medium tabular-nums transition-colors duration-300 ${
                       on
                         ? "bg-white/15 text-white"
                         : "bg-accent-soft text-accent"

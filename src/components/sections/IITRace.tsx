@@ -149,7 +149,7 @@ export function IITRace() {
             <div className="flex max-lg:justify-center">
               <Lockup />
             </div>
-            <h2 className="mt-10 font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.03em] text-ink">
+            <h2 className="mt-10 font-display text-[clamp(1.75rem,3vw,2.5rem)] font-medium leading-[1.1] tracking-[-0.03em] text-ink">
               Inside The <span className="text-accent">IIT Race</span>
             </h2>
             <p className="mt-5 max-w-[520px] text-balance text-[16px] leading-relaxed text-body max-lg:mx-auto">

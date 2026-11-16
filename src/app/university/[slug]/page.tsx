@@ -60,10 +60,10 @@ async function Campus({ params }: Pick<PageProps<"/university/[slug]">, "params"
       <CampusHero campus={campus} />
       <CampusRecognitions campus={campus} />
       <CampusAbout campus={campus} />
-      <Faculty />
       <CampusFees campus={campus} />
       <CampusLoans />
       <Scholarships />
+      <Faculty />
       <Admission />
       <Faqs university={campus.short} />
     </div>

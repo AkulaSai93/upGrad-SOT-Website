@@ -121,7 +121,7 @@ function StatCard({ stat }: { stat: Stat }) {
         <CornerHandles />
         <div>
           <p
-            className={`font-display font-bold leading-none tracking-[-0.045em] text-ink ${
+            className={`font-display font-medium leading-none tracking-[-0.045em] text-ink ${
               stat.wide
                 ? "text-[clamp(2.5rem,4.4vw,4rem)]"
                 : "text-[clamp(2.125rem,3.2vw,3rem)]"

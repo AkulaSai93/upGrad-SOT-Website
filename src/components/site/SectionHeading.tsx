@@ -19,7 +19,7 @@ const SIZE = {
 /**
  * Section heading in the hero's type system, used by every section:
  *
- *   h2       Plus Jakarta Sans bold, tight tracking; the `accent` phrase is
+ *   h2       Plus Jakarta Sans medium, tight tracking; the `accent` phrase is
  *            in brand red (the hero's "Science")
  *   intro    body copy under it
  *
@@ -121,7 +121,7 @@ export function SectionHeading({
     >
       <h2
         id={id}
-        className={`font-display font-bold leading-[1.15] tracking-[-0.03em] text-[color:var(--heading-fg,var(--ink))] ${SIZE[size]} ${titleClassName}`}
+        className={`font-display font-medium leading-[1.15] tracking-[-0.03em] text-[color:var(--heading-fg,var(--ink))] ${SIZE[size]} ${titleClassName}`}
       >
         {words(title, false)}
         {accent &&

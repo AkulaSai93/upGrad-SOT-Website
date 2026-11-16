@@ -215,7 +215,7 @@ export function CampusLoans() {
 
         {/* the notes */}
         <div data-loan-rise className="mt-8 lg:mt-10">
-          <h3 className="text-[14px] font-bold text-ink">Notes</h3>
+          <h3 className="text-[14px] font-medium text-ink">Notes</h3>
           <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-[13px] leading-relaxed text-body marker:text-muted">
             {LOANS.notes.map((n) => (
               <li key={n.slice(0, 24)}>{n}</li>
