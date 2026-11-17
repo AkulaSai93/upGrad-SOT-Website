@@ -125,7 +125,7 @@ const RESOURCES = [
 
 /** help and support: small links at the panel's foot */
 const HELP: MenuLink[] = [
-  { label: "Contact Us", href: `${SOT}/contactus` },
+  { label: "Contact Us", href: "/contact" },
   { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Terms & Conditions", href: "/terms-and-conditions" },
   {
