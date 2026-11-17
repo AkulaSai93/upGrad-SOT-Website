@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { lenis } from "@/components/motion/SmoothScroll";
 import { CornerHandles } from "@/components/site/CornerHandles";
+import { PROSE } from "@/components/site/prose";
 import { fmtDate, type Post } from "./data";
 import { Byline, PostCard, cover } from "./PostCard";
 
@@ -213,7 +214,7 @@ export function PostView({
             )}
 
             <article
-              className="mt-8 text-[16.5px] leading-[1.75] text-body lg:mt-10 [&>*+*]:mt-[1.1em] [&_h2]:mt-[2em] [&_h2]:scroll-mt-24 [&_h2]:font-display [&_h2]:text-[clamp(1.375rem,2.2vw,1.75rem)] [&_h2]:font-medium [&_h2]:leading-[1.25] [&_h2]:tracking-[-0.02em] [&_h2]:text-ink [&_h3]:mt-[1.6em] [&_h3]:scroll-mt-24 [&_h3]:text-[1.2rem] [&_h3]:font-medium [&_h3]:leading-[1.3] [&_h3]:text-ink [&>h2:first-child]:mt-0 [&>h3:first-child]:mt-0 [&_strong]:font-semibold [&_strong]:text-ink [&_b]:font-semibold [&_b]:text-ink [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-[3px] [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-[1.4em] [&_ol]:pl-[1.4em] [&_li+li]:mt-[0.4em] [&_li]:marker:text-accent [&_img]:mb-[0.4em] [&_img]:mt-[1.6em] [&_img]:h-auto [&_img]:w-full [&_img]:rounded-[8px] [&_blockquote]:border-l-[3px] [&_blockquote]:border-accent [&_blockquote]:pl-[1em] [&_blockquote]:text-ink [&_code]:rounded-[4px] [&_code]:bg-[#f3f5f7] [&_code]:px-[0.35em] [&_code]:py-[0.1em] [&_code]:text-[0.9em] [&_pre]:overflow-x-auto [&_pre]:rounded-[8px] [&_pre]:bg-ink [&_pre]:px-[1.2em] [&_pre]:py-[1em] [&_pre]:text-[14px] [&_pre]:leading-[1.6] [&_pre]:text-[#e9edf2] [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-inherit [&_table]:block [&_table]:overflow-x-auto [&_table]:border-collapse [&_table]:text-[14.5px] [&_td]:border [&_td]:border-black/[0.08] [&_td]:px-[0.8em] [&_td]:py-[0.55em] [&_th]:border [&_th]:border-black/[0.08] [&_th]:bg-[#f3f5f7] [&_th]:px-[0.8em] [&_th]:py-[0.55em] [&_th]:text-left [&_th]:font-semibold [&_th]:text-ink [&_hr]:border-black/[0.08]"
+              className={`mt-8 lg:mt-10 ${PROSE}`}
               dangerouslySetInnerHTML={{ __html: html }}
             />
           </div>

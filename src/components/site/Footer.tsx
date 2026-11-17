@@ -58,14 +58,14 @@ const REACH = [
 ];
 
 const LEGAL = [
-  { label: "Privacy Policy", href: "https://sot.upgrad.com/privacy-policy" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
   {
     label: "Terms & Conditions",
-    href: "https://sot.upgrad.com/terms-and-conditions",
+    href: "/terms-and-conditions",
   },
   {
     label: "Admission Policy",
-    href: "https://sot.upgrad.com/terms-and-conditions/admission-policy",
+    href: "/terms-and-conditions/admission-policy",
   },
 ];
 
@@ -294,8 +294,6 @@ export function Footer() {
                 <a
                   key={l.label}
                   href={l.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="transition-colors hover:text-accent"
                 >
                   {l.label}

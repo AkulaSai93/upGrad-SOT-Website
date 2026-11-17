@@ -126,11 +126,11 @@ const RESOURCES = [
 /** help and support: small links at the panel's foot */
 const HELP: MenuLink[] = [
   { label: "Contact Us", href: `${SOT}/contactus` },
-  { label: "Privacy Policy", href: `${SOT}/privacy-policy` },
-  { label: "Terms & Conditions", href: `${SOT}/terms-and-conditions` },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms & Conditions", href: "/terms-and-conditions" },
   {
     label: "Admission Policy",
-    href: `${SOT}/terms-and-conditions/admission-policy`,
+    href: "/terms-and-conditions/admission-policy",
   },
 ];
 

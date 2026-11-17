@@ -298,7 +298,7 @@ export function ContactHero() {
                 <span>
                   By submitting this form, you agree to our{" "}
                   <a
-                    href="https://sot.upgrad.com/terms-and-conditions"
+                    href="/terms-and-conditions"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#152b2a] underline"
@@ -307,7 +307,7 @@ export function ContactHero() {
                   </a>{" "}
                   and{" "}
                   <a
-                    href="https://sot.upgrad.com/privacy-policy"
+                    href="/privacy-policy"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#152b2a] underline"
