@@ -352,9 +352,7 @@ export function Hero() {
               <span className="hero-line-2 flex items-center gap-[0.18em] max-lg:justify-center">
                 <span className="hero-line-2-text inline-block whitespace-nowrap">
                   <MaskWord attr="hero">B.Tech</MaskWord>{" "}
-                  <MaskWord attr="hero" className="text-ink/55">
-                    in
-                  </MaskWord>
+                  <MaskWord attr="hero">in</MaskWord>
                 </span>
                 {/* Placeholder box: the floating film is measured against it. */}
                 <span
@@ -364,7 +362,9 @@ export function Hero() {
                 />
               </span>{" "}
               <span className="hero-line-3 block whitespace-nowrap">
-                <MaskWord attr="hero">Computer</MaskWord>{" "}
+                <MaskWord attr="hero" className="text-accent">
+                  Computer
+                </MaskWord>{" "}
                 <MaskWord attr="hero" className="text-accent">
                   Science
                 </MaskWord>
