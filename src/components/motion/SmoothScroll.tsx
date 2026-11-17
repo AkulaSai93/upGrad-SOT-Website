@@ -32,7 +32,7 @@ export function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const instance = new Lenis({ lerp: 0.09, anchors: { offset: -80 }, autoRaf: false });
+    const instance = new Lenis({ lerp: 0.09, anchors: { offset: -116 }, autoRaf: false });
     instance.on("scroll", ScrollTrigger.update);
     lenis = instance;
 

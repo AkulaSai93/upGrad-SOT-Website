@@ -115,7 +115,7 @@ export function BlogsPage() {
     const chips =
       posts.current?.querySelector<HTMLElement>("[data-chips]")?.offsetHeight ??
       60;
-    const offset = -(60 + chips + 24);
+    const offset = -(96 + chips + 24);
     if (lenis) lenis.scrollTo(el, { offset });
     else
       window.scrollTo({
@@ -225,7 +225,7 @@ export function BlogsPage() {
       <section ref={posts} className="bg-canvas pb-10 pt-7 lg:pb-20 lg:pt-14">
         {/* the chips stay under the navbar while the posts scroll */}
         <div
-          className="sticky top-[60px] z-20 border-b border-transparent bg-white/95 py-3 backdrop-blur data-[stuck]:border-black/[0.08]"
+          className="sticky top-[96px] z-20 border-b border-transparent bg-white/95 py-3 backdrop-blur data-[stuck]:border-black/[0.08]"
           data-chips
         >
           <div

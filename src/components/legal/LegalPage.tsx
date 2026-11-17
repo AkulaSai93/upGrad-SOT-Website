@@ -27,7 +27,7 @@ const OTHERS: { key: LegalKey; href: string }[] = [
 /** the legal text's own section blocks: a gap between them, a softer note
     for the opening "Related legal policies" block */
 const SECTIONS =
-  "[&_section]:scroll-mt-28 [&_section+section]:mt-[2.5em] [&_section>*+*]:mt-[1em] [&_section>h2:first-child]:mt-0 [&>section:not([id])]:rounded-[8px] [&>section:not([id])]:bg-[#f3f5f7] [&>section:not([id])]:p-5 [&>section:not([id])]:text-[14.5px] [&>section:not([id])>p:first-child]:font-semibold [&>section:not([id])>p:first-child]:text-ink";
+  "[&_section]:scroll-mt-[148px] [&_section+section]:mt-[2.5em] [&_section>*+*]:mt-[1em] [&_section>h2:first-child]:mt-0 [&>section:not([id])]:rounded-[8px] [&>section:not([id])]:bg-[#f3f5f7] [&>section:not([id])]:p-5 [&>section:not([id])]:text-[14.5px] [&>section:not([id])>p:first-child]:font-semibold [&>section:not([id])>p:first-child]:text-ink";
 
 /**
  * A legal page (Privacy Policy, Terms & Conditions, Admission Policy).
@@ -59,7 +59,7 @@ export function LegalPage({ doc: key }: { doc: LegalKey }) {
   const goTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-    if (lenis) lenis.scrollTo(el, { offset: -100 });
+    if (lenis) lenis.scrollTo(el, { offset: -136 });
     else
       window.scrollTo({
         top: el.getBoundingClientRect().top + window.scrollY - 100,
@@ -101,7 +101,7 @@ export function LegalPage({ doc: key }: { doc: LegalKey }) {
         <div className="container-page grid max-w-[1200px] gap-10 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-16">
           {/* desktop: the contents, in view while the text scrolls */}
           <aside className="hidden lg:block">
-            <div className="sticky top-[100px]">
+            <div className="sticky top-[136px]">
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
                 Contents
               </p>

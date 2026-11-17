@@ -276,7 +276,7 @@ export function ResumeFeatures({ id = "features" }: { id?: string }) {
         <>
           <div className="pt-10 lg:pt-14">{heading}</div>
           <div ref={track} className="relative h-[460svh]">
-            <div className="sticky top-0 h-svh overflow-hidden pb-6 pt-[72px]">
+            <div className="sticky top-[36px] h-[calc(100svh-36px)] overflow-hidden pb-6 pt-[72px]">
               <div className="container-page h-full">{stage}</div>
             </div>
           </div>

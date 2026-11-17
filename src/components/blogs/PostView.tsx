@@ -72,7 +72,7 @@ export function PostView({
     const el = document.getElementById(id);
     if (!el) return;
     setOpenToc(false);
-    if (lenis) lenis.scrollTo(el, { offset: -96 });
+    if (lenis) lenis.scrollTo(el, { offset: -132 });
     else
       window.scrollTo({
         top: el.getBoundingClientRect().top + window.scrollY - 96,
@@ -221,7 +221,7 @@ export function PostView({
 
           {/* stays in view while the article scrolls */}
           <aside className="lg:block">
-            <div className="grid gap-6 lg:sticky lg:top-[88px]">
+            <div className="grid gap-6 lg:sticky lg:top-[124px]">
               {toc.length > 1 && (
                 <div className="hidden lg:block">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">

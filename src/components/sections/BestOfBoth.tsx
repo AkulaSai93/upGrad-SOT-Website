@@ -400,7 +400,7 @@ export function BestOfBoth() {
         <div ref={trackRef} className="relative" style={{ height: "260vh" }}>
           <div
             ref={stageRef}
-            className="sticky top-0 h-screen overflow-hidden"
+            className="sticky top-[36px] h-[calc(100vh-36px)] overflow-hidden"
             style={{
               ["--a" as string]: 0,
               ["--lift" as string]: 0,

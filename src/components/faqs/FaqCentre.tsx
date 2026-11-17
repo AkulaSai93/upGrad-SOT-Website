@@ -63,7 +63,7 @@ export function FaqCentre() {
   const goTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-    if (lenis) lenis.scrollTo(el, { offset: -130 });
+    if (lenis) lenis.scrollTo(el, { offset: -166 });
     else el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -140,7 +140,7 @@ export function FaqCentre() {
       {/* phones: the topics as a sticky row of chips */}
       <nav
         aria-label="FAQ topics"
-        className="sticky top-[60px] z-20 border-b border-black/[0.08] bg-white/95 backdrop-blur lg:hidden"
+        className="sticky top-[96px] z-20 border-b border-black/[0.08] bg-white/95 backdrop-blur lg:hidden"
       >
         <div className="flex gap-2 overflow-x-auto px-4 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {shown.map((t) => (
@@ -166,7 +166,7 @@ export function FaqCentre() {
         <div className="container-page grid gap-10 lg:grid-cols-[270px_minmax(0,1fr)] lg:gap-16">
           {/* desktop: the topic list, in view while the answers scroll */}
           <aside className="hidden lg:block">
-            <div className="sticky top-28">
+            <div className="sticky top-[148px]">
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
                 Topics
               </p>
@@ -223,7 +223,7 @@ export function FaqCentre() {
                   key={t.id}
                   id={`faq-${t.id}`}
                   aria-labelledby={`faq-${t.id}-title`}
-                  className="scroll-mt-32"
+                  className="scroll-mt-[164px]"
                 >
                   <div className="flex items-start gap-4 lg:gap-5">
                     <span className="font-display text-[clamp(2.5rem,4.4vw,3.75rem)] font-medium leading-[0.85] tracking-[-0.05em] text-accent">
@@ -250,7 +250,7 @@ export function FaqCentre() {
                         <li
                           key={key}
                           id={`faq-${key}`}
-                          className={`scroll-mt-32 rounded-[6px] border bg-white transition-colors duration-300 ${
+                          className={`scroll-mt-[164px] rounded-[6px] border bg-white transition-colors duration-300 ${
                             on
                               ? "border-ink/20"
                               : "border-black/[0.08] hover:border-ink/20"

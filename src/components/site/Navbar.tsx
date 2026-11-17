@@ -48,6 +48,10 @@ const NAV_LINKS = [
 
 const SOT = "https://sot.upgrad.com";
 
+/** the announcement strip above the bar, and its height */
+const STRIP_TEXT = "Applications Open for 2027 Intake — Deadline 9th Jan";
+const STRIP_H = 36;
+
 type MenuLink = { label: string; href: string };
 
 /**
@@ -191,7 +195,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
       if (!hero) return false;
       trigger = ScrollTrigger.create({
         trigger: hero,
-        start: "bottom top+=60",
+        start: "bottom top+=96",
         onEnter: () => setSolid(true),
         onLeaveBack: () => setSolid(false),
       });
@@ -295,9 +299,35 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
 
   return (
     <header ref={root}>
+      {/* ---------------------------------------------------------- strip */}
+      {/* pinned to the top for good, with a spacer holding its place in the page */}
+      <div aria-hidden style={{ height: STRIP_H }} />
+      <Link
+        href="/admission"
+        style={{ height: STRIP_H }}
+        className="fixed inset-x-0 top-0 z-30 flex items-center justify-center bg-topbar px-4 text-center text-[12px] font-medium text-white transition-colors hover:bg-accent-hover sm:text-[14px]"
+      >
+        <span className="truncate">{STRIP_TEXT}</span>
+      </Link>
+
+      {/* ---------------------------------------- phones: Apply Now at the foot */}
+      {/* the bar's own Apply Now is hidden on phones, so it sits pinned to
+          the bottom of the screen instead */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-black/[0.08] bg-white/95 px-4 pb-[calc(10px+env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-xl sm:hidden">
+        <GlowButton
+          href="/admission"
+          streak="#0b0d12"
+          className="flex w-full [&>span:last-child]:w-full [&>span:last-child]:justify-center"
+        >
+          Apply Now
+          <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
+        </GlowButton>
+      </div>
+
       {/* ------------------------------------------------------------ bar */}
       <div
-        className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter,opacity] duration-500 ${
+        style={{ top: STRIP_H }}
+        className={`fixed inset-x-0 z-50 border-b transition-[background-color,border-color,backdrop-filter,opacity] duration-500 ${
           open ? "pointer-events-none opacity-0" : ""
         } ${
           !solid || open

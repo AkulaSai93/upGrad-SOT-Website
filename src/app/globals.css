@@ -25,7 +25,7 @@
   --line-strong: #ebebeb;
 
   /* Chrome above the fold: TopBar (36px) + Navbar (56px) */
-  --header-h: 92px;
+  --header-h: 128px; /* strip 36 + bar 60 + 32 */
 
   /* Elevation */
   --shadow-sm: 0 1px 2px rgba(11, 13, 18, 0.04);
