@@ -313,12 +313,16 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
       {/* ---------------------------------------- phones: Apply Now at the foot */}
       {/* the bar's own Apply Now is hidden on phones, so it sits pinned to
           the bottom of the screen instead */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-black/[0.08] bg-white/95 px-4 pb-[calc(10px+env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-xl sm:hidden">
-        <GlowButton
-          href="/admission"
-          streak="#0b0d12"
-          className="flex w-full [&>span:last-child]:w-full [&>span:last-child]:justify-center"
-        >
+      <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-black/[0.08] bg-white/95 px-4 pb-[calc(10px+env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-xl sm:hidden">
+        <div className="min-w-0">
+          <p className="truncate text-[14px] font-semibold text-ink">
+            Applications open · 2027
+          </p>
+          <p className="truncate text-[12px] text-muted">
+            Deadline 9th Jan · via uGNET
+          </p>
+        </div>
+        <GlowButton href="/admission" streak="#0b0d12" className="shrink-0">
           Apply Now
           <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
         </GlowButton>

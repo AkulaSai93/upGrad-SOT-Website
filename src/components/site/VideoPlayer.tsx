@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { X } from "lucide-react";
@@ -19,10 +20,12 @@ export type Video = {
 };
 
 /**
- * YouTube player overlay: a white, blurred backdrop with the video centred
+ * YouTube player overlay: a dark, lightly blurred backdrop with the video centred
  * (in a 9:16 frame for upright Shorts).
  * Closes on Esc, the close button, or a click outside the video; Lenis is
- * paused while it is open so the page underneath doesn't scroll.
+ * paused while it is open so the page underneath doesn't scroll. Rendered
+ * straight into <body>, so it covers the strip and the bar too (inside the
+ * page it sat under them, hiding its close button).
  */
 export function VideoPlayer({ video, onClose }: { video: Video; onClose: () => void }) {
   const root = useRef<HTMLDivElement>(null);
@@ -45,14 +48,14 @@ export function VideoPlayer({ video, onClose }: { video: Video; onClose: () => v
     { scope: root },
   );
 
-  return (
+  return createPortal(
     <div
       ref={root}
       role="dialog"
       aria-modal="true"
       aria-label={`Video: ${video.name}`}
       onClick={onClose}
-      className="fixed inset-0 z-[100] grid place-items-center bg-white/85 p-4 backdrop-blur-md sm:p-10"
+      className="fixed inset-0 z-[100] grid place-items-center bg-ink/70 p-4 backdrop-blur-[3px] sm:p-10"
     >
       <div
         data-frame
@@ -63,7 +66,7 @@ export function VideoPlayer({ video, onClose }: { video: Video; onClose: () => v
           type="button"
           onClick={onClose}
           aria-label="Close video"
-          className="absolute -top-12 right-0 grid size-10 place-items-center rounded-[6px] bg-ink text-white transition-colors hover:bg-accent"
+          className="absolute -top-12 right-0 grid size-10 place-items-center rounded-[6px] bg-white text-ink transition-colors hover:bg-accent hover:text-white"
         >
           <X size={18} strokeWidth={2} />
         </button>
@@ -83,6 +86,7 @@ export function VideoPlayer({ video, onClose }: { video: Video; onClose: () => v
           />
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
