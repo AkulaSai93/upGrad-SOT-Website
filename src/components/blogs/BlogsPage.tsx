@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { lenis } from "@/components/motion/SmoothScroll";
-import { POSTS, fmtDate, postHref, type Post } from "./data";
+import { POSTS, postHref, type Post } from "./data";
+import { Byline, PostCard, cover } from "./PostCard";
 
 gsap.registerPlugin(useGSAP);
 
@@ -24,16 +26,13 @@ gsap.registerPlugin(useGSAP);
  * (the category in view red, a click scrolls to it) over each category in
  * turn, a big red number, its name and count, then its posts three across
  * on desktop: the rounded cover, the title, two lines of the post and the
- * byline (initials, author, date, reading time). Every post links to its
- * page on sot.upgrad.com for now.
+ * byline (initials, author, date, reading time). Every post opens its page.
  */
 
 const FEATURED = POSTS.slice(0, 4);
 const pad = (n: number) => String(n).padStart(2, "0");
 const catId = (c: string) =>
   "cat-" + c.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-
-const cover = (slug: string) => `/images/blogs/${slug}.webp`;
 
 export function BlogsPage() {
   const root = useRef<HTMLDivElement>(null);
@@ -140,20 +139,21 @@ export function BlogsPage() {
       >
         <div className="container-page grid">
           {FEATURED.map((p, i) => (
-            <a
+            <div
               key={p.slug}
-              href={postHref(p.slug)}
-              target="_blank"
-              rel="noopener noreferrer"
               aria-hidden={i !== slide}
-              tabIndex={i === slide ? 0 : -1}
               className={`group grid items-center gap-5 [grid-area:1/1] transition-opacity duration-700 ease-out lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-14 ${
                 i === slide
                   ? "z-[1] opacity-100"
                   : "pointer-events-none opacity-0"
               }`}
             >
-              <div className="relative aspect-[1350/709] overflow-hidden rounded-[8px] bg-white">
+              <Link
+                href={postHref(p.slug)}
+                tabIndex={-1}
+                aria-hidden
+                className="relative block aspect-[1350/709] overflow-hidden rounded-[8px] bg-white"
+              >
                 <Image
                   src={cover(p.slug)}
                   alt=""
@@ -162,54 +162,62 @@ export function BlogsPage() {
                   sizes="(min-width: 1024px) 58vw, 100vw"
                   className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
                 />
-              </div>
+              </Link>
               {i === slide && (
-                <div className="px-1 pb-10 lg:px-0 lg:pb-0 lg:pr-10">
+                <div className="px-1 lg:px-0 lg:pr-6">
                   <p
                     data-hero-line
-                    className="text-[13px] font-medium text-accent lg:text-[14px]"
+                    className="text-[13px] font-medium text-accent"
                   >
                     Featured · {p.category}
                   </p>
                   <h2
                     data-hero-line
-                    className="mt-3 text-balance font-display text-[clamp(1.5rem,2.8vw,2.375rem)] font-medium leading-[1.15] tracking-[-0.025em] text-ink"
+                    className="mt-2.5 line-clamp-3 text-balance font-display text-[clamp(1.375rem,2.1vw,1.875rem)] font-medium leading-[1.2] tracking-[-0.02em] text-ink"
                   >
-                    {p.title}
+                    <Link
+                      href={postHref(p.slug)}
+                      className="transition-colors hover:text-accent"
+                    >
+                      {p.title}
+                    </Link>
                   </h2>
                   {p.sub && (
                     <p
                       data-hero-line
-                      className="mt-3 line-clamp-3 text-[15px] leading-[1.55] text-body lg:mt-4 lg:text-[16px]"
+                      className="mt-3 line-clamp-2 text-[14.5px] leading-[1.55] text-body lg:text-[15px]"
                     >
                       {p.sub}
                     </p>
                   )}
-                  <div data-hero-line className="mt-5 lg:mt-7">
+                  <div data-hero-line className="mt-5">
                     <Byline post={p} />
+                  </div>
+
+                  {/* the dots, under the byline (centred on phones) */}
+                  <div
+                    data-hero-line
+                    className="mt-7 flex justify-center gap-2 lg:mt-9 lg:justify-start"
+                  >
+                    {FEATURED.map((f, j) => (
+                      <button
+                        key={f.slug}
+                        type="button"
+                        aria-label={`Go to slide ${j + 1}`}
+                        aria-current={j === slide}
+                        onClick={() => setSlide(j)}
+                        className={`h-2 rounded-[2px] transition-all duration-500 ${
+                          j === slide
+                            ? "w-6 bg-accent"
+                            : "w-2 bg-ink/15 hover:bg-ink/30"
+                        }`}
+                      />
+                    ))}
                   </div>
                 </div>
               )}
-            </a>
+            </div>
           ))}
-
-          {/* the dots, under the copy */}
-          <div className="relative z-[2] flex justify-center gap-2 lg:justify-start [grid-area:1/1] self-end px-1 lg:col-start-1 lg:ml-[calc(57.4%+25px)] lg:px-0 lg:pb-1">
-            {FEATURED.map((p, i) => (
-              <button
-                key={p.slug}
-                type="button"
-                aria-label={`Go to slide ${i + 1}`}
-                aria-current={i === slide}
-                onClick={() => setSlide(i)}
-                className={`h-2 rounded-[2px] transition-all duration-500 ${
-                  i === slide
-                    ? "w-6 bg-accent"
-                    : "w-2 bg-ink/15 hover:bg-ink/30"
-                }`}
-              />
-            ))}
-          </div>
         </div>
       </section>
 
@@ -269,7 +277,7 @@ export function BlogsPage() {
               <ul className="mt-6 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:mt-8 lg:grid-cols-3 lg:gap-y-14">
                 {g.list.map((p) => (
                   <li key={p.slug}>
-                    <Card post={p} />
+                    <PostCard post={p} />
                   </li>
                 ))}
               </ul>
@@ -277,63 +285,6 @@ export function BlogsPage() {
           ))}
         </div>
       </section>
-    </div>
-  );
-}
-
-function Card({ post: p }: { post: Post }) {
-  return (
-    <a
-      href={postHref(p.slug)}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group flex h-full flex-col"
-    >
-      {/* the cover whole, at its own shape */}
-      <div className="relative aspect-[1350/709] overflow-hidden rounded-[8px] bg-[#f3f5f7]">
-        <Image
-          src={cover(p.slug)}
-          alt=""
-          fill
-          sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
-        />
-      </div>
-      <h3 className="mt-5 line-clamp-2 text-[18px] font-medium leading-[1.35] tracking-[-0.01em] text-ink transition-colors group-hover:text-accent">
-        {p.title}
-      </h3>
-      {p.sub && (
-        <p className="mt-2 line-clamp-2 text-[14px] leading-[1.55] text-body">
-          {p.sub}
-        </p>
-      )}
-      <div className="mt-auto pt-4">
-        <Byline post={p} />
-      </div>
-    </a>
-  );
-}
-
-/** the author's initials in a small circle, their name, date and read */
-function Byline({ post: p }: { post: Post }) {
-  const initials = p.author
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-  return (
-    <div className="flex items-center gap-2.5 text-[13px] text-ink">
-      <span
-        aria-hidden
-        className="grid size-7 shrink-0 place-items-center rounded-full bg-accent/10 text-[11px] font-semibold text-accent"
-      >
-        {initials}
-      </span>
-      <span className="font-medium">{p.author}</span>
-      <span className="text-muted">
-        · {fmtDate(p.date)} · {p.mins} min read
-      </span>
     </div>
   );
 }

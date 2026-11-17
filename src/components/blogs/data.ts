@@ -512,9 +512,8 @@ export const POSTS: Post[] = [
   },
 ];
 
-/** the link to a post (its page on the live site for now) */
-export const postHref = (slug: string) =>
-  `https://sot.upgrad.com/blogs/${slug}`;
+/** the link to a post's page */
+export const postHref = (slug: string) => `/blogs/${slug}`;
 
 /** "08 Jul 2026" */
 const MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
