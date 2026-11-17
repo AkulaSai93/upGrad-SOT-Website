@@ -120,7 +120,7 @@ const RESOURCES = [
   { label: "AI Playground", href: `${SOT}/Playground`, Icon: Sparkles },
   { label: "uGNET", href: "/ugnet", Icon: ClipboardCheck },
   { label: "EDP", href: `${SOT}/edp`, Icon: GraduationCap },
-  { label: "Blogs", href: `${SOT}/blogs`, Icon: Newspaper },
+  { label: "Blogs", href: "/blogs", Icon: Newspaper },
 ];
 
 /** help and support: small links at the panel's foot */
