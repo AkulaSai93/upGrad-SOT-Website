@@ -175,9 +175,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
                     Semester {s.sem}
                   </span>
                   <span className="flex items-center gap-3">
-                    <span className="text-[14px] font-semibold">
-                      {s.total}
-                    </span>
+                    <span className="text-[14px] font-semibold">{s.total}</span>
                     <ChevronDown
                       size={18}
                       aria-hidden
@@ -252,7 +250,7 @@ export function CampusFees({ campus }: { campus: Campus }) {
                 <div
                   role="tablist"
                   aria-label="Hostel"
-                  className="flex gap-1 rounded-[6px] bg-white p-1"
+                  className="flex gap-1 rounded-[6px] bg-white p-1 max-sm:w-full"
                 >
                   {hostel.groups.map((h, i) => (
                     <button
@@ -261,13 +259,15 @@ export function CampusFees({ campus }: { campus: Campus }) {
                       role="tab"
                       aria-selected={i === group}
                       onClick={() => setGroup(i)}
-                      className={`rounded-[6px] px-4 py-2 text-[14px] font-semibold transition-colors duration-300 ${
+                      className={`whitespace-nowrap rounded-[6px] px-4 py-2 text-[14px] font-semibold transition-colors duration-300 max-sm:flex-1 ${
                         i === group
                           ? "bg-ink text-white"
                           : "text-body hover:text-ink"
                       }`}
                     >
-                      Accommodation for {h.name}
+                      {/* on phones just the name, so both fit on one line */}
+                      <span className="max-sm:hidden">Accommodation for </span>
+                      {h.name}
                     </button>
                   ))}
                 </div>
