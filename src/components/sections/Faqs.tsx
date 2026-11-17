@@ -50,14 +50,26 @@ const ALL_FAQS = "https://sot.upgrad.com/allFAQs";
 
 /** `university`: on a campus page, its short name, which the eligibility
  *  question names in place of "partner universities", as that page does */
-export function Faqs({ university }: { university?: string } = {}) {
+export function Faqs({
+  university,
+  items,
+  allHref = ALL_FAQS,
+}: {
+  university?: string;
+  /** another page's own questions (the resume builder's) */
+  items?: { q: string; a: string }[];
+  /** where "View all FAQs" goes */
+  allHref?: string;
+} = {}) {
   const root = useRef<HTMLElement>(null);
-  const faqs = university
-    ? FAQS.map((f) => ({
-        ...f,
-        q: f.q.replace("at partner universities", `at ${university}`),
-      }))
-    : FAQS;
+  const faqs = items
+    ? items
+    : university
+      ? FAQS.map((f) => ({
+          ...f,
+          q: f.q.replace("at partner universities", `at ${university}`),
+        }))
+      : FAQS;
   const [open, setOpen] = useState<number | null>(0);
   const first = useRef(true);
 
@@ -152,7 +164,9 @@ export function Faqs({ university }: { university?: string } = {}) {
                 key={f.q}
                 data-row
                 className={`rounded-[6px] border bg-white transition-colors duration-300 ${
-                  isOpen ? "border-ink/20" : "border-black/[0.08] hover:border-ink/20"
+                  isOpen
+                    ? "border-ink/20"
+                    : "border-black/[0.08] hover:border-ink/20"
                 }`}
               >
                 <h3>
@@ -206,9 +220,10 @@ export function Faqs({ university }: { university?: string } = {}) {
 
         <div className="mt-8 flex justify-center">
           <a
-            href={ALL_FAQS}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={allHref}
+            {...(allHref.startsWith("http")
+              ? { target: "_blank", rel: "noopener noreferrer" }
+              : {})}
             className="group/link inline-flex items-center gap-1.5 text-[14px] font-semibold text-ink transition-colors hover:text-accent"
           >
             <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat pb-0.5 transition-[background-size] duration-500 group-hover/link:bg-[length:100%_1px]">
