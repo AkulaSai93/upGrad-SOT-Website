@@ -28,7 +28,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * while the heading rises in, then the cards rise in one after another. Under
  * reduced motion everything simply shows, at 100.
  */
-const UGNET = "https://sot.upgrad.com/uGNET";
+const UGNET = "/ugnet";
 
 type Scholarship = {
   key: string;
@@ -191,8 +191,6 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
           <div className="flex items-center justify-between gap-3">
             <a
               href={UGNET}
-              target="_blank"
-              rel="noopener noreferrer"
               className="group/link inline-flex items-center gap-2 rounded-[6px] bg-white px-4 py-2.5 text-[13.5px] font-semibold text-ink transition-colors duration-300 hover:text-accent"
             >
               Know More
@@ -324,8 +322,6 @@ export function Scholarships() {
             {/* the hero's moving line: a dark streak sweeping round the edge */}
             <a
               href={UGNET}
-              target="_blank"
-              rel="noopener noreferrer"
               className="group relative mt-6 inline-flex overflow-hidden rounded-[6px] p-[1.5px]"
             >
               <span

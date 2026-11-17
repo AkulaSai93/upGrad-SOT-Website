@@ -9,12 +9,12 @@ import Image from "next/image";
 import {
   ArrowRight,
   ArrowUpRight,
+  Bot,
   CircleHelp,
   ClipboardCheck,
   FilePen,
   GraduationCap,
   House,
-  Megaphone,
   MessageCircle,
   Newspaper,
   Phone,
@@ -52,40 +52,43 @@ const SOT = "https://sot.upgrad.com";
 type MenuLink = { label: string; href: string };
 
 /**
- * Everything the Menu lists, as on sot.upgrad.com's menu (read 16 Nov 2026):
- * its top-level pages, its two campuses, and the Events, Resource and Help
- * and Support lists under its More. The menu is drawn from these alone: the
- * pages as a list (icon, name, a short line); beside them the campuses as picture cards,
- * the featured event as a red card and the resources as icon chips; help and
- * support as small links at the foot. (Ignite AI Buildathon, listed under
- * Resources on sot.upgrad.com too, is the featured event here.)
- * Admissions and FAQs go to this site's own sections.
+ * Everything the Menu lists, arranged by the client: on the left the
+ * pages as a list (icon, name, a short line): Home, Admission, uGNET, IAIB,
+ * AI Playground and EDP; beside them the campuses as picture cards, Catalyst as a red
+ * card under them and the resources (Get in Touch, FAQs, Blogs) as icon
+ * chips; help and support as small links at the foot.
  */
 const PAGES = [
   { label: "Home", line: "AI-First B.Tech in CSE", href: "/", Icon: House },
   {
-    label: "Admissions",
+    label: "Admission",
     line: "Apply through uGNET",
     href: "/admission",
     Icon: FilePen,
   },
   {
-    label: "FAQs",
-    line: "Answers to common questions",
-    href: "/faqs",
-    Icon: CircleHelp,
+    label: "uGNET",
+    line: "National entrance test",
+    href: "/ugnet",
+    Icon: ClipboardCheck,
   },
   {
-    label: "Catalyst",
-    line: "Campus ambassador programme",
-    href: `${SOT}/catalyst`,
-    Icon: Megaphone,
+    label: "IAIB",
+    line: "Ignite AI Buildathon",
+    href: `${SOT}/events/iaib`,
+    Icon: Sparkles,
   },
   {
-    label: "Get in Touch",
-    line: "Talk to our admissions team",
-    href: "/contact",
-    Icon: MessageCircle,
+    label: "AI Playground",
+    line: "Try our AI agents",
+    href: `${SOT}/Playground`,
+    Icon: Bot,
+  },
+  {
+    label: "EDP",
+    line: "Executive development programme",
+    href: `${SOT}/edp`,
+    Icon: GraduationCap,
   },
 ];
 
@@ -107,19 +110,19 @@ const CAMPUSES = [
   },
 ];
 
-/** the featured event, as on sot.upgrad.com's Events list */
-const EVENT = {
-  name: "IAIB",
-  full: "Ignite AI Buildathon",
-  line: "Join India's biggest AI talent discovery event.",
-  href: `${SOT}/events/iaib`,
+/** the featured programme, as a red card under the campuses */
+const FEATURED = {
+  kicker: "Featured",
+  name: "Catalyst",
+  full: "2-Year Career Acceleration Program",
+  line: "Your college gives you a degree. uGSOT Catalyst helps you catalyze it.",
+  href: `${SOT}/catalyst`,
 };
 
 /** the resources, as small chips with an icon each */
 const RESOURCES = [
-  { label: "AI Playground", href: `${SOT}/Playground`, Icon: Sparkles },
-  { label: "uGNET", href: "/ugnet", Icon: ClipboardCheck },
-  { label: "EDP", href: `${SOT}/edp`, Icon: GraduationCap },
+  { label: "Get in Touch", href: "/contact", Icon: MessageCircle },
+  { label: "FAQs", href: "/faqs", Icon: CircleHelp },
   { label: "Blogs", href: "/blogs", Icon: Newspaper },
 ];
 
@@ -524,24 +527,24 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
               </div>
 
               <div className="menu-link grid gap-3 sm:grid-cols-2">
-                {/* the featured event */}
+                {/* the featured programme */}
                 <Link
-                  href={EVENT.href}
+                  href={FEATURED.href}
                   onClick={close}
                   className="group/e relative flex flex-col justify-between overflow-hidden rounded-[6px] bg-accent p-4 text-white"
                 >
                   <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80">
-                    Featured event
+                    {FEATURED.kicker}
                   </span>
                   <span className="mt-6">
                     <span className="block font-display text-[22px] font-medium leading-none tracking-[-0.03em]">
-                      {EVENT.name}
+                      {FEATURED.name}
                     </span>
                     <span className="mt-1 block text-[13px] font-semibold">
-                      {EVENT.full}
+                      {FEATURED.full}
                     </span>
                     <span className="mt-1.5 block text-[12px] leading-snug text-white/80">
-                      {EVENT.line}
+                      {FEATURED.line}
                     </span>
                   </span>
                   <ArrowUpRight
@@ -552,17 +555,18 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
                 </Link>
 
                 {/* the resources */}
-                <div>
+                {/* the chips share the red card's height between them */}
+                <div className="flex flex-col">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
                     Resources
                   </p>
-                  <ul className="mt-2 grid gap-1.5">
+                  <ul className="mt-2 grid flex-1 auto-rows-fr gap-1.5">
                     {RESOURCES.map(({ label, href, Icon }) => (
-                      <li key={label}>
+                      <li key={label} className="flex">
                         <Link
                           href={href}
                           onClick={close}
-                          className="group/r flex h-11 items-center gap-2.5 rounded-[6px] border border-black/[0.08] pl-2 pr-2.5 transition-colors duration-300 hover:border-accent hover:bg-accent-soft"
+                          className="group/r flex min-h-11 w-full items-center gap-2.5 rounded-[6px] border border-black/[0.08] pl-2 pr-2.5 transition-colors duration-300 hover:border-accent hover:bg-accent-soft"
                         >
                           <span className="grid size-7 shrink-0 place-items-center rounded-[4px] bg-accent-soft text-accent transition-colors duration-300 group-hover/r:bg-accent group-hover/r:text-white">
                             <Icon size={14} aria-hidden />
