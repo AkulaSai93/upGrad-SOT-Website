@@ -13,7 +13,6 @@ import {
   CircleHelp,
   ClipboardCheck,
   FilePen,
-  GraduationCap,
   House,
   MessageCircle,
   Newspaper,
@@ -54,7 +53,7 @@ type MenuLink = { label: string; href: string };
 /**
  * Everything the Menu lists, arranged by the client: on the left the
  * pages as a list (icon, name, a short line): Home, Admission, uGNET, IAIB,
- * AI Playground and EDP; beside them the campuses as picture cards, Catalyst as a red
+ * and AI Playground; beside them the campuses as picture cards, Catalyst as a red
  * card under them and the resources (Get in Touch, FAQs, Blogs) as icon
  * chips; help and support as small links at the foot.
  */
@@ -83,12 +82,6 @@ const PAGES = [
     line: "Try our AI agents",
     href: `${SOT}/Playground`,
     Icon: Bot,
-  },
-  {
-    label: "EDP",
-    line: "Executive development programme",
-    href: `${SOT}/edp`,
-    Icon: GraduationCap,
   },
 ];
 

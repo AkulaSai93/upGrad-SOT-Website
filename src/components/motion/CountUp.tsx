@@ -27,8 +27,8 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
       const state = { n: 0 };
       gsap.to(state, {
         n: target,
-        duration: 1.8,
-        ease: "expo.out",
+        duration: 0.9,
+        ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none none" },
         onStart: () => {
           el.textContent = "0";
