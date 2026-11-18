@@ -93,27 +93,27 @@ const SILICON: Item[] = [
   {
     title: "Sessions by MAANG Engineers",
     body: "Learn directly from experts working at top global companies.",
-    icon: "siliconvalley-1.avif",
+    icon: "sv-icon-1.png",
   },
   {
     title: "Coding from Day 1",
     body: "Build real-world projects and strengthen fundamentals.",
-    icon: "siliconvalley-2.avif",
+    icon: "sv-icon-2.png",
   },
   {
     title: "AI-First Campus",
     body: "Leverage AI tools and frameworks in everything you build.",
-    icon: "siliconvalley-3.avif",
+    icon: "sv-icon-3.png",
   },
   {
     title: "CXO Masterclasses",
     body: "Gain insights from leadership driving real-world impact.",
-    icon: "siliconvalley-4.avif",
+    icon: "sv-icon-4.png",
   },
   {
     title: "Tech with Management",
     body: "Blend technology with business and leadership skills.",
-    icon: "siliconvalley-5.avif",
+    icon: "sv-icon-5.png",
   },
 ];
 
@@ -168,9 +168,13 @@ function Rows({ items, dark }: { items: Item[]; dark: boolean }) {
             <Image
               src={`/images/advantage/${item.icon}`}
               alt=""
-              width={24}
-              height={24}
-              className={`size-[22px] object-contain ${dark ? "brightness-0 invert" : ""}`}
+              width={dark ? 33 : 24}
+              height={dark ? 22 : 24}
+              className={
+                dark
+                  ? "h-[22px] w-[33px] object-contain"
+                  : "size-[22px] object-contain"
+              }
             />
           </span>
           <span className="min-w-0">
