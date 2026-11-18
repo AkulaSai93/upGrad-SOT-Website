@@ -83,7 +83,7 @@ const PAGES = [
   {
     label: "AI Playground",
     line: "Try our AI agents",
-    href: `${SOT_URL}/Playground`,
+    href: "/playground/resumecraft",
     Icon: Bot,
   },
 ];
