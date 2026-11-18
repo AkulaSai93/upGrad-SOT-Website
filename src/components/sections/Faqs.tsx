@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { SectionHeading } from "@/components/site/SectionHeading";
+import { SOT_URL } from "@/components/site/contact";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -46,7 +47,7 @@ const FAQS = [
   },
 ] as const;
 
-const ALL_FAQS = "https://sot.upgrad.com/allFAQs";
+const ALL_FAQS = `${SOT_URL}/allFAQs`;
 
 /** `university`: on a campus page, its short name, which the eligibility
  *  question names in place of "partner universities", as that page does */

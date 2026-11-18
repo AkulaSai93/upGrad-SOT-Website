@@ -32,6 +32,5 @@ export const SOCIAL = [
   },
 ];
 
-
 export const INSTAGRAM = SOCIAL.find((s) => s.label === "Instagram")!;
 export const YOUTUBE = SOCIAL.find((s) => s.label === "YouTube")!;

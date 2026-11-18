@@ -24,23 +24,94 @@ export const thumb = (v: ChannelVideo) => `/images/channel-v2/${v.id}.webp`;
 
 /** sessions with upGrad's leadership, speaking to students on campus */
 export const MENTOR_CLIPS: ChannelVideo[] = [
-  { id: "TYzY3MenxZs", short: true, speaker: "ronnie", title: "Why Engineers Are Being Told to Learn Carpentry" },
-  { id: "T5QwtXlf02Y", short: true, speaker: "vishwa", title: "Stop Waiting for Final Year to Build Your Tech Career!" },
-  { id: "nmkaBg-KMRE", short: true, speaker: "ronnie", title: "The Brutal Truth About Staying Relevant" },
-  { id: "hYx1y8ilkWo", short: true, speaker: "vishwa", title: "Why you need to learn Quantum Computing BEFORE it blows up!" },
-  { id: "ge_-IHtkR1g", short: true, speaker: "ronnie", title: "Why funding should come FIFTH, not first." },
-  { id: "u8ZfbPeh99o", short: true, speaker: "vishwa", title: "Want to survive and win in today’s hyper-competitive tech market?" },
-  { id: "yDvDHtcUbFQ", short: true, speaker: "ronnie", title: "“Today, this ‘safe’ word is unsafe.”" },
-  { id: "5DWrPaPIPko", short: true, speaker: "ronnie", title: "If your education only prepares you for today's market, you are already falling behind." },
+  {
+    id: "TYzY3MenxZs",
+    short: true,
+    speaker: "ronnie",
+    title: "Why Engineers Are Being Told to Learn Carpentry",
+  },
+  {
+    id: "T5QwtXlf02Y",
+    short: true,
+    speaker: "vishwa",
+    title: "Stop Waiting for Final Year to Build Your Tech Career!",
+  },
+  {
+    id: "nmkaBg-KMRE",
+    short: true,
+    speaker: "ronnie",
+    title: "The Brutal Truth About Staying Relevant",
+  },
+  {
+    id: "hYx1y8ilkWo",
+    short: true,
+    speaker: "vishwa",
+    title: "Why you need to learn Quantum Computing BEFORE it blows up!",
+  },
+  {
+    id: "ge_-IHtkR1g",
+    short: true,
+    speaker: "ronnie",
+    title: "Why funding should come FIFTH, not first.",
+  },
+  {
+    id: "u8ZfbPeh99o",
+    short: true,
+    speaker: "vishwa",
+    title: "Want to survive and win in today’s hyper-competitive tech market?",
+  },
+  {
+    id: "yDvDHtcUbFQ",
+    short: true,
+    speaker: "ronnie",
+    title: "“Today, this ‘safe’ word is unsafe.”",
+  },
+  {
+    id: "5DWrPaPIPko",
+    short: true,
+    speaker: "ronnie",
+    title:
+      "If your education only prepares you for today's market, you are already falling behind.",
+  },
 ];
 
 /** campus life: the orientation films and the students' own moments */
 export const CAMPUS_CLIPS: ChannelVideo[] = [
-  { id: "LUiEPZiMc6M", short: true, title: "Founding Batch 2026–2030: Officially kicked off!" },
-  { id: "jRfmRHlXCwc", short: false, title: "Orientation Week at upGrad School of Technology | Pune Campus" },
-  { id: "rnMH5swIn94", short: true, title: "What a real student coding battle looks like!" },
-  { id: "jVN5XiXOiPU", short: true, title: "From discovering college via YouTube & podcasts to day one on campus" },
-  { id: "pGNNmfn8n6o", short: false, title: "Orientation Week at upGrad School of Technology | SSAHE Campus" },
-  { id: "sEF2j8xC91w", short: true, title: "“If you knew how AI worked, what would you build?”" },
-  { id: "rzz5yDiSXhg", short: true, title: "Grateful for the trust this community places in us every single day." },
+  {
+    id: "LUiEPZiMc6M",
+    short: true,
+    title: "Founding Batch 2026–2030: Officially kicked off!",
+  },
+  {
+    id: "jRfmRHlXCwc",
+    short: false,
+    title: "Orientation Week at upGrad School of Technology | Pune Campus",
+  },
+  {
+    id: "rnMH5swIn94",
+    short: true,
+    title: "What a real student coding battle looks like!",
+  },
+  {
+    id: "jVN5XiXOiPU",
+    short: true,
+    title:
+      "From discovering college via YouTube & podcasts to day one on campus",
+  },
+  {
+    id: "pGNNmfn8n6o",
+    short: false,
+    title: "Orientation Week at upGrad School of Technology | SSAHE Campus",
+  },
+  {
+    id: "sEF2j8xC91w",
+    short: true,
+    title: "“If you knew how AI worked, what would you build?”",
+  },
+  {
+    id: "rzz5yDiSXhg",
+    short: true,
+    title:
+      "Grateful for the trust this community places in us every single day.",
+  },
 ];

@@ -24,6 +24,7 @@ import { lenis } from "@/components/motion/SmoothScroll";
 import { GlowButton } from "./GlowButton";
 import { Logo } from "./Logo";
 import { SOCIAL } from "./socials";
+import { PHONE, SOT_URL } from "@/components/site/contact";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -45,8 +46,6 @@ const NAV_LINKS = [
   { label: "FAQs", href: "/#faqs" },
   { label: "Admission", href: "/#admission" },
 ];
-
-const SOT = "https://sot.upgrad.com";
 
 /** the announcement strip above the bar, and its height */
 const STRIP_TEXT = "Applications Open for 2027 Intake — Deadline 9th Jan";
@@ -78,13 +77,13 @@ const PAGES = [
   {
     label: "IAIB",
     line: "Ignite AI Buildathon",
-    href: `${SOT}/events/iaib`,
+    href: `${SOT_URL}/events/iaib`,
     Icon: Sparkles,
   },
   {
     label: "AI Playground",
     line: "Try our AI agents",
-    href: `${SOT}/Playground`,
+    href: `${SOT_URL}/Playground`,
     Icon: Bot,
   },
 ];
@@ -100,7 +99,7 @@ const CAMPUSES = [
   },
   {
     name: "Ajeenkya DY Patil University",
-    href: `${SOT}/university/adypu`,
+    href: `${SOT_URL}/university/adypu`,
     place: "Pune, Maharashtra",
     tag: "NAAC A",
     img: "/images/campuses/adypu.webp",
@@ -113,7 +112,7 @@ const FEATURED = {
   name: "Catalyst",
   full: "2-Year Career Acceleration Program",
   line: "Your college gives you a degree. uGSOT Catalyst helps you catalyze it.",
-  href: `${SOT}/catalyst`,
+  href: `${SOT_URL}/catalyst`,
 };
 
 /** the resources, as small chips with an icon each */
@@ -322,7 +321,12 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
             Deadline 9th Jan · via uGNET
           </p>
         </div>
-        <GlowButton href="/admission" size="sm" streak="#0b0d12" className="shrink-0">
+        <GlowButton
+          href="/admission"
+          size="sm"
+          streak="#0b0d12"
+          className="shrink-0"
+        >
           Apply Now
           <ArrowRight size={14} strokeWidth={2.2} aria-hidden />
         </GlowButton>
@@ -632,11 +636,11 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
                   <ArrowRight size={14} strokeWidth={2.2} aria-hidden />
                 </GlowButton>
                 <a
-                  href="tel:18002108080"
+                  href={PHONE.href}
                   className="inline-flex items-center gap-2 text-[13.5px] text-body transition-colors hover:text-ink"
                 >
                   <Phone size={14} aria-hidden />
-                  <span className="font-semibold text-ink">1800 210 8080</span>
+                  <span className="font-semibold text-ink">{PHONE.label}</span>
                 </a>
               </div>
             </div>

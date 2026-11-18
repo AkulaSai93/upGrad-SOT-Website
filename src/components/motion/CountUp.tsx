@@ -12,7 +12,13 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * it scrolls into view; the rest ("M+", "+", "L+") follows as a plain suffix.
  * Server-rendered with the final value, so the real figure is always there.
  */
-export function CountUp({ value, className = "" }: { value: string; className?: string }) {
+export function CountUp({
+  value,
+  className = "",
+}: {
+  value: string;
+  className?: string;
+}) {
   const num = useRef<HTMLSpanElement>(null);
   const match = value.match(/^([\d.]+)\s*(.*)$/);
   const target = match ? Number(match[1]) : NaN;
@@ -29,7 +35,11 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
         n: target,
         duration: 0.9,
         ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none none" },
+        scrollTrigger: {
+          trigger: el,
+          start: "top 90%",
+          toggleActions: "play none none none",
+        },
         onStart: () => {
           el.textContent = "0";
         },

@@ -18,6 +18,7 @@ import { CornerHandles } from "@/components/site/CornerHandles";
 import { PROSE } from "@/components/site/prose";
 import { fmtDate, type Post } from "./data";
 import { Byline, PostCard, cover } from "./PostCard";
+import { PHONE } from "@/components/site/contact";
 
 gsap.registerPlugin(useGSAP);
 
@@ -275,11 +276,11 @@ export function PostView({
                   </span>
                 </Link>
                 <a
-                  href="tel:18002108080"
+                  href={PHONE.href}
                   className="mt-4 flex items-center justify-center gap-2 text-[14px] font-medium text-white/90 hover:text-white"
                 >
                   <Phone size={14} aria-hidden />
-                  1800 210 8080
+                  {PHONE.label}
                 </a>
               </div>
             </div>

@@ -18,13 +18,17 @@ const FACTS = [
 
 export function HeroFacts({ className = "" }: { className?: string }) {
   return (
-    <dl className={`flex items-stretch gap-x-5 text-left sm:gap-x-7 ${className}`}>
+    <dl
+      className={`flex items-stretch gap-x-5 text-left sm:gap-x-7 ${className}`}
+    >
       {FACTS.map((fact, i) => (
         <div
           key={fact.label}
           /* the two cells sit side by side at every width, with a rule
              between them */
-          className={i > 0 ? "border-l border-black/[0.08] pl-5 sm:pl-7" : undefined}
+          className={
+            i > 0 ? "border-l border-black/[0.08] pl-5 sm:pl-7" : undefined
+          }
         >
           <dt className="whitespace-nowrap text-[11px] font-semibold tracking-[0.12em] text-muted lg:text-[10.5px] lg:tracking-[0.14em]">
             {fact.label}
@@ -32,7 +36,9 @@ export function HeroFacts({ className = "" }: { className?: string }) {
           <dd className="mt-1.5 whitespace-nowrap font-display text-[clamp(16px,5vw,19px)] font-medium leading-none text-ink lg:mt-1 lg:text-[16px]">
             {fact.value}
           </dd>
-          <p className="mt-1.5 text-[13px] text-muted lg:mt-1 lg:text-[11.5px]">{fact.note}</p>
+          <p className="mt-1.5 text-[13px] text-muted lg:mt-1 lg:text-[11.5px]">
+            {fact.note}
+          </p>
         </div>
       ))}
     </dl>

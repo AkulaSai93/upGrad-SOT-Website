@@ -17,7 +17,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  * scholarships with their eligibility text and the "Know More" link (to the
  * uGNET page, as there).
  *
- * Layout: a full-width band in warm yellow (the same as Special Mentorship's).
+ * Layout: a full-width band in warm yellow.
  * The heading is set like a headline: "Get Upto" above a
  * huge "100%" (its % in brand red) with "Scholarship" under it; on the right,
  * the line and "Check eligibility", with the hero's moving line round its
@@ -215,7 +215,7 @@ function ScholarshipCard({ s }: { s: Scholarship }) {
   );
 }
 
-/** the band's warm yellow, as Special Mentorship's */
+/** the band's warm yellow */
 const YELLOW = "#ffdf8f";
 
 export function Scholarships() {

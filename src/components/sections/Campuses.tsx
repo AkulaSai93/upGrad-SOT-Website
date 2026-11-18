@@ -6,6 +6,7 @@ import { ArrowUpRight, BadgeCheck, GraduationCap, MapPin } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
 import { CornerHandles } from "@/components/site/CornerHandles";
 import { SectionHeading } from "@/components/site/SectionHeading";
+import { SOT_URL } from "@/components/site/contact";
 
 /**
  * "Campuses"
@@ -65,7 +66,7 @@ const CAMPUSES = [
         text: "AI-First B.Tech in Computer Science with upGrad School of Technology",
       },
     ],
-    href: "https://sot.upgrad.com/university/adypu",
+    href: `${SOT_URL}/university/adypu`,
   },
 ] as const;
 

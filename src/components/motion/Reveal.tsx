@@ -50,7 +50,11 @@ export function Reveal({
             duration: 1,
             ease: "expo.out",
             stagger,
-            scrollTrigger: { trigger: el, start, toggleActions: "play none none none" },
+            scrollTrigger: {
+              trigger: el,
+              start,
+              toggleActions: "play none none none",
+            },
           },
         );
       });

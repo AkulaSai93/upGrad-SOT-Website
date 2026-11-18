@@ -245,7 +245,7 @@ export function ResumeFeatures({ id = "features" }: { id?: string }) {
       <div
         role="tablist"
         aria-label="Features"
-        className="relative z-10 mt-5 flex gap-1 overflow-x-auto rounded-[8px] max-lg:-mr-4 max-lg:self-stretch max-lg:rounded-r-none max-lg:border-r-0 lg:max-w-full [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border border-black/[0.06] bg-white p-1 shadow-[0_8px_24px_-12px_rgba(11,13,18,0.2)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="relative z-10 mt-5 flex gap-1 overflow-x-auto rounded-[8px] max-lg:-mr-4 max-lg:self-stretch max-lg:rounded-r-none max-lg:border-r-0 lg:max-w-full border border-black/[0.06] bg-white p-1 shadow-[0_8px_24px_-12px_rgba(11,13,18,0.2)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {FEATURES.map((f, i) => (
           <button

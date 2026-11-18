@@ -20,12 +20,18 @@ export function generateStaticParams() {
   return CAMPUSES.map((c) => ({ slug: c.slug }));
 }
 
-export async function generateMetadata(props: PageProps<"/university/[slug]">): Promise<Metadata> {
+export async function generateMetadata(
+  props: PageProps<"/university/[slug]">,
+): Promise<Metadata> {
   const { slug } = await props.params;
   const campus = campusBySlug(slug);
   if (!campus) return {};
   return {
-    title: `${campus.programme.lead} ${campus.programme.accent} ${campus.programme.tail ?? ""} at ${campus.short} | upGrad School of Technology`.replace(/\s+/g, " "),
+    title:
+      `${campus.programme.lead} ${campus.programme.accent} ${campus.programme.tail ?? ""} at ${campus.short} | upGrad School of Technology`.replace(
+        /\s+/g,
+        " ",
+      ),
     description: `${campus.programme.lead} ${campus.programme.accent} at ${campus.name}, ${campus.location}, in collaboration with upGrad School of Technology.`,
   };
 }
@@ -47,7 +53,9 @@ export default function CampusPage(props: PageProps<"/university/[slug]">) {
   );
 }
 
-async function Campus({ params }: Pick<PageProps<"/university/[slug]">, "params">) {
+async function Campus({
+  params,
+}: Pick<PageProps<"/university/[slug]">, "params">) {
   const { slug } = await params;
   const campus = campusBySlug(slug);
   if (!campus) notFound();

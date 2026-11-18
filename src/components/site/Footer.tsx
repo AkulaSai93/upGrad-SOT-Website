@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight, Mail, MessageCircle, Phone } from "lucide-react";
 import { SOCIAL } from "./socials";
+import { EMAIL, PHONE, SOT_URL, WHATSAPP } from "@/components/site/contact";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -38,23 +39,15 @@ const CONTACT = "/contact";
 
 const QUICK_LINKS = [
   { label: "Admissions", href: "/admission" },
-  { label: "Scholarships", href: "https://sot.upgrad.com/#scholarships" },
+  { label: "Scholarships", href: `${SOT_URL}/#scholarships` },
   { label: "FAQs", href: "/faqs" },
   { label: "Contacts", href: CONTACT },
 ];
 
 const REACH = [
-  {
-    label: "+91 8296506853",
-    href: "https://wa.me/918296506853",
-    icon: MessageCircle,
-  },
-  { label: "1800 210 8080", href: "tel:18002108080", icon: Phone },
-  {
-    label: "info@upgradsot.com",
-    href: "mailto:info@upgradsot.com",
-    icon: Mail,
-  },
+  { ...WHATSAPP, icon: MessageCircle },
+  { ...PHONE, icon: Phone },
+  { ...EMAIL, icon: Mail },
 ];
 
 const LEGAL = [

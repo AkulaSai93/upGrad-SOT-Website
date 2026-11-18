@@ -5,27 +5,28 @@
    ============================================================ */
 :root {
   /* Surfaces */
-  --canvas: #ffffff;        /* page background, pure white */
-  --surface: #ffffff;       /* cards */
-  --surface-sunken: #f4f4f1;/* subtle fills, chips */
+  --canvas: #ffffff; /* page background, pure white */
+  --surface: #ffffff; /* cards */
+  --surface-sunken: #f4f4f1; /* subtle fills, chips */
 
   /* Ink */
-  --ink: #0b0d12;           /* headings */
-  --ink-body: #3d4452;      /* body copy */
-  --ink-muted: #6b7280;     /* captions, labels */
+  --ink: #0b0d12; /* headings */
+  --ink-body: #3d4452; /* body copy */
+  --ink-muted: #6b7280; /* captions, labels */
 
   /* Brand */
-  --accent: #e4002b;        /* upGrad red */
+  --accent: #e4002b; /* upGrad red */
   --topbar: var(--accent); /* announcement strip — brand red */
   --accent-hover: #c40025;
-  --accent-soft: #fff1f3;   /* tinted background */
+  --accent-soft: #fff1f3; /* tinted background */
 
   /* Lines */
-  --line: #ebebeb;          /* the site's one border grey: black at 8% on white */
+  --line: #ebebeb; /* the site's one border grey: black at 8% on white */
   --line-strong: #ebebeb;
 
-  /* Chrome above the fold: TopBar (36px) + Navbar (56px) */
-  --header-h: 128px; /* strip 36 + bar 60 + 32 */
+  /* Chrome above the fold: the announcement strip (36px) + the bar (60px),
+     plus 32px of breathing room */
+  --header-h: 128px;
 
   /* Elevation */
   --shadow-sm: 0 1px 2px rgba(11, 13, 18, 0.04);
@@ -69,7 +70,10 @@
 
   /* No `color` here on purpose: headings set their own via a utility
      (text-ink, text-white …) so they work on light and on video/dark. */
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     letter-spacing: -0.025em;
     text-wrap: balance;
   }
@@ -95,7 +99,9 @@ html {
   padding-inline: 1.25rem;
 }
 @media (min-width: 1024px) {
-  .container-page { padding-inline: 2.5rem; }
+  .container-page {
+    padding-inline: 2.5rem;
+  }
 }
 
 /* Fine dotted grid used behind the hero visual */
@@ -105,26 +111,46 @@ html {
 }
 
 @keyframes rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .animate-rise {
   animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-
-
 /* Infinite logo marquee, right-to-left.
    The track renders the logo list twice, so translating it by exactly -50%
    puts copy #2 where copy #1 started — the loop repeats with no visible seam. */
 @keyframes scroll-left {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 .marquee-mask {
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent);
-  mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 48px,
+    #000 calc(100% - 48px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 48px,
+    #000 calc(100% - 48px),
+    transparent
+  );
 }
 .marquee-track {
   display: flex;
@@ -142,8 +168,12 @@ html {
    upGrad Framer hero): a large spinning gradient sits behind the button and the
    solid fill is inset 1px on top, so only a sweeping sliver shows at the edge. */
 @keyframes border-spin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to   { transform: translate(-50%, -50%) rotate(360deg); }
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 .cta-glow {
   animation: border-spin 4s linear infinite;
@@ -152,9 +182,15 @@ html {
 /* A light passing across the closing CTA band (see Testimonials): it sweeps
    from left to right, then rests a moment before the next pass. */
 @keyframes light-pass {
-  0% { transform: translateX(-120%); }
-  55% { transform: translateX(650%); }
-  100% { transform: translateX(650%); }
+  0% {
+    transform: translateX(-120%);
+  }
+  55% {
+    transform: translateX(650%);
+  }
+  100% {
+    transform: translateX(650%);
+  }
 }
 .light-pass {
   animation: light-pass 6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
@@ -191,7 +227,9 @@ html {
    flagged JS, so no-JS visitors always see the content. If the bundle never
    runs, the failsafe brings everything back after 3s. */
 @keyframes reveal-failsafe {
-  to { visibility: visible; }
+  to {
+    visibility: visible;
+  }
 }
 .js [data-reveal] {
   visibility: hidden;
@@ -199,12 +237,33 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js [data-reveal] { visibility: visible; }
-  .animate-rise { animation: none; }
-  .reveal-item { opacity: 1; transform: none; transition: none; }
-  .reveal-card { opacity: 1; transform: none; transition: none; }
-  .cta-glow { animation: none; }
-  .light-pass { animation: none; opacity: 0; }
-  .marquee-track { animation: none; }
-  html { scroll-behavior: auto; }
+  .js [data-reveal] {
+    visibility: visible;
+  }
+  .animate-rise {
+    animation: none;
+  }
+  .reveal-item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .reveal-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .cta-glow {
+    animation: none;
+  }
+  .light-pass {
+    animation: none;
+    opacity: 0;
+  }
+  .marquee-track {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

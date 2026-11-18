@@ -24,7 +24,8 @@ export function MaskWord({
   className?: string;
   attr?: "hero" | "heading";
 }) {
-  const data = attr === "hero" ? { "data-reveal": "word" } : { "data-heading-word": "" };
+  const data =
+    attr === "hero" ? { "data-reveal": "word" } : { "data-heading-word": "" };
   return (
     <span className="-mx-[0.15em] -mb-[0.12em] -mt-[0.06em] inline-block px-[0.15em] pb-[0.12em] pt-[0.06em] align-baseline [clip-path:inset(0)]">
       <span {...data} className={`inline-block ${className}`}>

@@ -22,12 +22,48 @@ import Image from "next/image";
  * under prefers-reduced-motion.
  */
 const LOGOS = [
-  { name: "Google", file: "Google.png", lightFile: "Google.png", w: 486, invert: false },
-  { name: "Goldman Sachs", file: "GoldmanSachs.png", lightFile: "GoldmanSachs.png", w: 382, invert: true },
-  { name: "Flipkart", file: "Flipkart.png", lightFile: "Flipkart.png", w: 583, invert: false },
-  { name: "Accenture", file: "Accenture.png", lightFile: "Accenture.png", w: 623, invert: true },
-  { name: "Groww", file: "Groww-onDark.png", lightFile: "Groww.png", w: 547, invert: false },
-  { name: "Haptik", file: "Haptik-onDark.png", lightFile: "Haptik.png", w: 402, invert: false },
+  {
+    name: "Google",
+    file: "Google.png",
+    lightFile: "Google.png",
+    w: 486,
+    invert: false,
+  },
+  {
+    name: "Goldman Sachs",
+    file: "GoldmanSachs.png",
+    lightFile: "GoldmanSachs.png",
+    w: 382,
+    invert: true,
+  },
+  {
+    name: "Flipkart",
+    file: "Flipkart.png",
+    lightFile: "Flipkart.png",
+    w: 583,
+    invert: false,
+  },
+  {
+    name: "Accenture",
+    file: "Accenture.png",
+    lightFile: "Accenture.png",
+    w: 623,
+    invert: true,
+  },
+  {
+    name: "Groww",
+    file: "Groww-onDark.png",
+    lightFile: "Groww.png",
+    w: 547,
+    invert: false,
+  },
+  {
+    name: "Haptik",
+    file: "Haptik-onDark.png",
+    lightFile: "Haptik.png",
+    w: 402,
+    invert: false,
+  },
 ] as const;
 
 /** "dark" = marks recoloured for a dark backdrop; "light" = original artwork. */

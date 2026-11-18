@@ -47,7 +47,12 @@ export function LazyVideo({
       className={className}
     >
       {sources.map((s) => (
-        <source key={s.src} src={s.src} type={s.type ?? "video/mp4"} media={s.media} />
+        <source
+          key={s.src}
+          src={s.src}
+          type={s.type ?? "video/mp4"}
+          media={s.media}
+        />
       ))}
     </video>
   );

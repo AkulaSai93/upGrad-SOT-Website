@@ -38,7 +38,9 @@ export function GlowButton({
     >
       <span
         aria-hidden
-        style={{ backgroundImage: `conic-gradient(transparent 200deg, ${streak})` }}
+        style={{
+          backgroundImage: `conic-gradient(transparent 200deg, ${streak})`,
+        }}
         className="cta-glow absolute left-1/2 top-1/2 aspect-square w-[160%]"
       />
       <span

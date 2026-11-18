@@ -27,7 +27,13 @@ export type Video = {
  * straight into <body>, so it covers the strip and the bar too (inside the
  * page it sat under them, hiding its close button).
  */
-export function VideoPlayer({ video, onClose }: { video: Video; onClose: () => void }) {
+export function VideoPlayer({
+  video,
+  onClose,
+}: {
+  video: Video;
+  onClose: () => void;
+}) {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,8 +48,16 @@ export function VideoPlayer({ video, onClose }: { video: Video; onClose: () => v
 
   useGSAP(
     () => {
-      gsap.fromTo(root.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35, ease: "power2.out" });
-      gsap.fromTo("[data-frame]", { y: 40, scale: 0.94 }, { y: 0, scale: 1, duration: 0.7, ease: "expo.out" });
+      gsap.fromTo(
+        root.current,
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.35, ease: "power2.out" },
+      );
+      gsap.fromTo(
+        "[data-frame]",
+        { y: 40, scale: 0.94 },
+        { y: 0, scale: 1, duration: 0.7, ease: "expo.out" },
+      );
     },
     { scope: root },
   );
@@ -59,7 +73,9 @@ export function VideoPlayer({ video, onClose }: { video: Video; onClose: () => v
     >
       <div
         data-frame
-        className={video.vertical ? "relative" : "relative w-full max-w-[1100px]"}
+        className={
+          video.vertical ? "relative" : "relative w-full max-w-[1100px]"
+        }
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -78,7 +94,10 @@ export function VideoPlayer({ video, onClose }: { video: Video; onClose: () => v
           }`}
         >
           <iframe
-            src={video.src ?? `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`}
+            src={
+              video.src ??
+              `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`
+            }
             title={video.name}
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowFullScreen
