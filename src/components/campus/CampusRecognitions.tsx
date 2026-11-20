@@ -128,7 +128,7 @@ export function CampusRecognitions({ campus }: { campus: Campus }) {
                 <span className="block">could start here.</span>
               </p>
               <Link
-                href="#apply"
+                href="/apply"
                 className="group inline-flex w-fit items-center gap-2 whitespace-nowrap rounded-[6px] bg-white px-3.5 py-2.5 sm:px-4 text-[14px] font-semibold text-ink transition-colors duration-300 hover:bg-ink hover:text-white"
               >
                 Apply Now

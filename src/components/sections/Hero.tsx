@@ -400,7 +400,7 @@ export function Hero() {
             >
               <Magnetic>
                 <GlowButton
-                  href="#apply"
+                  href="/apply"
                   streak="#0b0d12"
                   className="[&>span:last-child]:py-[10.5px] max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center max-sm:[&>span:last-child]:py-3 max-sm:[&>span:last-child]:text-[16px]"
                 >

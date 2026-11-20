@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import {
-  ArrowRight,
   ArrowUpRight,
   Bot,
   CircleHelp,
@@ -21,7 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { lenis } from "@/components/motion/SmoothScroll";
-import { GlowButton } from "./GlowButton";
+import { ApplyButton } from "./ApplyButton";
 import { Logo } from "./Logo";
 import { SOCIAL } from "./socials";
 import { PHONE, SOT_URL } from "@/components/site/contact";
@@ -139,7 +138,8 @@ const HELP: MenuLink[] = [
  *  left    the logo on its own, no backing.
  *  centre  a compact link pill with an ink "tab" that slides to whichever link
  *          is hovered (resting on Home).
- *  right   Apply Now (rotating border glow) and a Menu button.
+ *  right   Apply Now (rotating border glow; a user icon to the dashboard
+ *          once signed in on /apply) and a Menu button.
  *
  * The bar stays pinned to the top while scrolling. Over the hero it floats
  * with no backing; once the hero has scrolled away it gains a white bar
@@ -321,15 +321,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
             Deadline 9th Jan · via uGNET
           </p>
         </div>
-        <GlowButton
-          href="/admission"
-          size="sm"
-          streak="#0b0d12"
-          className="shrink-0"
-        >
-          Apply Now
-          <ArrowRight size={14} strokeWidth={2.2} aria-hidden />
-        </GlowButton>
+        <ApplyButton labelled className="shrink-0" />
       </div>
 
       {/* ------------------------------------------------------------ bar */}
@@ -392,15 +384,11 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
           )}
 
           <div className="flex items-center gap-2">
-            <GlowButton
-              href="#apply"
-              size="sm"
+            <ApplyButton
               streak={dark ? "#fff" : "#0b0d12"}
+              onDark={dark}
               className={`transition-opacity duration-300 max-sm:hidden ${open ? "pointer-events-none opacity-0" : ""}`}
-            >
-              Apply Now
-              <ArrowRight size={14} strokeWidth={2.2} aria-hidden />
-            </GlowButton>
+            />
 
             <button
               type="button"
@@ -626,15 +614,7 @@ export function Navbar({ links = true }: { links?: boolean } = {}) {
                 Admission starts with uGNET
               </p>
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <GlowButton
-                  href="#apply"
-                  streak="#0b0d12"
-                  size="sm"
-                  onClick={close}
-                >
-                  Apply Now
-                  <ArrowRight size={14} strokeWidth={2.2} aria-hidden />
-                </GlowButton>
+                <ApplyButton labelled onClick={close} />
                 <a
                   href={PHONE.href}
                   className="inline-flex items-center gap-2 text-[13.5px] text-body transition-colors hover:text-ink"

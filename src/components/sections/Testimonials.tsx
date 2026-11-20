@@ -340,7 +340,7 @@ export function Testimonials() {
           </div>
           {/* Apply Now, white on the red, with the hero CTA's sweeping glow */}
           <Link
-            href="#apply"
+            href="/apply"
             className="group/cta relative inline-flex shrink-0 overflow-hidden rounded-[6px] p-[1.5px]"
           >
             <span

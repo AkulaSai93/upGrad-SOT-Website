@@ -6,7 +6,6 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight, Check } from "lucide-react";
 import { GlowButton } from "@/components/site/GlowButton";
-import { SOT_URL } from "@/components/site/contact";
 
 gsap.registerPlugin(useGSAP);
 
@@ -351,7 +350,7 @@ export function AdmissionProcess() {
                 A simple, transparent journey from application to admission.
               </p>
               <GlowButton
-                href={`${SOT_URL}/admission`}
+                href="/apply"
                 streak="#0b0d12"
                 className="mt-6 max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center"
               >

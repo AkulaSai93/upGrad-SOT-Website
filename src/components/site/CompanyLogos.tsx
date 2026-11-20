@@ -76,10 +76,12 @@ function LogoRow({
   duplicate = false,
   tone,
   compact,
+  markHeight,
 }: {
   duplicate?: boolean;
   tone: Tone;
   compact: boolean;
+  markHeight?: number;
 }) {
   return (
     <ul
@@ -93,6 +95,7 @@ function LogoRow({
             alt={duplicate ? "" : logo.name}
             width={Math.round((logo.w / INTRINSIC_H) * RENDER_H)}
             height={RENDER_H}
+            style={markHeight ? { height: markHeight } : undefined}
             className={`w-auto max-w-none ${compact ? "h-[22px]" : "h-[34px]"} ${
               tone === "dark" && logo.invert ? "brightness-0 invert" : ""
             }`}
@@ -107,11 +110,14 @@ export function CompanyLogos({
   className = "",
   tone = "dark",
   compact = false,
+  markHeight,
 }: {
   className?: string;
   tone?: Tone;
   /** Smaller marks and a left-aligned label, for sitting under hero copy. */
   compact?: boolean;
+  /** the marks' height in px, in place of the size `compact` gives them */
+  markHeight?: number;
 }) {
   return (
     <div className={`min-w-0 ${className}`}>
@@ -124,11 +130,16 @@ export function CompanyLogos({
       </p>
 
       <div
-        className={`marquee-mask w-full ${compact ? "mt-3 lg:w-[400px]" : "mt-4 lg:w-[480px]"}`}
+        className={`marquee-mask w-full ${compact ? "mt-3 lg:w-[400px]" : "mt-4 lg:w-[480px]"} ${markHeight ? "lg:!w-[560px]" : ""}`}
       >
         <div className="marquee-track">
-          <LogoRow tone={tone} compact={compact} />
-          <LogoRow tone={tone} compact={compact} duplicate />
+          <LogoRow tone={tone} compact={compact} markHeight={markHeight} />
+          <LogoRow
+            tone={tone}
+            compact={compact}
+            markHeight={markHeight}
+            duplicate
+          />
         </div>
       </div>
     </div>

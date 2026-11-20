@@ -162,7 +162,7 @@ export function CampusHero({ campus }: { campus: Campus }) {
                 className="mt-7 flex flex-wrap items-center gap-3 max-lg:justify-center"
               >
                 <GlowButton
-                  href="#apply"
+                  href="/apply"
                   className="[&>span:last-child]:py-[10.5px] max-sm:w-full max-sm:[&>span:last-child]:w-full max-sm:[&>span:last-child]:justify-center max-sm:[&>span:last-child]:py-3"
                 >
                   Apply Now
