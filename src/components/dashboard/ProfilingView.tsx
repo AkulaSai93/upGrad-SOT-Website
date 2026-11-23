@@ -187,7 +187,7 @@ export function ProfilingView() {
             {SITE_PRIVACY}
           </p>
 
-          <div className="sticky bottom-0 z-10 -mx-4 flex items-center justify-between gap-3 border-t border-black/[0.06] bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:mx-0 lg:rounded-[6px] lg:border lg:bg-white/95 lg:px-5">
+          <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-black/[0.06] bg-white/95 px-4 py-3 shadow-[0_-4px_16px_rgba(11,13,18,0.06)] backdrop-blur sm:px-6 lg:sticky lg:z-10 lg:rounded-[6px] lg:border lg:px-5 lg:shadow-none">
             {editing ? (
               <button
                 type="button"

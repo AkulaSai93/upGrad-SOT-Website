@@ -61,7 +61,9 @@ function ProgressRing({
   size?: number;
   onDark?: boolean;
 }) {
-  const r = (size - 8) / 2;
+  // a fine ring: thinner still on the small one in the phone strip
+  const stroke = size <= 48 ? 3 : 4;
+  const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const share = done / STEPS.length;
   return (
@@ -73,7 +75,7 @@ function ProgressRing({
           r={r}
           fill="none"
           stroke="currentColor"
-          strokeWidth={6}
+          strokeWidth={stroke}
           className={onDark ? "text-white/15" : "text-black/[0.07]"}
         />
         <circle
@@ -82,7 +84,7 @@ function ProgressRing({
           r={r}
           fill="none"
           stroke="currentColor"
-          strokeWidth={6}
+          strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c * (1 - share)}
@@ -90,7 +92,7 @@ function ProgressRing({
         />
       </svg>
       <span
-        className={`absolute inset-0 grid place-items-center text-[13px] font-semibold ${onDark ? "text-white" : "text-ink"}`}
+        className={`absolute inset-0 grid place-items-center font-semibold ${size <= 48 ? "text-[11px]" : "text-[13px]"} ${onDark ? "text-white" : "text-ink"}`}
       >
         {Math.round(share * 100)}%
       </span>
@@ -104,7 +106,7 @@ function StepIcon({ state, index }: { state: StepState; index: number }) {
     <span
       className={`relative z-[1] grid size-9 shrink-0 place-items-center rounded-full border ${
         state === "done"
-          ? "border-accent bg-accent text-white"
+          ? "border-[#16a34a] bg-[#16a34a] text-white"
           : state === "current"
             ? "border-accent bg-accent-soft text-accent"
             : "border-black/[0.08] bg-black/[0.04] text-muted"
@@ -164,7 +166,7 @@ function StepList({
               <span
                 aria-hidden
                 className={`absolute left-[29px] top-[46px] h-[calc(100%-38px)] w-px ${
-                  state === "done" ? "bg-accent" : "bg-black/[0.08]"
+                  state === "done" ? "bg-[#16a34a]" : "bg-black/[0.08]"
                 }`}
               />
             )}
@@ -365,7 +367,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
             <ChevronRight size={16} aria-hidden />
           </span>
         </button>
-        <div className="mx-auto grid max-w-[1240px] gap-6 px-4 pb-16 pt-6 sm:px-6 lg:grid-cols-[288px_minmax(0,1fr)] lg:gap-8 lg:pt-8">
+        <div className="mx-auto grid max-w-[1240px] gap-6 px-4 pb-24 pt-6 lg:pb-16 sm:px-6 lg:grid-cols-[288px_minmax(0,1fr)] lg:gap-8 lg:pt-8">
           {/* desktop: the rail */}
           <aside className="hidden lg:block">
             <div className="sticky top-24 grid gap-3">

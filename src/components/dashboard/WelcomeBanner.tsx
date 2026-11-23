@@ -30,26 +30,25 @@ export function WelcomeBanner() {
 
   return (
     <section className="relative overflow-hidden rounded-[6px] bg-[linear-gradient(180deg,#e3eefe_0%,#b0d9fd_50%,#d4eafe_100%)]">
-      {/* the photo, always whole (nobody cut off): on phones a strip
-            across the top fading into the sky below it; on wider screens
-            at the right at the banner's full height, its left edge fading
-            into the matching sky behind the copy */}
-      <div className="relative aspect-[1600/686] w-full [mask-image:linear-gradient(180deg,#000_70%,transparent)] md:absolute md:inset-y-0 md:right-0 md:w-auto md:[mask-image:linear-gradient(90deg,transparent_0%,#000_28%)]">
+      {/* the photo at the right at the banner's full height, its left
+            edge fading into the matching sky behind the copy (on phones
+            too, so the banner stays short) */}
+      <div className="absolute inset-y-0 right-0 aspect-[1600/686] [mask-image:linear-gradient(90deg,transparent_0%,#000_28%)]">
         <Image
           src="/images/dashboard/banner.webp"
           alt=""
           fill
           priority
-          sizes="(min-width: 768px) 560px, 100vw"
+          sizes="(min-width: 768px) 560px, 360px"
           className="object-cover"
         />
       </div>
-      <div className="relative z-[1] px-5 pb-5 max-md:-mt-6 sm:px-7 md:max-w-[55%] md:py-6 xl:max-w-[560px]">
-        <p className="inline-flex items-center gap-2 rounded-[4px] bg-white/70 px-2.5 py-0.5 text-[11.5px] font-semibold text-[#294454] backdrop-blur">
+      <div className="relative z-[1] max-w-[60%] px-4 py-4 sm:px-7 md:max-w-[55%] md:py-6 xl:max-w-[560px]">
+        <p className="hidden items-center gap-2 rounded-[4px] sm:inline-flex bg-white/70 px-2.5 py-0.5 text-[11.5px] font-semibold text-[#294454] backdrop-blur">
           <span className="size-1.5 rounded-full bg-accent" />
           AI-First B.Tech · 2027 intake
         </p>
-        <h1 className="mt-3 font-display text-[clamp(1.5rem,2.6vw,2.1rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink">
+        <h1 className="font-display text-[clamp(1.35rem,2.6vw,2.1rem)] sm:mt-3 font-medium leading-[1.05] tracking-[-0.035em] text-ink">
           Hi, {firstName(app.profile.name)}.{" "}
           <span className="text-accent">
             {done === 0 ? "Let's begin." : "Keep going."}
@@ -57,8 +56,10 @@ export function WelcomeBanner() {
         </h1>
         {/* the next step and the way to it, on one line so the banner
               stays short */}
-        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
-          <p className="text-[14px] leading-[1.5] text-[#294454]">
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 sm:mt-2">
+          <p
+            className={`text-[14px] leading-[1.5] text-[#294454] ${target ? "max-sm:hidden" : ""}`}
+          >
             {next ? (
               shown ? (
                 <>
