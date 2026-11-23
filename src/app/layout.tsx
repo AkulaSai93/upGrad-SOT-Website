@@ -32,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: JS_FLAG }} />
       </head>
-      <body className="flex min-h-full flex-col bg-canvas selection:bg-accent selection:text-white max-sm:pb-[56px]">
+      <body className="flex min-h-full flex-col bg-canvas selection:bg-accent selection:text-white max-sm:has-[#apply-bar]:pb-[56px]">
         <SmoothScroll />
         {children}
       </body>

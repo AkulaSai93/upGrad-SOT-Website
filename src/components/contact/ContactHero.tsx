@@ -5,6 +5,7 @@ import { useRef, useState, type FormEvent } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Check, ChevronDown } from "lucide-react";
+import { STATES } from "@/components/site/india";
 
 gsap.registerPlugin(useGSAP);
 
@@ -26,44 +27,6 @@ gsap.registerPlugin(useGSAP);
  * Motion (GSAP): the copy rises in and the card lifts in. Reduced motion:
  * shown as they are.
  */
-const STATES = [
-  "Andaman and Nicobar Islands",
-  "Andhra Pradesh",
-  "Arunachal Pradesh",
-  "Assam",
-  "Bihar",
-  "Chandigarh",
-  "Chhattisgarh",
-  "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi",
-  "Goa",
-  "Gujarat",
-  "Haryana",
-  "Himachal Pradesh",
-  "Jammu and Kashmir",
-  "Jharkhand",
-  "Karnataka",
-  "Kerala",
-  "Ladakh",
-  "Lakshadweep",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Manipur",
-  "Meghalaya",
-  "Mizoram",
-  "Nagaland",
-  "Odisha",
-  "Puducherry",
-  "Punjab",
-  "Rajasthan",
-  "Sikkim",
-  "Tamil Nadu",
-  "Telangana",
-  "Tripura",
-  "Uttar Pradesh",
-  "Uttarakhand",
-  "West Bengal",
-];
 
 const FIELD =
   "h-12 w-full rounded-[4px] border border-[#d9e0db] bg-[#fbfcfa] px-[15px] text-[14px] text-ink outline-none transition-colors placeholder:text-[#62706e] focus:border-ink";

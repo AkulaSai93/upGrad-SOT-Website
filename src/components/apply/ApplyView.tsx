@@ -246,6 +246,7 @@ export function ApplyView() {
           <CompanyLogos
             compact
             markHeight={28}
+            trackWidth="lg:w-[560px]"
             className="mt-6 lg:mt-10 lg:[&_img]:!h-[30px]"
           />
         </div>

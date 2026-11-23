@@ -111,9 +111,12 @@ export function CompanyLogos({
   tone = "dark",
   compact = false,
   markHeight,
+  trackWidth,
 }: {
   className?: string;
   tone?: Tone;
+  /** the running row's width on desktop, in place of the default (a class) */
+  trackWidth?: string;
   /** Smaller marks and a left-aligned label, for sitting under hero copy. */
   compact?: boolean;
   /** the marks' height in px, in place of the size `compact` gives them */
@@ -130,7 +133,7 @@ export function CompanyLogos({
       </p>
 
       <div
-        className={`marquee-mask w-full ${compact ? "mt-3 lg:w-[400px]" : "mt-4 lg:w-[480px]"} ${markHeight ? "lg:!w-[560px]" : ""}`}
+        className={`marquee-mask w-full ${compact ? "mt-3" : "mt-4"} ${trackWidth ?? (compact ? "lg:w-[400px]" : "lg:w-[480px]")}`}
       >
         <div className="marquee-track">
           <LogoRow tone={tone} compact={compact} markHeight={markHeight} />

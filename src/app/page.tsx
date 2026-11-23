@@ -22,6 +22,7 @@ import { News } from "@/components/sections/News";
 import { Awards } from "@/components/sections/Awards";
 import { Scholarships } from "@/components/sections/Scholarships";
 import { Admission } from "@/components/sections/Admission";
+import { BrochureBook } from "@/components/sections/BrochureBook";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Faqs } from "@/components/sections/Faqs";
 import { Social } from "@/components/sections/Social";
@@ -54,6 +55,7 @@ export default function Home() {
         <Awards />
         <Scholarships />
         <Admission />
+        <BrochureBook />
         <Testimonials />
         <Social />
         <Faqs />
