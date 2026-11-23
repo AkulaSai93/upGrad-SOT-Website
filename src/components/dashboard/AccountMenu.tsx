@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  ArrowLeft,
   ChevronDown,
   LayoutDashboard,
   LogOut,
@@ -22,12 +21,12 @@ import {
 /**
  * The signed-in applicant's menu: their name, application ID and email
  * (or mobile number until an email is added), then Dashboard and Log out.
- * In the dashboard it also offers Reset application (after a confirm),
+ * In the dashboard it offers Reset application instead of Dashboard (after a confirm),
  * which clears every step and starts again from step 1. Log out clears
  * the saved application too, while it lives only in this browser.
  * One menu for the whole site: on the website it opens from the navbar's
- * user icon, in the dashboard from the name in the header (where it also
- * offers the way back to the website). A white card in the site's style;
+ * user icon (with Dashboard), in the dashboard from the name in the header
+ * (Reset application and Log out only). A white card in the site's style;
  * Escape or a click outside closes it.
  *
  * `trigger`: "icon" is the navbar's square user button (`onDark` for the
@@ -129,24 +128,15 @@ export function AccountMenu({
             </p>
           </div>
           <div className="border-t border-black/[0.06] p-1.5">
-            <Link
-              role="menuitem"
-              href="/dashboard"
-              onClick={() => setOpen(false)}
-              className={`${item} text-ink hover:bg-black/[0.04]`}
-            >
-              <LayoutDashboard size={17} aria-hidden />
-              Dashboard
-            </Link>
-            {inDashboard && (
+            {!inDashboard && (
               <Link
                 role="menuitem"
-                href="/"
+                href="/dashboard"
                 onClick={() => setOpen(false)}
                 className={`${item} text-ink hover:bg-black/[0.04]`}
               >
-                <ArrowLeft size={17} aria-hidden />
-                Back to website
+                <LayoutDashboard size={17} aria-hidden />
+                Dashboard
               </Link>
             )}
             {inDashboard && (
