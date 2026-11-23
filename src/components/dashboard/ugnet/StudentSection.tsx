@@ -15,8 +15,10 @@ import {
 } from "../application";
 import {
   Checkbox,
+  Combobox,
   Field,
   Grid,
+  PRIMARY_BUTTON,
   SECONDARY_BUTTON,
   SectionCard,
   Select,
@@ -144,8 +146,8 @@ function PhotoPicker({
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-      <span className="relative grid size-24 shrink-0 place-items-center overflow-hidden rounded-full border border-black/[0.08] bg-sunken text-muted">
+    <div className="flex flex-col items-center rounded-[4px] border border-black/[0.08] bg-black/[0.015] px-5 py-6 text-center">
+      <span className="relative grid size-24 shrink-0 place-items-center overflow-hidden rounded-full border border-black/[0.08] bg-white text-muted">
         {value ? (
           <Image
             src={value}
@@ -158,40 +160,43 @@ function PhotoPicker({
           <UserRound size={34} aria-hidden />
         )}
       </span>
+      <p className="mt-4 text-[15px] font-semibold text-ink">
+        {value ? "Your photo" : "Add your photo"}
+      </p>
+      <p className="mt-0.5 text-[13px] text-muted">
+        Use your camera or upload one from your device
+      </p>
+      <div className="mt-4 flex flex-wrap justify-center gap-2">
+        <button
+          type="button"
+          onClick={() => camera.current?.click()}
+          className={`${PRIMARY_BUTTON} h-10 px-4 text-[13.5px]`}
+        >
+          <Camera size={16} aria-hidden />
+          Take photo
+        </button>
+        <button
+          type="button"
+          onClick={() => upload.current?.click()}
+          className={`${SECONDARY_BUTTON} h-10 px-4 text-[13.5px]`}
+        >
+          <Upload size={16} aria-hidden />
+          {value ? "Change photo" : "Upload"}
+        </button>
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange(undefined)}
+            className="h-10 px-2 text-[13.5px] font-medium text-body hover:text-accent"
+          >
+            Remove
+          </button>
+        )}
+      </div>
+      <p className="mt-3 text-[12px] text-muted">
+        Good lighting · Look straight at the camera
+      </p>
       <div>
-        <p className="text-[15px] font-semibold text-ink">
-          {value ? "Your photo" : "Add your photo"}
-        </p>
-        <p className="mt-0.5 text-[13px] text-muted">
-          A clear, front-facing photo in good light
-        </p>
-        <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
-          <button
-            type="button"
-            onClick={() => camera.current?.click()}
-            className={`${SECONDARY_BUTTON} h-10 px-4 text-[13.5px]`}
-          >
-            <Camera size={16} aria-hidden />
-            Take photo
-          </button>
-          <button
-            type="button"
-            onClick={() => upload.current?.click()}
-            className={`${SECONDARY_BUTTON} h-10 px-4 text-[13.5px]`}
-          >
-            <Upload size={16} aria-hidden />
-            {value ? "Change photo" : "Upload"}
-          </button>
-          {value && (
-            <button
-              type="button"
-              onClick={() => onChange(undefined)}
-              className="h-10 px-2 text-[13.5px] font-medium text-body hover:text-accent"
-            >
-              Remove
-            </button>
-          )}
-        </div>
         <input
           ref={camera}
           type="file"
@@ -274,22 +279,17 @@ function AddressFields({
         />
       </Field>
       <Field label="City" required htmlFor={`${at}-city`} error={err("city")}>
-        <TextInput
+        <Combobox
           id={`${at}-city`}
-          list={`${at}-cities`}
+          options={CITIES[value.state] ?? []}
           placeholder={
             value.state ? "Type or pick your city" : "Pick a state first"
           }
           disabled={!value.state}
           value={value.city}
           invalid={Boolean(err("city"))}
-          onChange={(e) => set({ city: e.target.value })}
+          onChange={(city) => set({ city })}
         />
-        <datalist id={`${at}-cities`}>
-          {(CITIES[value.state] ?? []).map((c) => (
-            <option key={c} value={c} />
-          ))}
-        </datalist>
       </Field>
       <Field
         label="Pincode"
@@ -323,12 +323,12 @@ export function StudentSection({
     set({ guardian: { ...s.guardian, ...patch } });
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
       <SectionCard
         title="Student details"
         line="Your name as it appears on your Class 12 marksheet"
       >
-        <div className="grid gap-6">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
           <PhotoPicker value={s.photo} onChange={(photo) => set({ photo })} />
           <Grid>
             <Field
@@ -423,22 +423,17 @@ export function StudentSection({
               />
             </Field>
             <Field label="City" required htmlFor="st-city" error={errors.city}>
-              <TextInput
+              <Combobox
                 id="st-city"
-                list="st-cities"
+                options={CITIES[s.state] ?? []}
                 placeholder={
                   s.state ? "Type or pick your city" : "Pick a state first"
                 }
                 disabled={!s.state}
                 value={s.city}
                 invalid={Boolean(errors.city)}
-                onChange={(e) => set({ city: e.target.value })}
+                onChange={(city) => set({ city })}
               />
-              <datalist id="st-cities">
-                {(CITIES[s.state] ?? []).map((c) => (
-                  <option key={c} value={c} />
-                ))}
-              </datalist>
             </Field>
             <Field
               label="Nationality"
@@ -446,22 +441,16 @@ export function StudentSection({
               htmlFor="st-nation"
               error={errors.nationality}
             >
-              <div className="relative">
-                <Globe
-                  size={17}
-                  aria-hidden
-                  className="pointer-events-none absolute left-3.5 top-1/2 z-[1] -translate-y-1/2 text-muted"
-                />
-                <Select
-                  id="st-nation"
-                  options={NATIONALITIES}
-                  placeholder="Select nationality"
-                  className="pl-10"
-                  value={s.nationality}
-                  invalid={Boolean(errors.nationality)}
-                  onChange={(e) => set({ nationality: e.target.value })}
-                />
-              </div>
+              <Select
+                id="st-nation"
+                icon={Globe}
+                options={NATIONALITIES}
+                placeholder="Select nationality"
+
+                value={s.nationality}
+                invalid={Boolean(errors.nationality)}
+                onChange={(e) => set({ nationality: e.target.value })}
+              />
             </Field>
           </Grid>
         </div>
@@ -559,7 +548,7 @@ export function StudentSection({
       </SectionCard>
 
       <SectionCard title="Current address" line="Where you live now">
-        <div className="grid gap-6">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
           <AddressFields
             value={s.current}
             onChange={(current) => set({ current })}

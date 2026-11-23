@@ -63,8 +63,8 @@ export function ExamsSection({
       action={list.length > 0 ? add : undefined}
     >
       {list.length === 0 ? (
-        <div className="flex flex-col items-center rounded-[8px] border border-dashed border-black/15 px-6 py-10 text-center">
-          <span className="grid size-11 place-items-center rounded-full bg-sunken text-muted">
+        <div className="flex flex-col items-center rounded-[6px] border border-dashed border-black/15 px-6 py-10 text-center">
+          <span className="grid size-11 place-items-center rounded-full bg-black/[0.04] text-muted">
             <ClipboardList size={20} aria-hidden />
           </span>
           <p className="mt-3 text-[15px] font-medium text-ink">
@@ -77,11 +77,11 @@ export function ExamsSection({
           <div className="mt-5">{add}</div>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-4">
           {list.map((x, i) => (
             <div
               key={i}
-              className="rounded-[8px] border border-black/[0.08] p-4 sm:p-5"
+              className="rounded-[6px] border border-black/[0.08] p-4 sm:p-5"
             >
               <div className="mb-4 flex items-center justify-between">
                 <p className="text-[14px] font-semibold text-ink">
@@ -90,7 +90,7 @@ export function ExamsSection({
                 <button
                   type="button"
                   onClick={() => onChange(list.filter((_, j) => j !== i))}
-                  className="inline-flex items-center gap-1.5 rounded-[6px] px-2 py-1 text-[13px] font-medium text-body transition-colors hover:bg-accent-soft hover:text-accent"
+                  className="inline-flex items-center gap-1.5 rounded-[4px] px-2 py-1 text-[13px] font-medium text-body transition-colors hover:bg-accent-soft hover:text-accent"
                 >
                   <Trash2 size={14} aria-hidden />
                   Remove

@@ -12,6 +12,7 @@ import {
   SectionCard,
   Select,
   TextInput,
+  Combobox,
 } from "../fields";
 import { BOARDS_X, BOARDS_XII, RESULT_STATUS, years } from "../options";
 import type { Errors, SectionProps } from "./types";
@@ -124,7 +125,7 @@ function ClassFields({
   const scores = !status || c.status === "I have results";
 
   return (
-    <div className="grid gap-5">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-5">
       <Field label="Board" required error={err("board")}>
         <Chips
           name={`${at}-board`}
@@ -159,13 +160,13 @@ function ClassFields({
             htmlFor={`${at}-city`}
             error={err("city")}
           >
-            <TextInput
+            <Combobox
               id={`${at}-city`}
-              list="all-cities"
+              options={ALL_CITIES}
               placeholder="Type or pick the city"
               value={c.city}
               invalid={Boolean(err("city"))}
-              onChange={(e) => set({ city: e.target.value })}
+              onChange={(city) => set({ city })}
             />
           </Field>
         )}
@@ -252,7 +253,7 @@ function ClassFields({
           </>
         )}
         {status && c.status === "Waiting for results" && (
-          <p className="flex items-start gap-2 rounded-[8px] bg-sunken px-4 py-3 text-[13.5px] text-body sm:col-span-2">
+          <p className="flex items-start gap-2 rounded-[6px] bg-black/[0.04] px-4 py-3 text-[13.5px] text-body sm:col-span-2">
             <Info
               size={16}
               className="mt-0.5 shrink-0 text-muted"
@@ -273,12 +274,7 @@ export function AcademicsSection({
   errors,
 }: SectionProps<Academics>) {
   return (
-    <div className="grid gap-6">
-      <datalist id="all-cities">
-        {ALL_CITIES.map((c) => (
-          <option key={c} value={c} />
-        ))}
-      </datalist>
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
       <SectionCard title="Class X" line="Your secondary school results">
         <ClassFields
           at="x"

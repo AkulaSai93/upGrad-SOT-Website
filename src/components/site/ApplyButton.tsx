@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { ArrowRight, UserRound } from "lucide-react";
 import { useApplicant } from "@/components/apply/applicant";
+import { AccountMenu } from "@/components/dashboard/AccountMenu";
 import { GlowButton } from "./GlowButton";
 
 /**
  * The navbar's Apply Now, which becomes a user icon once the visitor has
- * signed in on /apply: the icon opens their dashboard.
+ * signed in on /apply: the icon opens the account menu (name, ID, email,
+ * Dashboard, Log out).
  *
  * `labelled` adds "My Dashboard" beside the icon, for the places with room
  * for it (the phone's bottom bar and the menu panel). `onDark` styles the
@@ -43,22 +45,22 @@ export function ApplyButton({
     );
   }
 
+  // the bar's icon opens the account menu; the roomier spots link straight
+  // to the dashboard
+  if (!labelled) return <AccountMenu onDark={onDark} className={className} />;
+
   return (
     <Link
       href="/dashboard"
       onClick={onClick}
-      aria-label={labelled ? undefined : `${applicant.name}: your dashboard`}
-      title={labelled ? undefined : "Your dashboard"}
-      className={`inline-flex h-[38px] items-center justify-center gap-2 rounded-[6px] text-[13.5px] font-semibold transition-colors ${
-        labelled ? "px-3.5" : "w-[38px]"
-      } ${
+      className={`inline-flex h-[38px] items-center justify-center gap-2 rounded-[6px] px-3.5 text-[13.5px] font-semibold transition-colors ${
         onDark
           ? "bg-white/15 text-white hover:bg-white/25"
           : "bg-accent text-white hover:bg-accent-hover"
       } ${className}`}
     >
       <UserRound size={17} strokeWidth={2.2} aria-hidden />
-      {labelled && "My Dashboard"}
+      My Dashboard
     </Link>
   );
 }

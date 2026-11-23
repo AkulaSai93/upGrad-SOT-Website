@@ -1,35 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
 import {
   ArrowRight,
   Check,
-  ChevronDown,
+  ChevronRight,
   LayoutDashboard,
   Lock,
-  LogOut,
+  PanelLeft,
   Phone,
+  X,
 } from "lucide-react";
 import { Logo } from "@/components/site/Logo";
 import { PHONE } from "@/components/site/contact";
-import { signOut } from "@/components/apply/applicant";
 import { useHydrated } from "@/components/apply/localStore";
-import {
-  applicationId,
-  firstName,
-  useApplication,
-  type Application,
-} from "./application";
+import { applicationId, useApplication, type Application } from "./application";
+import { AccountMenu } from "./AccountMenu";
 import { STEPS, stepStates, type StepState } from "./steps";
+import { WelcomeBanner } from "./WelcomeBanner";
 
 /**
  * The applicant dashboard's frame, around every page under /dashboard: a
@@ -78,7 +74,7 @@ function ProgressRing({
           fill="none"
           stroke="currentColor"
           strokeWidth={6}
-          className={onDark ? "text-white/15" : "text-sunken"}
+          className={onDark ? "text-white/15" : "text-black/[0.07]"}
         />
         <circle
           cx={size / 2}
@@ -111,7 +107,7 @@ function StepIcon({ state, index }: { state: StepState; index: number }) {
           ? "border-accent bg-accent text-white"
           : state === "current"
             ? "border-accent bg-accent-soft text-accent"
-            : "border-black/[0.08] bg-sunken text-muted"
+            : "border-black/[0.08] bg-black/[0.04] text-muted"
       }`}
     >
       {state === "done" ? (
@@ -177,8 +173,8 @@ function StepList({
                 href={step.href!}
                 onClick={onPick}
                 aria-current={here ? "page" : undefined}
-                className={`flex items-start gap-3 rounded-[8px] px-3 py-2 transition-colors ${
-                  here ? "bg-sunken" : "hover:bg-sunken/60"
+                className={`flex items-start gap-3 rounded-[6px] px-3 py-2 transition-colors ${
+                  here ? "bg-black/[0.04]" : "hover:bg-black/[0.03]"
                 }`}
               >
                 {body}
@@ -193,92 +189,87 @@ function StepList({
   );
 }
 
-/** the account menu: who is signed in, the application ID, sign out */
-function AccountMenu({ app }: { app: Application }) {
-  const [open, setOpen] = useState(false);
-  const box = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const close = (e: MouseEvent | KeyboardEvent) => {
-      if (
-        e instanceof KeyboardEvent
-          ? e.key === "Escape"
-          : !box.current?.contains(e.target as Node)
-      )
-        setOpen(false);
-    };
-    document.addEventListener("mousedown", close);
-    document.addEventListener("keydown", close);
-    return () => {
-      document.removeEventListener("mousedown", close);
-      document.removeEventListener("keydown", close);
-    };
-  }, [open]);
-
-  const initial = firstName(app.profile.name).charAt(0).toUpperCase();
-
+/** the progress card, then Overview and the nine steps: the desktop rail,
+    and the phone's slide-in panel */
+function StepsPanel({
+  app,
+  states,
+  done,
+  onPick,
+}: {
+  app: Application;
+  states: StepState[];
+  done: number;
+  onPick?: () => void;
+}) {
+  const path = usePathname();
   return (
-    <div ref={box} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-haspopup="menu"
-        className="flex items-center gap-2 rounded-[6px] border border-black/[0.08] bg-white py-1 pl-1 pr-2.5 transition-colors hover:border-ink"
-      >
-        <span className="grid size-8 place-items-center rounded-full bg-accent text-[13px] font-semibold text-white">
-          {initial}
-        </span>
-        <span className="hidden text-[13.5px] font-medium text-ink sm:block">
-          {firstName(app.profile.name)}
-        </span>
-        <ChevronDown size={15} className="text-muted" aria-hidden />
-      </button>
-      {open && (
-        <div
-          role="menu"
-          className="absolute right-0 top-[calc(100%+8px)] z-50 w-[260px] rounded-[6px] border border-black/[0.08] bg-white p-2 shadow-[var(--shadow-lg)]"
-        >
-          <div className="px-3 py-2.5">
-            <p className="truncate text-[14px] font-semibold text-ink">
-              {app.profile.name}
-            </p>
-            <p className="text-[12.5px] text-muted">+91 {app.profile.phone}</p>
-            <p className="mt-2 inline-block rounded-[4px] bg-sunken px-2 py-0.5 text-[11.5px] font-medium tracking-[0.04em] text-body">
-              ID {applicationId(app.profile.phone)}
+    <>
+      {/* the progress, on the site's dark ground with a red glow */}
+      <div className="relative overflow-hidden rounded-[6px] bg-ink p-5 text-white">
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-16 size-44 rounded-full bg-accent/45 blur-3xl"
+        />
+        <div className="relative flex items-center gap-4">
+          <ProgressRing done={done} onDark />
+          <div>
+            <p className="text-[15px] font-semibold">Application progress</p>
+            <p className="mt-0.5 text-[13px] text-white/65">
+              {done} of {STEPS.length} steps completed
             </p>
           </div>
-          <div className="my-1 h-px bg-black/[0.06]" />
-          <Link
-            role="menuitem"
-            href="/"
-            onClick={() => setOpen(false)}
-            className="flex items-center gap-2.5 rounded-[6px] px-3 py-2 text-[14px] text-ink hover:bg-sunken"
-          >
-            <ArrowRight size={15} className="rotate-180" aria-hidden />
-            Back to website
-          </Link>
-          <button
-            role="menuitem"
-            type="button"
-            onClick={signOut}
-            className="flex w-full items-center gap-2.5 rounded-[6px] px-3 py-2 text-left text-[14px] text-accent hover:bg-accent-soft"
-          >
-            <LogOut size={15} aria-hidden />
-            Sign out
-          </button>
         </div>
-      )}
-    </div>
+        <p className="relative mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-[12.5px] text-white/60">
+          Application ID
+          <span className="font-semibold tracking-[0.04em] text-white">
+            {applicationId(app.profile.phone)}
+          </span>
+        </p>
+      </div>
+      <nav
+        aria-label="Application"
+        className="rounded-[6px] border border-black/[0.08] bg-white p-3"
+      >
+        <Link
+          href="/dashboard"
+          onClick={onPick}
+          aria-current={path === "/dashboard" ? "page" : undefined}
+          className={`mb-2 flex items-center gap-3 rounded-[4px] px-3 py-2.5 text-[14px] font-medium text-ink transition-colors ${
+            path === "/dashboard" ? "bg-black/[0.04]" : "hover:bg-black/[0.03]"
+          }`}
+        >
+          <span className="grid size-9 place-items-center rounded-full border border-black/[0.08] bg-white">
+            <LayoutDashboard size={16} aria-hidden />
+          </span>
+          Overview
+        </Link>
+        <p className="px-3 pb-2 pt-3 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-muted">
+          Application steps
+        </p>
+        <StepList states={states} onPick={onPick} />
+      </nav>
+    </>
   );
 }
 
-function Header({ app }: { app?: Application }) {
+function Header({ app, onMenu }: { app?: Application; onMenu?: () => void }) {
   return (
     <header className="sticky top-0 z-40 border-b border-black/[0.06] bg-white/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-[1240px] items-center justify-between gap-4 px-4 sm:px-6">
-        <Logo />
+        <div className="flex items-center gap-3">
+          {onMenu && (
+            <button
+              type="button"
+              onClick={onMenu}
+              aria-label="Show application steps"
+              className="grid size-10 place-items-center rounded-[4px] border border-black/[0.08] text-ink transition-colors hover:border-ink lg:hidden"
+            >
+              <PanelLeft size={18} aria-hidden />
+            </button>
+          )}
+          <Logo />
+        </div>
         <div className="flex items-center gap-4">
           <a
             href={PHONE.href}
@@ -288,7 +279,7 @@ function Header({ app }: { app?: Application }) {
             Need help?{" "}
             <span className="font-semibold text-ink">{PHONE.label}</span>
           </a>
-          {app && <AccountMenu app={app} />}
+          {app && <AccountMenu trigger="pill" inDashboard />}
         </div>
       </div>
     </header>
@@ -300,6 +291,18 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   const app = useApplication();
   const path = usePathname();
   const [stepsOpen, setStepsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!stepsOpen) return;
+    const onKey = (e: KeyboardEvent) =>
+      e.key === "Escape" && setStepsOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [stepsOpen]);
 
   if (!hydrated) {
     return (
@@ -322,7 +325,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           </p>
           <Link
             href="/apply"
-            className="mt-7 inline-flex h-11 items-center gap-2 rounded-[6px] bg-accent px-6 text-[15px] font-semibold text-white transition-colors hover:bg-accent-hover"
+            className="mt-7 inline-flex h-11 items-center gap-2 rounded-[4px] bg-accent px-6 text-[15px] font-semibold text-white transition-colors hover:bg-accent-hover"
           >
             Apply Now
             <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
@@ -335,111 +338,117 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   const states = stepStates(app);
   const done = states.filter((s) => s === "done").length;
   const current = STEPS[states.indexOf("current")];
+  const isOverview = path === "/dashboard";
 
   return (
     <ApplicationContext.Provider value={app}>
-      <div className="min-h-svh bg-white">
-        <Header app={app} />
+      <div className="min-h-svh bg-[#f3f5f8]">
+        <Header app={app} onMenu={() => setStepsOpen(true)} />
+        {/* phones and tablets: a slim progress strip pinned under the
+            header, opening the steps */}
+        <button
+          type="button"
+          onClick={() => setStepsOpen(true)}
+          className="sticky top-16 z-30 flex w-full items-center gap-3 border-b border-black/[0.06] bg-white/95 px-4 py-2.5 text-left backdrop-blur-xl sm:px-6 lg:hidden"
+        >
+          <ProgressRing done={done} size={40} />
+          <span className="min-w-0 flex-1">
+            <span className="block text-[12px] text-muted">
+              {done} of {STEPS.length} steps completed
+            </span>
+            <span className="block truncate text-[14.5px] font-semibold text-ink">
+              {current ? `Next: ${current.title}` : "All steps done"}
+            </span>
+          </span>
+          <span className="inline-flex shrink-0 items-center gap-1 text-[13px] font-semibold text-accent">
+            All steps
+            <ChevronRight size={16} aria-hidden />
+          </span>
+        </button>
         <div className="mx-auto grid max-w-[1240px] gap-6 px-4 pb-16 pt-6 sm:px-6 lg:grid-cols-[288px_minmax(0,1fr)] lg:gap-8 lg:pt-8">
           {/* desktop: the rail */}
           <aside className="hidden lg:block">
             <div className="sticky top-24 grid gap-3">
-              {/* the progress, on the site's dark ground with a red glow */}
-              <div className="relative overflow-hidden rounded-[8px] bg-ink p-5 text-white">
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute -right-12 -top-16 size-44 rounded-full bg-accent/45 blur-3xl"
-                />
-                <div className="relative flex items-center gap-4">
-                  <ProgressRing done={done} onDark />
-                  <div>
-                    <p className="text-[15px] font-semibold">
-                      Application progress
-                    </p>
-                    <p className="mt-0.5 text-[13px] text-white/65">
-                      {done} of {STEPS.length} steps completed
-                    </p>
-                  </div>
-                </div>
-                <p className="relative mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-[12.5px] text-white/60">
-                  Application ID
-                  <span className="font-semibold tracking-[0.04em] text-white">
-                    {applicationId(app.profile.phone)}
-                  </span>
-                </p>
-              </div>
-              <nav
-                aria-label="Application"
-                className="rounded-[8px] border border-black/[0.08] bg-white p-3"
-              >
-                <Link
-                  href="/dashboard"
-                  aria-current={path === "/dashboard" ? "page" : undefined}
-                  className={`mb-2 flex items-center gap-3 rounded-[6px] px-3 py-2.5 text-[14px] font-medium text-ink transition-colors ${
-                    path === "/dashboard" ? "bg-sunken" : "hover:bg-sunken/60"
-                  }`}
-                >
-                  <span className="grid size-9 place-items-center rounded-full border border-black/[0.08] bg-white">
-                    <LayoutDashboard size={16} aria-hidden />
-                  </span>
-                  Overview
-                </Link>
-                <p className="px-3 pb-2 pt-3 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-muted">
-                  Application steps
-                </p>
-                <StepList states={states} />
-              </nav>
+              <StepsPanel app={app} states={states} done={done} />
             </div>
           </aside>
 
-          {/* phones and tablets: the progress bar, opening to the steps */}
-          <div className="rounded-[8px] border border-black/[0.08] bg-white lg:hidden">
-            <button
-              type="button"
-              onClick={() => setStepsOpen((v) => !v)}
-              aria-expanded={stepsOpen}
-              className="flex w-full items-center gap-3 p-4 text-left"
-            >
-              <ProgressRing done={done} size={48} />
-              <span className="min-w-0 flex-1">
-                <span className="block text-[12.5px] text-muted">
-                  {done} of {STEPS.length} steps completed
-                </span>
-                <span className="block truncate text-[15px] font-semibold text-ink">
-                  {current ? `Next: ${current.title}` : "All steps done"}
-                </span>
-              </span>
-              <ChevronDown
-                size={18}
-                aria-hidden
-                className={`text-muted transition-transform ${stepsOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-            {stepsOpen && (
-              <nav
-                aria-label="Application"
-                className="border-t border-black/[0.06] p-2"
-              >
-                <Link
-                  href="/dashboard"
-                  onClick={() => setStepsOpen(false)}
-                  className="mb-1 flex items-center gap-3 rounded-[6px] px-3 py-2 text-[14px] font-medium text-ink hover:bg-sunken/60"
-                >
-                  <span className="grid size-9 place-items-center rounded-full border border-black/[0.08] bg-white">
-                    <LayoutDashboard size={16} aria-hidden />
-                  </span>
-                  Overview
-                </Link>
-                <StepList states={states} onPick={() => setStepsOpen(false)} />
-              </nav>
+          <main className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-6">
+            <WelcomeBanner />
+            {/* a step's own tab: its form is where the banner's button
+                scrolls to (the overview marks its own) */}
+            {isOverview ? (
+              children
+            ) : (
+              <div id="current-step" className="min-w-0 scroll-mt-32">
+                {children}
+              </div>
             )}
-          </div>
+          </main>
+        </div>
 
-          <main className="min-w-0">{children}</main>
+        {/* phones and tablets: the steps slide in from the left */}
+        <div
+          className={`fixed inset-0 z-[60] lg:hidden ${stepsOpen ? "" : "pointer-events-none"}`}
+          inert={!stepsOpen}
+        >
+          <div
+            onClick={() => setStepsOpen(false)}
+            className={`absolute inset-0 bg-ink/40 transition-opacity duration-300 ${
+              stepsOpen ? "opacity-100" : "opacity-0"
+            }`}
+          />
+          <aside
+            role="dialog"
+            aria-modal="true"
+            aria-label="Application steps"
+            className={`absolute inset-y-0 left-0 grid w-[min(340px,86vw)] auto-rows-max content-start gap-3 overflow-y-auto overscroll-contain bg-white p-4 shadow-[var(--shadow-lg)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              stepsOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <p className="text-[13.5px] font-semibold uppercase tracking-[0.08em] text-ink">
+                Your application
+              </p>
+              <button
+                type="button"
+                onClick={() => setStepsOpen(false)}
+                aria-label="Close"
+                className="grid size-9 place-items-center rounded-full text-muted transition-colors hover:bg-black/[0.04] hover:text-ink"
+              >
+                <X size={18} aria-hidden />
+              </button>
+            </div>
+            <StepsPanel
+              app={app}
+              states={states}
+              done={done}
+              onPick={() => setStepsOpen(false)}
+            />
+          </aside>
         </div>
       </div>
     </ApplicationContext.Provider>
   );
+}
+
+/**
+ * Once a step is done, on to the next: its own page, or, on the overview
+ * (which shows the next step's form in place of the one just done), a
+ * scroll up to it.
+ */
+export function useGoToNext() {
+  const router = useRouter();
+  const path = usePathname();
+  return (href: string) => {
+    if (path === "/dashboard") {
+      window.setTimeout(() =>
+        document
+          .getElementById("current-step")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" }),
+      );
+    } else router.push(href);
+  };
 }
 
 /**
@@ -459,8 +468,8 @@ export function StepGate({
   if (states[index] !== "locked") return <>{children}</>;
   const blocker = STEPS[states.indexOf("current")];
   return (
-    <div className="rounded-[8px] border border-black/[0.08] bg-white px-6 py-14 text-center">
-      <span className="mx-auto grid size-12 place-items-center rounded-full bg-sunken text-muted">
+    <div className="rounded-[6px] border border-black/[0.08] bg-white px-6 py-14 text-center">
+      <span className="mx-auto grid size-12 place-items-center rounded-full bg-black/[0.04] text-muted">
         <Lock size={20} aria-hidden />
       </span>
       <h1 className="mt-4 font-display text-[22px] font-medium tracking-[-0.02em] text-ink">
@@ -472,7 +481,7 @@ export function StepGate({
       {blocker?.href && (
         <Link
           href={blocker.href}
-          className="mt-6 inline-flex h-11 items-center gap-2 rounded-[6px] bg-accent px-5 text-[14.5px] font-semibold text-white transition-colors hover:bg-accent-hover"
+          className="mt-6 inline-flex h-11 items-center gap-2 rounded-[4px] bg-accent px-5 text-[14.5px] font-semibold text-white transition-colors hover:bg-accent-hover"
         >
           Go to {blocker.title}
           <ArrowRight size={16} aria-hidden />

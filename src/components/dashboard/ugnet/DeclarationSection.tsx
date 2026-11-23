@@ -72,16 +72,16 @@ export function DeclarationSection({
   ];
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
       <SectionCard
         title="Review your answers"
         line="Check everything once before you submit"
       >
-        <ul className="divide-y divide-black/[0.06] rounded-[8px] border border-black/[0.08]">
+        <ul className="-my-3 divide-y divide-black/[0.06]">
           {rows.map((r) => (
             <li
               key={r.title}
-              className="flex items-start justify-between gap-4 px-4 py-3.5"
+              className="flex items-start justify-between gap-4 py-3.5"
             >
               <div className="min-w-0">
                 <p className="text-[14px] font-semibold text-ink">{r.title}</p>
@@ -94,7 +94,7 @@ export function DeclarationSection({
               <button
                 type="button"
                 onClick={() => onEdit(r.section)}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-[6px] px-2 py-1 text-[13px] font-medium text-accent hover:bg-accent-soft"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-[4px] px-2 py-1 text-[13px] font-medium text-accent hover:bg-accent-soft"
               >
                 <Pencil size={13} aria-hidden />
                 Edit
@@ -105,17 +105,9 @@ export function DeclarationSection({
       </SectionCard>
 
       <SectionCard title="Declaration">
-        <div
-          className={`rounded-[8px] border p-4 ${error ? "border-accent" : "border-black/[0.08]"}`}
-        >
-          <Checkbox
-            checked={agreed}
-            onChange={onAgree}
-            invalid={Boolean(error)}
-          >
-            {DECLARATION}
-          </Checkbox>
-        </div>
+        <Checkbox checked={agreed} onChange={onAgree} invalid={Boolean(error)}>
+          {DECLARATION}
+        </Checkbox>
         {error && (
           <p role="alert" className="mt-2 text-[12.5px] text-accent">
             {error}

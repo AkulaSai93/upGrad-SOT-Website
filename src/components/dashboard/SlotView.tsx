@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {
   ArrowRight,
   Calendar,
-  Check,
   CheckCircle2,
   ChevronDown,
   Clock,
@@ -18,10 +17,10 @@ import { saveApplication, type SlotBooking } from "./application";
 import { INPUT, PRIMARY_BUTTON, SECONDARY_BUTTON } from "./fields";
 
 /**
- * Step 4, uGNET Slot Selection (from the form's Figma): the test date and
- * its three 2-hour slots as cards; picking one shows it in a bar with
- * Confirm booking, which asks the student to type "confirm" before it
- * books (a slot cannot be changed online afterwards). Once booked: the
+ * Step 4, uGNET Slot Selection (from the form's Figma): one card with the
+ * test date (a calendar tile), its three 2-hour slots as rows to pick
+ * from, and Confirm booking at its foot, which asks the student to type
+ * "confirm" before it books (a slot cannot be changed online afterwards). Once booked: the
  * date and time, a countdown to the start, the assessment link (live from
  * the slot's start) and the common questions.
  *
@@ -44,6 +43,11 @@ const dateLabel = (iso: string) =>
     month: "long",
     year: "numeric",
   });
+
+const monthShort = (iso: string) =>
+  new Date(`${iso}T00:00:00`).toLocaleDateString("en-IN", { month: "short" });
+
+const dayOfMonth = (iso: string) => new Date(`${iso}T00:00:00`).getDate();
 
 const time = (hhmm: string) =>
   new Date(`2000-01-01T${hhmm}:00`)
@@ -99,12 +103,12 @@ function Countdown({ to, now }: { to: Date; now: number }) {
       {parts.map(([label, n]) => (
         <div
           key={label}
-          className="rounded-[8px] bg-white/10 px-2 py-3 text-center"
+          className="rounded-[4px] border border-black/[0.08] px-2 py-3.5 text-center"
         >
-          <p className="font-display text-[clamp(1.5rem,3vw,2rem)] font-medium leading-none tabular-nums">
+          <p className="font-display text-[clamp(1.5rem,3vw,2rem)] font-medium leading-none text-accent tabular-nums">
             {String(n).padStart(2, "0")}
           </p>
-          <p className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-white/60">
+          <p className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-muted">
             {label}
           </p>
         </div>
@@ -148,7 +152,7 @@ function ConfirmDialog({
           e.preventDefault();
           if (ok) onBook();
         }}
-        className="w-full max-w-[440px] rounded-t-[8px] bg-white p-6 shadow-[var(--shadow-lg)] sm:rounded-[8px]"
+        className="w-full max-w-[440px] rounded-t-[6px] bg-white p-6 shadow-[var(--shadow-lg)] sm:rounded-[6px]"
       >
         <div className="flex items-start justify-between gap-4">
           <h2
@@ -161,7 +165,7 @@ function ConfirmDialog({
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="grid size-9 place-items-center rounded-full text-muted hover:bg-sunken hover:text-ink"
+            className="grid size-9 place-items-center rounded-full text-muted hover:bg-black/[0.04] hover:text-ink"
           >
             <X size={18} aria-hidden />
           </button>
@@ -170,7 +174,7 @@ function ConfirmDialog({
           Slots can&apos;t be changed online after booking. Type{" "}
           <span className="font-semibold text-accent">confirm</span> to book.
         </p>
-        <div className="mt-5 grid gap-2 rounded-[8px] bg-sunken p-4 text-[14px] text-ink">
+        <div className="mt-5 grid gap-2 rounded-[6px] bg-black/[0.04] p-4 text-[14px] text-ink">
           <p className="flex items-center gap-2.5">
             <Calendar size={16} className="text-accent" aria-hidden />
             {dateLabel(TEST_DATE)}
@@ -208,16 +212,46 @@ function ConfirmDialog({
   );
 }
 
-function Booked({ booking }: { booking: SlotBooking }) {
+/** the countdown to the booked slot and the assessment link (also on the
+    dashboard's overview) */
+export function TestPanel({ booking }: { booking: SlotBooking }) {
   const slot = SLOTS.find((s) => s.id === booking.slot) ?? SLOTS[0];
   const start = new Date(`${booking.date}T${slot.start}:00`);
   const now = useNow();
   const live = now >= start.getTime();
+  return (
+    <section className="rounded-[6px] border border-black/[0.08] bg-white p-5 sm:p-6">
+      <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">
+        Time until your test
+      </p>
+      <div className="mt-4">
+        <Countdown to={start} now={now} />
+      </div>
+      <div className="mt-5 flex flex-col gap-3 border-t border-black/[0.06] pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-[15px] font-semibold text-ink">uGNET assessment</p>
+          <p className="text-[13px] text-muted">
+            {live
+              ? "Your test is open now."
+              : "The link goes live when your slot starts."}
+          </p>
+        </div>
+        <button type="button" disabled={!live} className={PRIMARY_BUTTON}>
+          Open assessment
+          <ExternalLink size={15} aria-hidden />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function Booked({ booking }: { booking: SlotBooking }) {
+  const slot = SLOTS.find((s) => s.id === booking.slot) ?? SLOTS[0];
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <div className="grid gap-6">
-      <section className="rounded-[8px] border border-black/[0.08] bg-white p-6 sm:p-8">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
+      <section className="rounded-[6px] border border-black/[0.08] bg-white p-6 sm:p-8">
         <div className="flex flex-col items-center text-center">
           <span className="grid size-14 place-items-center rounded-full bg-[#e9f7ef] text-[#16794a]">
             <CheckCircle2 size={28} aria-hidden />
@@ -236,9 +270,9 @@ function Booked({ booking }: { booking: SlotBooking }) {
           ].map(({ Icon, k, v }) => (
             <div
               key={k}
-              className="flex items-center gap-3 rounded-[8px] border border-black/[0.08] px-4 py-3.5"
+              className="flex items-center gap-3 rounded-[6px] border border-black/[0.08] px-4 py-3.5"
             >
-              <span className="grid size-10 place-items-center rounded-[8px] bg-accent-soft text-accent">
+              <span className="grid size-10 place-items-center rounded-[6px] bg-accent-soft text-accent">
                 <Icon size={18} aria-hidden />
               </span>
               <span>
@@ -252,34 +286,9 @@ function Booked({ booking }: { booking: SlotBooking }) {
         </div>
       </section>
 
-      <section className="rounded-[8px] bg-ink p-6 text-white sm:p-8">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-white/60">
-          Time until your test
-        </p>
-        <div className="mt-4">
-          <Countdown to={start} now={now} />
-        </div>
-        <div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-[15px] font-semibold">uGNET assessment</p>
-            <p className="text-[13px] text-white/65">
-              {live
-                ? "Your test is open now."
-                : "The link goes live when your slot starts."}
-            </p>
-          </div>
-          <button
-            type="button"
-            disabled={!live}
-            className={`${PRIMARY_BUTTON} disabled:bg-white/15 disabled:opacity-100`}
-          >
-            Open assessment
-            <ExternalLink size={15} aria-hidden />
-          </button>
-        </div>
-      </section>
+      <TestPanel booking={booking} />
 
-      <section className="rounded-[8px] border border-black/[0.08] bg-white">
+      <section className="rounded-[6px] border border-black/[0.08] bg-white">
         <h2 className="border-b border-black/[0.06] px-5 py-4 font-display text-[17px] font-semibold text-ink sm:px-6">
           Common questions
         </h2>
@@ -347,35 +356,46 @@ export function SlotView() {
       {app.slot ? (
         <Booked booking={app.slot} />
       ) : (
-        <div className="grid gap-6">
-          <section className="rounded-[8px] border border-black/[0.08] bg-white p-5 sm:p-6">
-            <div className="flex items-center gap-3">
-              <span className="grid size-11 place-items-center rounded-[8px] bg-accent-soft text-accent">
-                <Calendar size={20} aria-hidden />
+        <section className="rounded-[6px] border border-black/[0.08] bg-white">
+          {/* the date */}
+          <div className="flex items-center gap-4 border-b border-black/[0.06] p-5 sm:p-6">
+            <span className="grid w-14 shrink-0 overflow-hidden rounded-[4px] border border-black/[0.08] text-center">
+              <span className="bg-accent py-0.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-white">
+                {monthShort(TEST_DATE)}
               </span>
-              <div>
-                <h2 className="text-[16px] font-semibold text-ink">
-                  {dateLabel(TEST_DATE)}
-                </h2>
-                <p className="text-[13px] text-muted">
-                  uGNET 2027 · January test
-                </p>
-              </div>
+              <span className="py-1 font-display text-[22px] font-semibold leading-tight text-ink">
+                {dayOfMonth(TEST_DATE)}
+              </span>
+            </span>
+            <div>
+              <h2 className="text-[16.5px] font-semibold text-ink">
+                {dateLabel(TEST_DATE)}
+              </h2>
+              <p className="mt-0.5 text-[13px] text-muted">
+                uGNET 2027 · Online test · 2 hours
+              </p>
             </div>
+          </div>
+
+          {/* the slots */}
+          <div className="p-5 sm:p-6">
+            <p className="mb-3 text-[13.5px] font-medium text-ink">
+              Choose a time slot
+            </p>
             <div
               role="radiogroup"
               aria-label="Time slot"
-              className="mt-5 grid gap-3 sm:grid-cols-3"
+              className="grid gap-2.5"
             >
               {SLOTS.map((s) => {
                 const on = picked === s.id;
                 return (
                   <label
                     key={s.id}
-                    className={`relative flex cursor-pointer flex-col gap-1 rounded-[6px] border-2 p-4 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent/30 ${
+                    className={`flex cursor-pointer items-center gap-4 rounded-[4px] border px-4 py-3.5 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent/30 ${
                       on
                         ? "border-accent bg-accent-soft"
-                        : "border-black/[0.08] hover:border-black/30"
+                        : "border-black/[0.1] hover:border-black/30"
                     }`}
                   >
                     <input
@@ -386,50 +406,58 @@ export function SlotView() {
                       onChange={() => setPicked(s.id)}
                       className="sr-only"
                     />
-                    {on && (
-                      <span className="absolute right-3 top-3 grid size-6 place-items-center rounded-full bg-accent text-white">
-                        <Check size={14} strokeWidth={3} aria-hidden />
+                    <span
+                      aria-hidden
+                      className={`grid size-5 shrink-0 place-items-center rounded-full border-2 ${
+                        on ? "border-accent" : "border-black/20"
+                      }`}
+                    >
+                      {on && (
+                        <span className="size-2.5 rounded-full bg-accent" />
+                      )}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[15px] font-semibold text-ink">
+                        {span(s)}
                       </span>
-                    )}
-                    <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted">
-                      {s.label}
+                      <span className="block text-[12.5px] text-muted">
+                        {s.label} · 2 hours
+                      </span>
                     </span>
-                    <span className="flex items-center gap-2 text-[16px] font-semibold text-ink">
-                      <Clock size={16} className="text-accent" aria-hidden />
-                      {span(s)}
-                    </span>
-                    <span className="text-[12.5px] text-muted">
-                      2 hours · Limited seats
+                    <span className="shrink-0 rounded-[4px] bg-accent-soft px-2 py-1 text-[11.5px] font-semibold text-accent">
+                      Limited seats
                     </span>
                   </label>
                 );
               })}
             </div>
-          </section>
+          </div>
 
-          {slot ? (
-            <div className="sticky bottom-0 z-10 -mx-4 flex flex-col gap-3 border-t border-black/[0.06] bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:mx-0 lg:rounded-[8px] lg:border lg:px-5">
-              <div>
-                <p className="text-[12.5px] text-muted">Selected slot</p>
-                <p className="text-[14.5px] font-semibold text-ink">
-                  {dateLabel(TEST_DATE)} · {span(slot)}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setConfirming(true)}
-                className={PRIMARY_BUTTON}
-              >
-                Confirm booking
-                <ArrowRight size={16} aria-hidden />
-              </button>
-            </div>
-          ) : (
-            <p className="text-center text-[13.5px] text-muted">
-              Pick a slot to continue
+          {/* the choice, and booking it */}
+          <div className="flex flex-col gap-3 border-t border-black/[0.06] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+            <p className="text-[13.5px] text-muted">
+              {slot ? (
+                <>
+                  Selected:{" "}
+                  <span className="font-semibold text-ink">
+                    {dateLabel(TEST_DATE)} · {span(slot)}
+                  </span>
+                </>
+              ) : (
+                "Pick a slot to continue"
+              )}
             </p>
-          )}
-        </div>
+            <button
+              type="button"
+              disabled={!slot}
+              onClick={() => setConfirming(true)}
+              className={`${PRIMARY_BUTTON} shrink-0`}
+            >
+              Confirm booking
+              <ArrowRight size={16} aria-hidden />
+            </button>
+          </div>
+        </section>
       )}
       {confirming && slot && (
         <ConfirmDialog

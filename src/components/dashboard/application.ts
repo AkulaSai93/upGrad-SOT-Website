@@ -22,7 +22,10 @@ export type Profile = {
 };
 
 export type Payment = {
+  /** the total paid, IGST included */
   amount: number;
+  coupon?: string;
+  discount?: number;
   method: string;
   reference: string;
   paidAt: string; // ISO date
@@ -121,9 +124,6 @@ export type Application = {
   slot?: SlotBooking;
 };
 
-/** the uGNET application fee, in rupees (sot.upgrad.com/uGNET) */
-export const APPLICATION_FEE = 1000;
-
 type Saved = Record<string, Application>; // by mobile number
 
 const store = createLocalStore<Saved>("sot-applications", (value) =>
@@ -155,6 +155,13 @@ export function useApplication(): Application | null {
 export function saveApplication(application: Application) {
   const saved = store.get() ?? {};
   store.set({ ...saved, [application.profile.phone]: application });
+}
+
+/** forget everything saved for this mobile number: back to step 1 */
+export function resetApplication(phone: string) {
+  const saved = { ...(store.get() ?? {}) };
+  delete saved[phone];
+  store.set(saved);
 }
 
 /** the reference the admissions team quotes back, from the mobile number */

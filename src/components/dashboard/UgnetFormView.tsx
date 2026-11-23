@@ -1,12 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
   Check,
-  CheckCircle2,
   ClipboardList,
   FileCheck,
   GraduationCap,
@@ -15,7 +13,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { SITE_PRIVACY } from "./copy";
-import { StepGate, useApp } from "./DashboardShell";
+import { StepGate, useApp, useGoToNext } from "./DashboardShell";
 import { saveApplication, type UgnetForm } from "./application";
 import { PRIMARY_BUTTON, SECONDARY_BUTTON } from "./fields";
 import {
@@ -36,6 +34,7 @@ import {
   studentFrom,
 } from "./ugnet/StudentSection";
 import type { Errors } from "./ugnet/types";
+import { UgnetPreview } from "./ugnet/UgnetPreview";
 
 /**
  * Step 2, the uGNET form, in five sections: Student Details, Academics,
@@ -47,6 +46,10 @@ import type { Errors } from "./ugnet/types";
  * Save & Next checks the section: any problems show under their fields
  * and the first one is brought into view. The last section reviews the
  * answers and, once the declaration is ticked, submits the form.
+ *
+ * Once submitted, the step opens as a preview of every answer; Edit on a
+ * section reopens it on a copy, and Save changes (once the section checks
+ * out) writes it back, while Cancel drops the changes.
  */
 
 const SECTIONS = [
@@ -114,34 +117,14 @@ function Stepper({
   );
 }
 
-function Submitted({ form }: { form: UgnetForm }) {
-  return (
-    <section className="rounded-[8px] border border-black/[0.08] bg-white p-6 text-center sm:p-10">
-      <span className="mx-auto grid size-14 place-items-center rounded-full bg-[#e9f7ef] text-[#16794a]">
-        <CheckCircle2 size={28} aria-hidden />
-      </span>
-      <h2 className="mt-4 font-display text-[24px] font-medium tracking-[-0.02em] text-ink">
-        uGNET form submitted
-      </h2>
-      <p className="mx-auto mt-1.5 max-w-[440px] text-[14.5px] text-body">
-        Submitted on{" "}
-        {new Date(form.submittedAt!).toLocaleDateString("en-IN", {
-          dateStyle: "long",
-        })}
-        . Next, a few short questions for your profile, then you can pick your
-        test slot.
-      </p>
-      <Link href="/dashboard/profiling" className={`${PRIMARY_BUTTON} mt-7`}>
-        Continue to Comprehensive Profiling
-        <ArrowRight size={16} aria-hidden />
-      </Link>
-    </section>
-  );
-}
-
 export function UgnetFormView() {
   const app = useApp();
-  const form = app.ugnet;
+  const goToNext = useGoToNext();
+  // a submitted form opens as a preview; Edit works on a copy (the draft),
+  // saved back only once the section checks out
+  const [draft, setDraft] = useState<UgnetForm | null>(null);
+  const editing = Boolean(app.ugnet.submittedAt && draft);
+  const form = draft ?? app.ugnet;
   const [at, setAt] = useState(() =>
     Math.min(form.reached, SECTIONS.length - 1),
   );
@@ -153,7 +136,21 @@ export function UgnetFormView() {
   const activities = form.activities ?? blankActivities();
 
   const save = (patch: Partial<UgnetForm>) =>
-    saveApplication({ ...app, ugnet: { ...form, ...patch } });
+    editing
+      ? setDraft({ ...form, ...patch })
+      : saveApplication({ ...app, ugnet: { ...form, ...patch } });
+
+  const edit = (i: number) => {
+    setDraft(app.ugnet);
+    setAt(i);
+    setTried(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const stopEditing = () => {
+    setDraft(null);
+    setTried(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const problems: Errors =
     at === 0
@@ -182,15 +179,23 @@ export function UgnetFormView() {
       window.setTimeout(() =>
         document
           .querySelector<HTMLElement>(
-            "main [aria-invalid=true], main [role=alert]",
+            "main [aria-invalid=true], main [data-invalid=true], main [role=alert]",
           )
           ?.scrollIntoView({ behavior: "smooth", block: "center" }),
       );
       return;
     }
+    if (editing) {
+      saveApplication({
+        ...app,
+        ugnet: { ...form, student, academics, exams, activities },
+      });
+      stopEditing();
+      return;
+    }
     if (at === SECTIONS.length - 1) {
       save({ submittedAt: new Date().toISOString(), reached: SECTIONS.length });
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      goToNext("/dashboard/profiling");
       return;
     }
     // keep the answers of this section (the defaults included) and move on
@@ -206,12 +211,18 @@ export function UgnetFormView() {
 
   return (
     <StepGate id="ugnet-form">
-      {form.submittedAt ? (
-        <Submitted form={form} />
+      {app.ugnet.submittedAt && !editing ? (
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-5">
+          <UgnetPreview form={app.ugnet} onEdit={edit} />
+        </div>
       ) : (
-        <div className="grid gap-6">
-          <div className="rounded-[8px] border border-black/[0.08] bg-white px-4 py-5 sm:px-6">
-            <Stepper at={at} reached={form.reached} go={go} />
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
+          <div className="py-1">
+            <Stepper
+              at={at}
+              reached={editing ? SECTIONS.length - 2 : form.reached}
+              go={go}
+            />
             <p className="mt-3 text-center text-[13px] text-muted sm:hidden">
               Section {at + 1} of {SECTIONS.length}:{" "}
               <span className="font-semibold text-ink">
@@ -264,8 +275,16 @@ export function UgnetFormView() {
           </p>
 
           {/* the way back and on, kept in reach at the foot of the screen */}
-          <div className="sticky bottom-0 z-10 -mx-4 flex items-center justify-between gap-3 border-t border-black/[0.06] bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:mx-0 lg:rounded-[8px] lg:border lg:bg-white/95 lg:px-5">
-            {at > 0 ? (
+          <div className="sticky bottom-0 z-10 -mx-4 flex items-center justify-between gap-3 border-t border-black/[0.06] bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:mx-0 lg:rounded-[6px] lg:border lg:bg-white/95 lg:px-5">
+            {editing ? (
+              <button
+                type="button"
+                onClick={stopEditing}
+                className={SECONDARY_BUTTON}
+              >
+                Cancel
+              </button>
+            ) : at > 0 ? (
               <button
                 type="button"
                 onClick={() => go(at - 1)}
@@ -280,7 +299,11 @@ export function UgnetFormView() {
               </span>
             )}
             <button type="button" onClick={next} className={PRIMARY_BUTTON}>
-              {at === SECTIONS.length - 1 ? "Submit form" : "Save & Next"}
+              {editing
+                ? "Save changes"
+                : at === SECTIONS.length - 1
+                  ? "Submit form"
+                  : "Save & Next"}
               <ArrowRight size={16} aria-hidden />
             </button>
           </div>

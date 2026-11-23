@@ -1,10 +1,13 @@
 "use client";
 
 import {
+  useCallback,
+  useEffect,
   useId,
   useRef,
   useState,
   type ChangeEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ComponentProps,
   type DragEvent,
   type ReactNode,
@@ -12,6 +15,7 @@ import {
 import {
   Check,
   ChevronDown,
+  Pencil,
   FileCheck2,
   Trash2,
   UploadCloud,
@@ -20,13 +24,13 @@ import {
 
 /**
  * The dashboard's form kit: one look for every field across the
- * application steps (labels above, a red star for required, a hint under
- * the label, the error under the field), so each step only lays out its
- * fields and its rules.
+ * application steps (labels above, a red star for required, the control,
+ * then its hint, or its error in its place), so fields side by side line
+ * up and each step only lays out its fields and its rules.
  */
 
 export const INPUT =
-  "h-11 w-full rounded-[6px] border border-black/[0.1] bg-white px-3.5 text-[14.5px] text-ink outline-none transition-colors placeholder:text-muted/80 focus:border-ink disabled:cursor-not-allowed disabled:bg-sunken disabled:text-body aria-[invalid=true]:border-accent";
+  "h-11 w-full rounded-[4px] border border-black/[0.1] bg-white px-3.5 text-[14.5px] text-ink outline-none transition-colors placeholder:text-muted/80 focus:border-ink disabled:cursor-not-allowed disabled:bg-black/[0.035] disabled:text-body aria-[invalid=true]:border-accent";
 
 /** a labelled field: label, optional hint, the control, then any error */
 export function Field({
@@ -47,24 +51,27 @@ export function Field({
   children: ReactNode;
 }) {
   return (
-    <div className={`grid content-start gap-2 ${className}`}>
-      <div>
-        <label
-          htmlFor={htmlFor}
-          className="text-[13.5px] font-medium leading-tight text-ink"
-        >
-          {label}
-          {required && <span className="text-accent"> *</span>}
-        </label>
-        {hint && (
-          <p className="mt-1 text-[12.5px] leading-snug text-muted">{hint}</p>
-        )}
-      </div>
+    <div
+      className={`grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-2 ${className}`}
+    >
+      <label
+        htmlFor={htmlFor}
+        className="text-[13.5px] font-medium leading-tight text-ink"
+      >
+        {label}
+        {required && <span className="text-accent"> *</span>}
+      </label>
       {children}
-      {error && (
+      {error ? (
         <p role="alert" className="text-[12.5px] text-accent">
           {error}
         </p>
+      ) : (
+        hint && (
+          <p className="-mt-0.5 text-[12.5px] leading-snug text-muted">
+            {hint}
+          </p>
+        )
       )}
     </div>
   );
@@ -109,44 +116,304 @@ export function TextArea({
   );
 }
 
-/** a native select, styled like the inputs, with a placeholder choice */
-export function Select({
+/** closes a popover on a click outside it or on Escape */
+function useDismiss(
+  open: boolean,
+  box: React.RefObject<HTMLElement | null>,
+  close: () => void,
+) {
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (!box.current?.contains(e.target as Node)) close();
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, box, close]);
+}
+
+const POPOVER =
+  "absolute inset-x-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-[4px] border border-black/[0.1] bg-white shadow-[var(--shadow-lg)]";
+
+/** the list in a popover: options, the active one tinted, the chosen one ticked */
+function OptionList({
+  id,
   options,
+  value,
+  active,
+  setActive,
+  choose,
+  empty = "No matches",
+}: {
+  id: string;
+  options: readonly string[];
+  value: string;
+  active: number;
+  setActive: (i: number) => void;
+  choose: (o: string) => void;
+  empty?: string;
+}) {
+  const list = useRef<HTMLUListElement>(null);
+  // keep the active option in view as the arrows move it
+  useEffect(() => {
+    list.current
+      ?.querySelector<HTMLElement>(`[data-i="${active}"]`)
+      ?.scrollIntoView({ block: "nearest" });
+  }, [active]);
+
+  if (!options.length)
+    return <p className="px-3.5 py-3 text-[13.5px] text-muted">{empty}</p>;
+  return (
+    <ul
+      ref={list}
+      id={id}
+      role="listbox"
+      className="max-h-60 overflow-y-auto overscroll-contain p-1"
+    >
+      {options.map((o, i) => (
+        <li
+          key={o}
+          data-i={i}
+          role="option"
+          aria-selected={o === value}
+          onMouseDown={(e) => e.preventDefault()}
+          onMouseEnter={() => setActive(i)}
+          onClick={() => choose(o)}
+          className={`flex cursor-pointer items-center justify-between gap-3 rounded-[4px] px-3 py-2.5 text-[14px] ${
+            i === active ? "bg-black/[0.045]" : ""
+          } ${o === value ? "font-medium text-accent" : "text-ink"}`}
+        >
+          {o}
+          {o === value && <Check size={15} strokeWidth={2.4} aria-hidden />}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * A dropdown in the site's style (in place of the browser's own): a field
+ * that opens a list under it. Long lists get a search box. The arrow keys
+ * move through the list, Enter picks, Escape or a click outside closes.
+ * `onChange` gets `{ target: { value } }`, as a native select's would.
+ */
+export function Select({
+  id,
+  options,
+  value = "",
+  onChange,
   placeholder = "Select",
   invalid,
-  className = "",
-  ...props
-}: Omit<ComponentProps<"select">, "children"> & {
+  disabled,
+  icon: Icon,
+  searchable,
+}: {
+  id?: string;
+  options: readonly string[];
+  value?: string;
+  onChange?: (e: { target: { value: string } }) => void;
+  placeholder?: string;
+  invalid?: boolean;
+  disabled?: boolean;
+  icon?: LucideIcon;
+  /** a search box at the top of the list (on its own for lists over 8) */
+  searchable?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [active, setActive] = useState(0);
+  const box = useRef<HTMLDivElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
+  const listId = useId();
+  const search = searchable ?? options.length > 8;
+  const shown = query
+    ? options.filter((o) => o.toLowerCase().includes(query.toLowerCase()))
+    : options;
+
+  const close = useCallback(() => {
+    setOpen(false);
+    setQuery("");
+  }, []);
+  useDismiss(open, box, close);
+
+  const show = () => {
+    setActive(Math.max(0, options.indexOf(value)));
+    setOpen(true);
+  };
+  const choose = (o: string) => {
+    onChange?.({ target: { value: o } });
+    close();
+    button.current?.focus();
+  };
+  const onKeys = (e: ReactKeyboardEvent<HTMLElement>) => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      if (!open) return show();
+      const by = e.key === "ArrowDown" ? 1 : -1;
+      setActive((a) => (a + by + shown.length) % Math.max(shown.length, 1));
+    } else if (e.key === "Enter" && open) {
+      e.preventDefault();
+      if (shown[active]) choose(shown[active]);
+    } else if (e.key === "Tab") close();
+  };
+
+  return (
+    <div ref={box} className="relative">
+      <button
+        ref={button}
+        id={id}
+        type="button"
+        disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        data-invalid={invalid || undefined}
+        onClick={() => (open ? close() : show())}
+        onKeyDown={onKeys}
+        className={`${INPUT} flex items-center gap-2.5 text-left ${open ? "border-ink" : invalid ? "border-accent" : ""}`}
+      >
+        {Icon && <Icon size={17} className="shrink-0 text-muted" aria-hidden />}
+        <span
+          className={`min-w-0 flex-1 truncate ${value ? "" : "text-muted/80"}`}
+        >
+          {value || placeholder}
+        </span>
+        <ChevronDown
+          size={17}
+          aria-hidden
+          className={`shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div className={POPOVER}>
+          {search && (
+            <div className="border-b border-black/[0.06] p-1.5">
+              <input
+                autoFocus
+                aria-label="Search"
+                placeholder="Search"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setActive(0);
+                }}
+                onKeyDown={onKeys}
+                className="h-9 w-full rounded-[4px] bg-black/[0.035] px-3 text-[14px] text-ink outline-none placeholder:text-muted/80"
+              />
+            </div>
+          )}
+          <OptionList
+            id={listId}
+            options={shown}
+            value={value}
+            active={active}
+            setActive={setActive}
+            choose={choose}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * A text field with suggestions (for cities): type any value, or pick one
+ * of the suggestions that match what has been typed so far.
+ */
+export function Combobox({
+  id,
+  value,
+  onChange,
+  options,
+  placeholder,
+  invalid,
+  disabled,
+}: {
+  id?: string;
+  value: string;
+  onChange: (value: string) => void;
   options: readonly string[];
   placeholder?: string;
   invalid?: boolean;
+  disabled?: boolean;
 }) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const box = useRef<HTMLDivElement>(null);
+  const listId = useId();
+  const q = value.trim().toLowerCase();
+  const shown = (
+    q ? options.filter((o) => o.toLowerCase().includes(q)) : options
+  ).slice(0, 50);
+  const close = useCallback(() => setOpen(false), []);
+  useDismiss(open, box, close);
+
+  const choose = (o: string) => {
+    onChange(o);
+    close();
+  };
+
   return (
-    <div className="relative">
-      <select
+    <div ref={box} className="relative">
+      <input
+        id={id}
+        autoComplete="off"
+        role="combobox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        aria-autocomplete="list"
         aria-invalid={invalid || undefined}
-        className={`${INPUT} appearance-none pr-10 ${props.value ? "" : "text-muted/80"} ${className}`}
-        {...props}
-      >
-        <option value="" disabled>
-          {placeholder}
-        </option>
-        {options.map((o) => (
-          <option key={o} value={o} className="text-ink">
-            {o}
-          </option>
-        ))}
-      </select>
+        disabled={disabled}
+        placeholder={placeholder}
+        value={value}
+        onFocus={() => setOpen(true)}
+        onChange={(e) => {
+          onChange(e.target.value);
+          setActive(0);
+          setOpen(true);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+            setOpen(true);
+            const by = e.key === "ArrowDown" ? 1 : -1;
+            setActive(
+              (a) => (a + by + shown.length) % Math.max(shown.length, 1),
+            );
+          } else if (e.key === "Enter" && open && shown[active]) {
+            e.preventDefault();
+            choose(shown[active]);
+          } else if (e.key === "Tab") close();
+        }}
+        className={`${INPUT} pr-10`}
+      />
       <ChevronDown
         size={17}
         aria-hidden
         className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-muted"
       />
+      {open && !disabled && shown.length > 0 && (
+        <div className={POPOVER}>
+          <OptionList
+            id={listId}
+            options={shown}
+            value={value}
+            active={active}
+            setActive={setActive}
+            choose={choose}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
-/** a single choice shown as a row of chips (radio buttons underneath) */
+/** a single choice as a row of equal chips (radio buttons underneath) */
 export function Chips({
   name,
   options,
@@ -164,14 +431,14 @@ export function Chips({
     <div
       role="radiogroup"
       aria-invalid={invalid || undefined}
-      className="flex flex-wrap gap-2"
+      className="grid grid-cols-[repeat(auto-fit,minmax(92px,1fr))] gap-2"
     >
       {options.map((o) => {
         const on = value === o;
         return (
           <label
             key={o}
-            className={`inline-flex h-10 cursor-pointer items-center gap-1.5 rounded-[4px] border px-4 text-[13.5px] font-medium transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent/30 ${
+            className={`inline-flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-[4px] border px-3 text-center text-[13.5px] font-medium transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent/30 ${
               on
                 ? "border-accent bg-accent-soft text-accent"
                 : invalid
@@ -188,6 +455,61 @@ export function Chips({
               className="sr-only"
             />
             {on && <Check size={14} strokeWidth={2.6} aria-hidden />}
+            {o}
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
+/** a single choice as radio buttons in a row (for short answers like Yes / No) */
+export function Radios({
+  name,
+  options,
+  value,
+  onChange,
+  invalid,
+}: {
+  name: string;
+  options: readonly string[];
+  value: string;
+  onChange: (value: string) => void;
+  invalid?: boolean;
+}) {
+  return (
+    <div
+      role="radiogroup"
+      data-invalid={invalid || undefined}
+      className="flex min-h-11 flex-wrap items-center gap-x-7 gap-y-2"
+    >
+      {options.map((o) => {
+        const on = value === o;
+        return (
+          <label
+            key={o}
+            className="inline-flex cursor-pointer items-center gap-2.5 text-[14.5px] text-ink has-[:focus-visible]:[&>span]:ring-2 has-[:focus-visible]:[&>span]:ring-accent/30"
+          >
+            <input
+              type="radio"
+              name={name}
+              value={o}
+              checked={on}
+              onChange={() => onChange(o)}
+              className="sr-only"
+            />
+            <span
+              aria-hidden
+              className={`grid size-5 place-items-center rounded-full border-2 bg-white transition-colors ${
+                on
+                  ? "border-accent"
+                  : invalid
+                    ? "border-accent/60"
+                    : "border-black/25"
+              }`}
+            >
+              {on && <span className="size-2.5 rounded-full bg-accent" />}
+            </span>
             {o}
           </label>
         );
@@ -251,7 +573,7 @@ export function ScoreInput({
 }) {
   return (
     <div
-      className={`flex h-11 overflow-hidden rounded-[6px] border bg-white transition-colors focus-within:border-ink ${
+      className={`flex h-11 overflow-hidden rounded-[4px] border bg-white transition-colors focus-within:border-ink ${
         invalid ? "border-accent" : "border-black/[0.1]"
       }`}
     >
@@ -263,7 +585,7 @@ export function ScoreInput({
         onChange={(e) => onValue(e.target.value.replace(/[^\d.]/g, ""))}
         className="min-w-0 flex-1 bg-transparent px-3.5 text-[14.5px] text-ink outline-none placeholder:text-muted/80"
       />
-      <div className="relative border-l border-black/[0.08] bg-sunken">
+      <div className="relative border-l border-black/[0.08] bg-black/[0.035]">
         <select
           aria-label="Score type"
           value={unit}
@@ -319,8 +641,8 @@ export function FileDrop({
 
   if (value) {
     return (
-      <div className="flex items-center gap-3 rounded-[6px] border border-black/[0.1] bg-white px-3.5 py-3">
-        <span className="grid size-9 shrink-0 place-items-center rounded-[6px] bg-accent-soft text-accent">
+      <div className="flex items-center gap-3 rounded-[4px] border border-black/[0.1] bg-white px-3.5 py-3">
+        <span className="grid size-9 shrink-0 place-items-center rounded-[4px] bg-accent-soft text-accent">
           <FileCheck2 size={18} aria-hidden />
         </span>
         <span className="min-w-0 flex-1">
@@ -334,7 +656,7 @@ export function FileDrop({
         <button
           type="button"
           onClick={() => onChange(undefined)}
-          className="inline-flex items-center gap-1 rounded-[6px] px-2 py-1.5 text-[13px] font-medium text-body transition-colors hover:bg-sunken hover:text-ink"
+          className="inline-flex items-center gap-1 rounded-[4px] px-2 py-1.5 text-[13px] font-medium text-body transition-colors hover:bg-black/[0.04] hover:text-ink"
         >
           <Trash2 size={15} aria-hidden />
           Remove
@@ -357,7 +679,7 @@ export function FileDrop({
           setOver(false);
           take(e.dataTransfer.files[0]);
         }}
-        className={`flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-[6px] border border-dashed px-4 py-6 text-center transition-colors ${
+        className={`flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-[4px] border border-dashed px-4 py-6 text-center transition-colors ${
           over
             ? "border-accent bg-accent-soft"
             : invalid
@@ -394,7 +716,7 @@ export function FileDrop({
   );
 }
 
-/** a white card holding one section of a form */
+/** one section of a form: its title above, its fields in a white card */
 export function SectionCard({
   title,
   line,
@@ -407,28 +729,135 @@ export function SectionCard({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-[6px] border border-black/[0.08] bg-white">
-      <header className="flex flex-wrap items-start justify-between gap-3 border-b border-black/[0.06] px-5 py-4 sm:px-6">
+    <section>
+      <header className="mb-3 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="font-display text-[17px] font-semibold tracking-[-0.01em] text-ink">
+          <h2 className="text-[13.5px] font-semibold uppercase tracking-[0.08em] text-ink">
             {title}
           </h2>
           {line && <p className="mt-0.5 text-[13px] text-muted">{line}</p>}
         </div>
         {action}
       </header>
-      <div className="px-5 py-5 sm:px-6 sm:py-6">{children}</div>
+      <div className="rounded-[6px] border border-black/[0.08] bg-white px-5 py-5 sm:px-6 sm:py-6">
+        {children}
+      </div>
     </section>
   );
 }
 
+/** a finished section, read back: its title and an Edit button above,
+    then its answers as label / value pairs in a white card, two columns
+    on wider screens */
+export function ReviewCard({
+  title,
+  onEdit,
+  rows,
+  children,
+}: {
+  title: string;
+  onEdit?: () => void;
+  rows?: [label: string, value: ReactNode][];
+  children?: ReactNode;
+}) {
+  return (
+    <section>
+      <header className="mb-3 flex items-end justify-between gap-3">
+        <h2 className="text-[13.5px] font-semibold uppercase tracking-[0.08em] text-ink">
+          {title}
+        </h2>
+        {onEdit && (
+          <button
+            type="button"
+            onClick={onEdit}
+            className="inline-flex items-center gap-1.5 rounded-[4px] border border-black/[0.1] px-3 py-1.5 text-[13px] font-semibold text-ink transition-colors hover:border-ink"
+          >
+            <Pencil size={13} aria-hidden />
+            Edit
+          </button>
+        )}
+      </header>
+      <div className="rounded-[6px] border border-black/[0.08] bg-white px-5 py-5 sm:px-6">
+        {rows && (
+          <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            {rows.map(([label, value]) => (
+              <div key={label} className="min-w-0">
+                <dt className="text-[12.5px] text-muted">{label}</dt>
+                <dd className="mt-0.5 break-words text-[14.5px] font-medium text-ink">
+                  {value === "" || value === undefined || value === null
+                    ? "—"
+                    : value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        {children}
+      </div>
+    </section>
+  );
+}
+
+/** key facts at a glance: the title above, then label / value rows (the
+    value on the right) in a white card, with an optional footer */
+export function InfoCard({
+  title,
+  rows,
+  footer,
+}: {
+  title: string;
+  rows: [label: string, value: ReactNode][];
+  footer?: ReactNode;
+}) {
+  return (
+    <section>
+      <h2 className="mb-3 text-[13.5px] font-semibold uppercase tracking-[0.08em] text-ink">
+        {title}
+      </h2>
+      <div className="rounded-[6px] border border-black/[0.08] bg-white px-5 py-2 sm:px-6">
+        <dl className="divide-y divide-black/[0.06]">
+          {rows.map(([label, value]) => (
+            <div
+              key={label}
+              className="flex items-center justify-between gap-4 py-3"
+            >
+              <dt className="text-[14px] text-body">{label}</dt>
+              <dd className="min-w-0 truncate text-right text-[14px] font-semibold text-ink">
+                {value === "" || value === undefined || value === null
+                  ? "—"
+                  : value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+        {footer && (
+          <div className="border-t border-black/[0.06] py-4">{footer}</div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/** a date (YYYY-MM-DD or ISO) as "14 March 2008" */
+export const longDate = (d: string) =>
+  d
+    ? new Date(d.length === 10 ? `${d}T00:00:00` : d).toLocaleDateString(
+        "en-IN",
+        { day: "numeric", month: "long", year: "numeric" },
+      )
+    : "";
+
 /** two columns on wider screens, one on phones */
 export function Grid({ children }: { children: ReactNode }) {
-  return <div className="grid gap-5 sm:grid-cols-2">{children}</div>;
+  return (
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-5 sm:grid-cols-2">
+      {children}
+    </div>
+  );
 }
 
 export const PRIMARY_BUTTON =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-[6px] bg-accent px-5 text-[14.5px] font-semibold text-white transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-[4px] bg-accent px-5 text-[14.5px] font-semibold text-white transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50";
 
 export const SECONDARY_BUTTON =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-[6px] border border-black/[0.1] bg-white px-5 text-[14.5px] font-semibold text-ink transition-colors hover:border-ink disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-[4px] border border-black/[0.1] bg-white px-5 text-[14.5px] font-semibold text-ink transition-colors hover:border-ink disabled:cursor-not-allowed disabled:opacity-50";

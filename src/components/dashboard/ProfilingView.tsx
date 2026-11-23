@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, Info } from "lucide-react";
+import { ArrowLeft, ArrowRight, Info } from "lucide-react";
 import { SITE_PRIVACY } from "./copy";
-import { StepGate, useApp } from "./DashboardShell";
+import { StepGate, useApp, useGoToNext } from "./DashboardShell";
 import { saveApplication, type Profiling } from "./application";
 import {
-  Chips,
   Field,
   Grid,
   PRIMARY_BUTTON,
+  Radios,
+  ReviewCard,
   SECONDARY_BUTTON,
   SectionCard,
   Select,
@@ -21,7 +22,8 @@ import { INCOME_RANGES, LANGUAGES, OCCUPATIONS } from "./options";
  * Step 3, Comprehensive Profiling (from the form's Figma): the languages
  * the student speaks, what their parents do, the family's income and
  * whether EWS applies. Saved as it is filled in; Submit checks the
- * required answers and opens slot selection.
+ * required answers and opens slot selection. Once submitted it opens as a
+ * preview of the answers, with Edit to change them.
  */
 
 const blank = (): Profiling => ({
@@ -48,26 +50,45 @@ function check(p: Profiling) {
 
 export function ProfilingView() {
   const app = useApp();
-  const p = app.profiling ?? blank();
+  const goToNext = useGoToNext();
+  // submitted answers open as a preview; Edit works on a copy, saved back
+  // only once it checks out
+  const [draft, setDraft] = useState<Profiling | null>(null);
+  const editing = Boolean(app.profiling?.submittedAt && draft);
+  const p = draft ?? app.profiling ?? blank();
   const [tried, setTried] = useState(false);
   const errors = check(p);
   const shown = tried ? errors : {};
 
   const set = (patch: Partial<Profiling>) =>
-    saveApplication({ ...app, profiling: { ...p, ...patch } });
+    editing
+      ? setDraft({ ...p, ...patch })
+      : saveApplication({ ...app, profiling: { ...p, ...patch } });
+
+  const stopEditing = () => {
+    setDraft(null);
+    setTried(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const submit = () => {
     setTried(true);
     if (Object.keys(errors).length) {
       window.setTimeout(() =>
         document
-          .querySelector<HTMLElement>("main [aria-invalid=true]")
+          .querySelector<HTMLElement>(
+            "main [aria-invalid=true], main [data-invalid=true]",
+          )
           ?.scrollIntoView({ behavior: "smooth", block: "center" }),
       );
       return;
     }
+    if (editing) {
+      saveApplication({ ...app, profiling: p });
+      return stopEditing();
+    }
     set({ submittedAt: new Date().toISOString() });
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    goToNext("/dashboard/ugnet-slot");
   };
 
   const select = (
@@ -97,27 +118,30 @@ export function ProfilingView() {
 
   return (
     <StepGate id="profiling">
-      {p.submittedAt ? (
-        <section className="rounded-[8px] border border-black/[0.08] bg-white p-6 text-center sm:p-10">
-          <span className="mx-auto grid size-14 place-items-center rounded-full bg-[#e9f7ef] text-[#16794a]">
-            <CheckCircle2 size={28} aria-hidden />
-          </span>
-          <h2 className="mt-4 font-display text-[24px] font-medium tracking-[-0.02em] text-ink">
-            Profile complete
-          </h2>
-          <p className="mx-auto mt-1.5 max-w-[420px] text-[14.5px] text-body">
-            Thank you. Now pick the date and time you want to take uGNET.
-          </p>
-          <Link
-            href="/dashboard/ugnet-slot"
-            className={`${PRIMARY_BUTTON} mt-7`}
-          >
-            Choose your uGNET slot
-            <ArrowRight size={16} aria-hidden />
-          </Link>
-        </section>
+      {app.profiling?.submittedAt && !editing ? (
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-5">
+          <ReviewCard
+            title="Languages"
+            onEdit={() => setDraft(app.profiling!)}
+            rows={[
+              ["Mother tongue", p.motherTongue],
+              ["Second language", p.second],
+              ["Third language", p.third],
+            ]}
+          />
+          <ReviewCard
+            title="Your family"
+            onEdit={() => setDraft(app.profiling!)}
+            rows={[
+              ["Father's occupation", p.fatherOccupation],
+              ["Mother's occupation", p.motherOccupation],
+              ["Annual family income", p.income],
+              ["EWS applies", p.ews],
+            ]}
+          />
+        </div>
       ) : (
-        <div className="grid gap-6">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
           <SectionCard title="Languages" line="The languages you speak">
             <Grid>
               {select("motherTongue", "Mother tongue", LANGUAGES)}
@@ -147,7 +171,7 @@ export function ProfilingView() {
                 hint="Economically Weaker Section"
                 error={shown.ews}
               >
-                <Chips
+                <Radios
                   name="ews"
                   options={["Yes", "No"]}
                   value={p.ews}
@@ -163,13 +187,23 @@ export function ProfilingView() {
             {SITE_PRIVACY}
           </p>
 
-          <div className="sticky bottom-0 z-10 -mx-4 flex items-center justify-between gap-3 border-t border-black/[0.06] bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:mx-0 lg:rounded-[8px] lg:border lg:bg-white/95 lg:px-5">
-            <Link href="/dashboard/ugnet-form" className={SECONDARY_BUTTON}>
-              <ArrowLeft size={16} aria-hidden />
-              Back
-            </Link>
+          <div className="sticky bottom-0 z-10 -mx-4 flex items-center justify-between gap-3 border-t border-black/[0.06] bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:mx-0 lg:rounded-[6px] lg:border lg:bg-white/95 lg:px-5">
+            {editing ? (
+              <button
+                type="button"
+                onClick={stopEditing}
+                className={SECONDARY_BUTTON}
+              >
+                Cancel
+              </button>
+            ) : (
+              <Link href="/dashboard/ugnet-form" className={SECONDARY_BUTTON}>
+                <ArrowLeft size={16} aria-hidden />
+                Back
+              </Link>
+            )}
             <button type="button" onClick={submit} className={PRIMARY_BUTTON}>
-              Submit
+              {editing ? "Save changes" : "Submit"}
               <ArrowRight size={16} aria-hidden />
             </button>
           </div>
